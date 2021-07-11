@@ -38,6 +38,8 @@ int main()
 
 	// main loop
 	glm::vec4 color(0.0f,0.0f,0.0f, 1.0f);
+	int c = 0;
+	float step = 0.0002f;
 	while (!glfwWindowShouldClose(window))
 	{
 		// change window color
@@ -45,16 +47,40 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// update color vector for next frame
-		if (color.b < 0.99f)
-			color.b += 0.0004f;
-		else
+		if (c == 0)
 		{
-			if (color.g < 0.99f)
-				color.g += 0.0004f;
-			else
+			color.r += step;
+			color.g = 0;
+			color.b = 0;
+
+			if (color.r >= 0.99f)
 			{
-				if (color.r < 0.99f)
-					color.r += 0.0004f;
+				color.r = 0;
+				c = (c + 1) % 3;
+			}
+		}
+		else if (c == 1)
+		{
+			color.r = 0;
+			color.g += step;
+			color.b = 0;
+
+			if (color.g >= 0.99f)
+			{
+				color.g = 0;
+				c = (c + 1) % 3;
+			}
+		}
+		else if (c == 2)
+		{
+			color.r = 0;
+			color.g = 0;
+			color.b += step;
+
+			if (color.b >= 0.99f)
+			{
+				color.b = 0;
+				c = (c + 1) % 3;
 			}
 		}
 
