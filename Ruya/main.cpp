@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
+#include "MainWindow.h"
 
 void windowResizeCallback(GLFWwindow* window, int width, int height);
 void processInputs(GLFWwindow* window);
@@ -16,13 +17,9 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create the window
-	GLFWwindow* window = glfwCreateWindow(1480, 720, "opengl window", nullptr, nullptr);
-	if (window == nullptr)
-	{
-		std::cerr << "Failed to create glfw window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
+	MainWindow mainWindow;
+	//GLFWwindow* window = glfwCreateWindow(1480, 720, "opengl window", nullptr, nullptr);
+	GLFWwindow* window = mainWindow.getGLFWWindowObj();
 	glfwMakeContextCurrent(window);
 
 	// init functions pointers to opengl functions
