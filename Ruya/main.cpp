@@ -13,7 +13,7 @@ int main()
 	// CHECK THAT BEFORE PROCEDING WITH NVIDIA GPU IN THE FUTURE
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create the window
@@ -36,7 +36,7 @@ int main()
 	// main loop
 	glm::vec4 color(0.0f,0.0f,0.0f, 1.0f);
 	int c = 0;
-	float step = 0.0002f;
+	float step = 0.01f;
 	while (!glfwWindowShouldClose(window))
 	{
 		// change window color
