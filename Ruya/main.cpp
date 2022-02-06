@@ -4,13 +4,12 @@
 #include <GLFW/glfw3.h>
 #include "MainWindow.h"
 
-void windowResizeCallback(GLFWwindow* window, int width, int height);
 void processInputs(GLFWwindow* window);
 
 int main()
 {
-	// THESE VERSIONS ARE FOR THE INTEGRATED INTEL GPU, THE SECOND NVIDIA GPU MIGHT HAVE ANOTHER VERSION
-	// CHECK THAT BEFORE PROCEDING WITH NVIDIA GPU IN THE FUTURE
+	// Hint windowing system the version of opengl used. This code is tested on gtx 1050m which supports
+	// opengl 4.6 at the moment.
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -18,7 +17,6 @@ int main()
 
 	// create the window
 	MainWindow mainWindow;
-	//GLFWwindow* window = glfwCreateWindow(1480, 720, "opengl window", nullptr, nullptr);
 	GLFWwindow* window = mainWindow.getGLFWWindowObj();
 	glfwMakeContextCurrent(window);
 
@@ -29,15 +27,11 @@ int main()
 		return -1;
 	}
 
-	// opengl settings
-	glViewport(0, 0, 1480, 720);
-	glfwSetFramebufferSizeCallback(window, windowResizeCallback); // when the window gets resized, the viewport has to be updated
-
 	// main loop
 	glm::vec4 color(0.0f,0.0f,0.0f, 1.0f);
 	int c = 0;
 	float step = 0.01f;
-	while (!glfwWindowShouldClose(window))
+	while (!mainWindow.shouldClose())
 	{
 		// change window color
 		glClearColor(color.r, color.g, color.b, color.a);
@@ -91,11 +85,6 @@ int main()
 
 	glfwTerminate(); // clean up all reasources allocated by glfw.
 	return 0;
-}
-
-void windowResizeCallback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
 }
 
 void processInputs(GLFWwindow* window)

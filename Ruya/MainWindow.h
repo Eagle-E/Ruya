@@ -4,17 +4,32 @@
 #include <GLFW/glfw3.h>
 
 
-
+/*
+* The MainWindow object encapsulates GLFW code to create and manage a window.
+*/
 class MainWindow
 {
 public:
+	// CONSTRUCTORS & DESTRUCTOR
 	MainWindow(int width = 1480, int height = 720);
+	~MainWindow();
+
+	// GETTERS & SETTERS
 	GLFWwindow* getGLFWWindowObj();
+	int height() { return mHeight; }
+	int width() { return mWidth; }
+	
+	// QUERRIES
+	bool shouldClose() { return glfwWindowShouldClose(mGLFWwindow); }
 
 private:
-	int mWidth = 1480;
-	int mHeight = 720;
+	// VARIABLES
+	int mWidth = 0;
+	int mHeight = 0;
 	GLFWwindow* mGLFWwindow = nullptr;
+
+	// PRIVATE FUNCTIONS
+	static void windowResizeCallback(GLFWwindow* window, int width, int height);
 };
 
 
