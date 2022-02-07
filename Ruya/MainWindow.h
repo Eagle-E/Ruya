@@ -7,30 +7,43 @@
 /*
 * The MainWindow object encapsulates GLFW code to create and manage a window.
 */
-class MainWindow
+namespace ruya
 {
-public:
-	// CONSTRUCTORS & DESTRUCTOR
-	MainWindow(int width = 1480, int height = 720);
-	~MainWindow();
 
-	// GETTERS & SETTERS
-	GLFWwindow* getGLFWWindowObj();
-	int height() { return mHeight; }
-	int width() { return mWidth; }
+	class MainWindow
+	{
+	public:
+		// CONSTRUCTORS & DESTRUCTOR
+		MainWindow(int width = 1480, int height = 720);
+		~MainWindow();
+
+		// GETTERS & SETTERS
+		GLFWwindow* getGLFWWindowObj();
+		int height() { return mHeight; }
+		int width() { return mWidth; }
 	
-	// QUERRIES
-	bool shouldClose() { return glfwWindowShouldClose(mGLFWwindow); }
+		// QUERRIES
+		bool shouldClose() { return glfwWindowShouldClose(mGLFWwindow); }
 
-private:
-	// VARIABLES
-	int mWidth = 0;
-	int mHeight = 0;
-	GLFWwindow* mGLFWwindow = nullptr;
+	private:
+		// VARIABLES
+		int mWidth = 0;
+		int mHeight = 0;
+		GLFWwindow* mGLFWwindow = nullptr;
 
-	// PRIVATE FUNCTIONS
-	static void windowResizeCallback(GLFWwindow* window, int width, int height);
-};
+		// PRIVATE FUNCTIONS
+		static void windowResizeCallback(GLFWwindow* window, int width, int height);
+	};
+
+
+} // end namespace 
+
+
+#include <iostream>
+static void test()
+{
+	std::cout << "The static function has been called\n";
+}
 
 
 

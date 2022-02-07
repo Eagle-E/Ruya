@@ -8,6 +8,8 @@ void processInputs(GLFWwindow* window);
 
 int main()
 {
+	test();
+
 	// Hint windowing system the version of opengl used. This code is tested on gtx 1050m which supports
 	// opengl 4.6 at the moment.
 	glfwInit();
@@ -16,7 +18,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create the window
-	MainWindow mainWindow;
+	ruya::MainWindow mainWindow;
 	GLFWwindow* window = mainWindow.getGLFWWindowObj();
 	glfwMakeContextCurrent(window);
 

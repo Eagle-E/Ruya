@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-MainWindow::MainWindow(int width, int height)
+ruya::MainWindow::MainWindow(int width, int height)
 	: mWidth(width), mHeight(height)
 {
 	mGLFWwindow = glfwCreateWindow(width, height, "opengl window", nullptr, nullptr);
@@ -21,17 +21,17 @@ MainWindow::MainWindow(int width, int height)
 
 }
 
-MainWindow::~MainWindow()
+ruya::MainWindow::~MainWindow()
 {
 	glfwDestroyWindow(mGLFWwindow);
 }
 
-GLFWwindow* MainWindow::getGLFWWindowObj()
+GLFWwindow* ruya::MainWindow::getGLFWWindowObj()
 {
 	return mGLFWwindow;
 }
 
-void MainWindow::windowResizeCallback(GLFWwindow* window, int width, int height)
+void ruya::MainWindow::windowResizeCallback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
