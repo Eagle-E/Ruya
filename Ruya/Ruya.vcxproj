@@ -84,6 +84,8 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Users\guney\Desktop\learningOpenGL\Ruya\Ruya\includes;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\guney\Desktop\learningOpenGL\Ruya\Ruya\libs;$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>code_analysis_ruleset.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -157,6 +159,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment_shader.frag" />
+    <None Include="vertex_shader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="shader_file_extensions.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

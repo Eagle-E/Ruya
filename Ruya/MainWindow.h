@@ -25,6 +25,9 @@ namespace ruya
 		// QUERRIES
 		bool shouldClose() { return glfwWindowShouldClose(mGLFWwindow); }
 
+		// MANIPULATORS
+		void makeContextCurrent() { glfwMakeContextCurrent(mGLFWwindow); }
+
 	private:
 		// VARIABLES
 		int mWidth = 0;
@@ -37,14 +40,6 @@ namespace ruya
 
 
 } // end namespace 
-
-
-#include <iostream>
-static void test()
-{
-	std::cout << "The static function has been called\n";
-}
-
 
 
 #endif // !MAINWINDOW_H

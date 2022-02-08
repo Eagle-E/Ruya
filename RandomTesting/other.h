@@ -13,20 +13,4 @@ namespace
 }
 
 
-//void static_func()
-//{
-//	printf("This function is static and should not be seen\n");
-//}
-
-
-
-
-
-
-
-
-
-
-
-
 #endif // !AAAAAAA
