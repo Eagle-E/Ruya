@@ -6,6 +6,10 @@
 #include <GLFW/glfw3.h>
 #include "MainWindow.h"
 
+enum class RenderMode {FILL, WIREFRAME};
+RenderMode renderMode = RenderMode::FILL;
+bool allowRenderModeChange = true;
+
 void processInputs(GLFWwindow* window);
 void mainloop(ruya::MainWindow& mainWindow);
 
@@ -54,17 +58,6 @@ std::string readFileContents(const char* fileName)
 
 void mainloop(ruya::MainWindow& mainWindow)
 {
-	GLFWwindow* window = mainWindow.getGLFWWindowObj();
-	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
-	
-	// triangle data
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};
-	glm::vec4 tcolor(0.0f, 0.0f, 0.0f, 1.0f);
-
 	// read vertex shader file contents and setup vertex shader
 	std::string vertexShaderText = readFileContents("vertex_shader.vert");
 	unsigned int vertexShaderID;
@@ -127,25 +120,47 @@ void mainloop(ruya::MainWindow& mainWindow)
 	// delete shaders, not needed afer successful linkage
 	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
-	
+
 	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
 	unsigned int vaoID;
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	// triangle buffer
+	// triangle data
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f, // left bottom
+		-0.5f,  0.5f, 0.0f, // left top
+		 0.5f,  0.5f, 0.0f, // right top
+		 0.5f, -0.5f, 0.0f  // left bottom
+	};
+
+	unsigned int indices[] = {  
+	0, 1, 3,   // first triangle
+	1, 2, 3    // second triangle
+	};
+
+	// element buffer
+	unsigned int eboID;
+	glGenBuffers(1, &eboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// vertex buffer
 	unsigned int vboID;
 	glGenBuffers(1, &vboID); // create a buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
+	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	// activate the shader program and the vertex attribute settings
 	glUseProgram(shaderProgramID);
-	glEnableVertexAttribArray(0);
+	glBindVertexArray(vaoID);
 
+	GLFWwindow* window = mainWindow.getGLFWWindowObj();
+	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
 
 	while (!mainWindow.shouldClose())
 	{
@@ -153,8 +168,9 @@ void mainloop(ruya::MainWindow& mainWindow)
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// RENDER THE TRIANGLE!!!
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// RENDER THE RECTANGLE!!!
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// update frame
 		glfwSwapBuffers(window); // swap buffer to the new to-be-rendered buffer
@@ -170,4 +186,26 @@ void processInputs(GLFWwindow* window)
 	// Close window if ESC key is pressed
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+	
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && allowRenderModeChange)
+	{
+		switch (renderMode)
+		{
+		case RenderMode::FILL:
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			renderMode = RenderMode::WIREFRAME;
+			break;
+		case RenderMode::WIREFRAME:
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			renderMode = RenderMode::FILL;
+			break;
+		}
+
+		allowRenderModeChange = false;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE)
+	{
+		allowRenderModeChange = true;
+	}
+
 }

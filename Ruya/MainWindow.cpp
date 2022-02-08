@@ -18,7 +18,6 @@ ruya::MainWindow::MainWindow(int width, int height)
 
 	// callback when window is resized
 	glfwSetFramebufferSizeCallback(mGLFWwindow, windowResizeCallback); // when the window gets resized, the viewport has to be updated
-
 }
 
 ruya::MainWindow::~MainWindow()
