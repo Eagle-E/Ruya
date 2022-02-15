@@ -59,7 +59,7 @@ std::string readFileContents(const char* fileName)
 void mainloop(ruya::MainWindow& mainWindow)
 {
 	// read vertex shader file contents and setup vertex shader
-	std::string vertexShaderText = readFileContents("vertex_shader.vert");
+	std::string vertexShaderText = readFileContents("source/shaders/vertex_shader.vert");
 	unsigned int vertexShaderID;
 	vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	const char* temp = vertexShaderText.c_str();
@@ -79,7 +79,7 @@ void mainloop(ruya::MainWindow& mainWindow)
 	}
 
 	// setup fragment shader
-	std::string fragmentShaderText = readFileContents("fragment_shader.frag");
+	std::string fragmentShaderText = readFileContents("source/shaders/fragment_shader.frag");
 	unsigned int fragmentShaderID;
 	fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 	temp = fragmentShaderText.c_str();
@@ -179,6 +179,7 @@ void mainloop(ruya::MainWindow& mainWindow)
 		glfwPollEvents(); // check if there are any events
 		processInputs(window);
 	}
+
 }
 
 void processInputs(GLFWwindow* window)

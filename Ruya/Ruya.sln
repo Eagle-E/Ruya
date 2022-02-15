@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ruya", "Ruya.vcxproj", "{3192C44F-F15F-452A-9C58-4C2BC7067EFA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testing", "..\RandomTesting\RandomTesting.vcxproj", "{D7C91FD3-746A-46F2-BA80-8C35673EF61C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{3192C44F-F15F-452A-9C58-4C2BC7067EFA}.Release|x64.Build.0 = Release|x64
 		{3192C44F-F15F-452A-9C58-4C2BC7067EFA}.Release|x86.ActiveCfg = Release|Win32
 		{3192C44F-F15F-452A-9C58-4C2BC7067EFA}.Release|x86.Build.0 = Release|Win32
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Debug|x64.ActiveCfg = Debug|x64
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Debug|x64.Build.0 = Debug|x64
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Debug|x86.ActiveCfg = Debug|Win32
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Debug|x86.Build.0 = Debug|Win32
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Release|x64.ActiveCfg = Release|x64
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Release|x64.Build.0 = Release|x64
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Release|x86.ActiveCfg = Release|Win32
-		{D7C91FD3-746A-46F2-BA80-8C35673EF61C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
