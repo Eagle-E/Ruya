@@ -126,12 +126,13 @@ void mainloop(ruya::MainWindow& mainWindow)
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	// triangle data
+	// triangle data, location and color interleaved
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left bottom
-		-0.5f,  0.5f, 0.0f, // left top
-		 0.5f,  0.5f, 0.0f, // right top
-		 0.5f, -0.5f, 0.0f  // left bottom
+		// vertex           // color
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // left bottom
+		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // left top
+		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  // right top
+		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f   // right bottom
 	};
 
 	unsigned int indices[] = {  
@@ -153,7 +154,10 @@ void mainloop(ruya::MainWindow& mainWindow)
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // loc data
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); // color data
+
 
 	// activate the shader program and the vertex attribute settings
 	glUseProgram(shaderProgramID);
@@ -162,11 +166,25 @@ void mainloop(ruya::MainWindow& mainWindow)
 	GLFWwindow* window = mainWindow.getGLFWWindowObj();
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
 
+	// start temp
+	float timeValue = glfwGetTime();
+	float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+	int colorUniformLoc = glGetUniformLocation(shaderProgramID, "ourColor");
+	glUseProgram(shaderProgramID); // not necessary, but to remind that the uniform of the current program is changed
+	glUniform4f(colorUniformLoc, 0.0f, greenValue, 0.0f, 1.0f);
+	// end temp
+
 	while (!mainWindow.shouldClose())
 	{
 		// change window color
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// update uniform color
+		float timeValue = glfwGetTime();
+		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+		int colorUniformLoc = glGetUniformLocation(shaderProgramID, "ourColor");
+		glUniform4f(colorUniformLoc, 0.0f, greenValue, 0.0f, 1.0f);
 
 		// RENDER THE RECTANGLE!!!
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
