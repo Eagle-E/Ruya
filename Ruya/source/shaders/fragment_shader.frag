@@ -18,7 +18,7 @@ void main()
     
     // convert linear brightness opacity change to a parabolic one
     float i = 1.25; // intensity
-    p  = -1 * pow((-p*i + 1*i), 2) + 1; 
+    p  = -1 * pow((-p*i + 1*i), 2) + 1;
     FragColor = mix(texture(ourTexture, ourTexCoord) * p, texture(ourTexture2, ourTexCoord) * p, 0.2);
 
 

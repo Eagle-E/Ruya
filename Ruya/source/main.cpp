@@ -115,7 +115,7 @@ void mainloop(ruya::Window& window)
 	glBindVertexArray(vaoID);
 	
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
-
+	
 	// texture settings
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT); // wrap around in s- and t-axi
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
