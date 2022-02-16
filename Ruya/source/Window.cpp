@@ -1,7 +1,7 @@
-#include "MainWindow.h"
+#include "Window.h"
 #include <iostream>
 
-ruya::MainWindow::MainWindow(int width, int height)
+ruya::Window::Window(int width, int height)
 	: mWidth(width), mHeight(height)
 {
 	mGLFWwindow = glfwCreateWindow(width, height, "opengl window", nullptr, nullptr);
@@ -19,17 +19,17 @@ ruya::MainWindow::MainWindow(int width, int height)
 	glfwSetFramebufferSizeCallback(mGLFWwindow, windowResizeCallback); // when the window gets resized, the viewport has to be updated
 }
 
-ruya::MainWindow::~MainWindow()
+ruya::Window::~Window()
 {
 	glfwDestroyWindow(mGLFWwindow);
 }
 
-GLFWwindow* ruya::MainWindow::getGLFWWindowObj()
+GLFWwindow* ruya::Window::getGLFWWindowObj()
 {
 	return mGLFWwindow;
 }
 
-void ruya::MainWindow::update()
+void ruya::Window::update()
 {
 	// update frame
 	glfwSwapBuffers(mGLFWwindow); // swap buffer to the new to-be-rendered buffer
@@ -39,13 +39,13 @@ void ruya::MainWindow::update()
 	processInputs(mGLFWwindow);
 }
 
-void ruya::MainWindow::windowResizeCallback(GLFWwindow* window, int width, int height)
+void ruya::Window::windowResizeCallback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
 
 
-void ruya::MainWindow::processInputs(GLFWwindow* window)
+void ruya::Window::processInputs(GLFWwindow* window)
 {
 	// Close window if ESC key is pressed
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)

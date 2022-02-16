@@ -157,11 +157,11 @@
   <ItemGroup>
     <ClCompile Include="source\glad.c" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\MainWindow.cpp" />
+    <ClCompile Include="source\Window.cpp" />
     <ClCompile Include="source\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\MainWindow.h" />
+    <ClInclude Include="source\Window.h" />
     <ClInclude Include="source\Shader.h" />
   </ItemGroup>
   <ItemGroup>

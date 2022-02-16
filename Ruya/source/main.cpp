@@ -5,10 +5,10 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
-#include "MainWindow.h"
+#include "Window.h"
 #include "Shader.h"
 
-void mainloop(ruya::MainWindow& mainWindow);
+void mainloop(ruya::Window& window);
 
 int main()
 {
@@ -20,8 +20,8 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create the window
-	ruya::MainWindow mainWindow;
-	mainWindow.makeContextCurrent();
+	ruya::Window window;
+	window.makeContextCurrent();
 
 	// init functions pointers to opengl functions
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -31,7 +31,7 @@ int main()
 	}
 
 	// main loop
-	mainloop(mainWindow);
+	mainloop(window);
 
 	glfwTerminate(); // clean up all reasources allocated by glfw.
 	return 0;
@@ -53,7 +53,7 @@ std::string readFileContents(const char* fileName)
 	return vertexShaderText;
 }
 
-void mainloop(ruya::MainWindow& mainWindow)
+void mainloop(ruya::Window& window)
 {
 	// create the shader program
 	ruya::Shader shader;
@@ -111,11 +111,9 @@ void mainloop(ruya::MainWindow& mainWindow)
 	shader.use();
 	glBindVertexArray(vaoID);
 	
-	// the window and colors
-	GLFWwindow* window = mainWindow.getGLFWWindowObj();
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
 
-	while (!mainWindow.shouldClose())
+	while (!window.shouldClose())
 	{
 		// change window color
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
@@ -127,7 +125,7 @@ void mainloop(ruya::MainWindow& mainWindow)
 
 		// update frame => swaps buffers = starts showing newly rendered buffer
 		// + checks for input events and calls handlers
-		mainWindow.update();
+		window.update();
 	}
 
 }

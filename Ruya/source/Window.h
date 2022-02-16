@@ -10,12 +10,12 @@
 namespace ruya
 {
 
-	class MainWindow
+	class Window
 	{
 	public:
 		// CONSTRUCTORS & DESTRUCTOR
-		MainWindow(int width = 1480, int height = 720);
-		~MainWindow();
+		Window(int width = 1480, int height = 720);
+		~Window();
 
 		// GETTERS & SETTERS
 		GLFWwindow* getGLFWWindowObj();
