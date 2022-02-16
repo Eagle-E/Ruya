@@ -77,6 +77,11 @@ void ruya::Shader::use()
 	glUseProgram(mID);
 }
 
+void ruya::Shader::setInt(const std::string& uniformName, int value)
+{
+	glUniform1i(glGetUniformLocation(mID, uniformName.c_str()), value);
+}
+
 /*####################################################################################################################################
 *
 *	Helper Functions

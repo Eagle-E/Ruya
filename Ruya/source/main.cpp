@@ -124,17 +124,31 @@ void mainloop(ruya::Window& window)
 
 	// load texture data
 	int width, height, nrChannels;
+	int width2, height2, nrChannels2;
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* texData = stbi_load("resources/Wood049_1K-PNG/Wood049_1K_Color.png", &width, &height, &nrChannels, 0);
-	
+	unsigned char* texData2 = stbi_load("resources/awesomeface.png", &width2, &height2, &nrChannels2, 0);
 
 	// create texture
-	GLuint texID;
-	if (texData)
+	GLuint texID, texID2;
+	if (texData /*&& texData2*/)
 	{
 		glGenTextures(1, &texID);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);
+		GLuint sourceColorType;
+		nrChannels == 3 ? sourceColorType = GL_RGB : sourceColorType = GL_RGBA;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, sourceColorType, GL_UNSIGNED_BYTE, texData);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		shader.setInt("ourTexture", 0);
+
+		glGenTextures(1, &texID2);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texID2);
+		nrChannels2 == 3 ? sourceColorType = GL_RGB : sourceColorType = GL_RGBA;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width2, height2, 0, sourceColorType, GL_UNSIGNED_BYTE, texData2);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		shader.setInt("ourTexture2", 1);
 	}
 	else
 	{
@@ -143,6 +157,7 @@ void mainloop(ruya::Window& window)
 
 	// free image, not needed anymore
 	stbi_image_free(texData);
+	stbi_image_free(texData2);
 
 	while (!window.shouldClose())
 	{
@@ -151,7 +166,6 @@ void mainloop(ruya::Window& window)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// RENDER THE RECTANGLE!!!
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
 		glBindVertexArray(vaoID);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

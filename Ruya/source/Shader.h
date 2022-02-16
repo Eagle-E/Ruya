@@ -10,13 +10,20 @@ namespace ruya
 	class Shader
 	{
 	public:
+		// CONSTRUCTORS & DESTRUCTOR
 		Shader();
 		Shader(const char * vertexShaderPath, const char * fragmentShaderPath);
+		
+		// MANIPULATORS
 		void setShaders(const char* vertexShaderPath, const char* fragmentShaderPath);
 		void use();
+		void setInt(const std::string& uniformName, int value);
 
-		GLuint mID; // the shader id
+		// GETTERS
+		GLuint id() { return mID; }
+
 	private:
+		GLuint mID; // the shader id
 
 		// HELPER FUNCTIONS
 		GLuint createShader(GLenum shaderType, const std::string& shaderContent);
