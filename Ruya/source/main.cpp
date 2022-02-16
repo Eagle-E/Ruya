@@ -8,11 +8,6 @@
 #include "MainWindow.h"
 #include "Shader.h"
 
-enum class RenderMode {FILL, WIREFRAME};
-RenderMode renderMode = RenderMode::FILL;
-bool allowRenderModeChange = true;
-
-void processInputs(GLFWwindow* window);
 void mainloop(ruya::MainWindow& mainWindow);
 
 int main()
@@ -115,8 +110,8 @@ void mainloop(ruya::MainWindow& mainWindow)
 	// activate the shader program and the vertex attribute settings
 	shader.use();
 	glBindVertexArray(vaoID);
-
-
+	
+	// the window and colors
 	GLFWwindow* window = mainWindow.getGLFWWindowObj();
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
 
@@ -130,41 +125,11 @@ void mainloop(ruya::MainWindow& mainWindow)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		// update frame
-		glfwSwapBuffers(window); // swap buffer to the new to-be-rendered buffer
-
-		// check for events
-		glfwPollEvents(); // check if there are any events
-		processInputs(window);
+		// update frame => swaps buffers = starts showing newly rendered buffer
+		// + checks for input events and calls handlers
+		mainWindow.update();
 	}
 
 }
 
-void processInputs(GLFWwindow* window)
-{
-	// Close window if ESC key is pressed
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-	
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && allowRenderModeChange)
-	{
-		switch (renderMode)
-		{
-		case RenderMode::FILL:
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			renderMode = RenderMode::WIREFRAME;
-			break;
-		case RenderMode::WIREFRAME:
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			renderMode = RenderMode::FILL;
-			break;
-		}
 
-		allowRenderModeChange = false;
-	}
-	else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE)
-	{
-		allowRenderModeChange = true;
-	}
-
-}

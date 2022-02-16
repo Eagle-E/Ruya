@@ -27,15 +27,21 @@ namespace ruya
 
 		// MANIPULATORS
 		void makeContextCurrent() { glfwMakeContextCurrent(mGLFWwindow); }
+		void update();
 
 	private:
+		enum class RenderMode { FILL, WIREFRAME };
+		
 		// VARIABLES
 		int mWidth = 0;
 		int mHeight = 0;
 		GLFWwindow* mGLFWwindow = nullptr;
+		RenderMode renderMode = RenderMode::FILL;
+		bool allowRenderModeChange = true;
 
 		// PRIVATE FUNCTIONS
 		static void windowResizeCallback(GLFWwindow* window, int width, int height);
+		void processInputs(GLFWwindow* window);
 	};
 
 
