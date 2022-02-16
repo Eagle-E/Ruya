@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include "Window.h"
 #include "Shader.h"
+#include "stb_image.h"
 
 void mainloop(ruya::Window& window);
 
@@ -20,7 +21,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// create the window
-	ruya::Window window;
+	ruya::Window window(720, 720);
 	window.makeContextCurrent();
 
 	// init functions pointers to opengl functions
@@ -74,13 +75,13 @@ void mainloop(ruya::Window& window)
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	// triangle data, location and color interleaved
+	// triangle data, location, color and texture coords interleaved
 	float vertices[] = {
-		// vertex           // color
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // left bottom
-		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // left top
-		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  // right top
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f   // right bottom
+		// vertex           // color          // texture
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // left bottom
+		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // left top
+		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // right top
+		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f  // right bottom
 	};
 
 	unsigned int indices[] = {  
@@ -102,9 +103,11 @@ void mainloop(ruya::Window& window)
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // loc data
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // loc data
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); // color data
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // color data
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // texture data
 
 
 	// activate the shader program and the vertex attribute settings
@@ -113,6 +116,34 @@ void mainloop(ruya::Window& window)
 	
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
 
+	// texture settings
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT); // wrap around in s- and t-axi
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST); // nearest neighbor filtering with best fitting mipmap when minifying
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // bilinear interpolation when magnifying
+
+	// load texture data
+	int width, height, nrChannels;
+	unsigned char* texData = stbi_load("resources/Wood049_1K-PNG/Wood049_1K_Color.png", &width, &height, &nrChannels, 0);
+	
+
+	// create texture
+	GLuint texID;
+	if (texData)
+	{
+		glGenTextures(1, &texID);
+		glBindTexture(GL_TEXTURE_2D, texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cerr << "Error loading texture: " << stbi_failure_reason() << std::endl;
+	}
+
+	// free image, not needed anymore
+	stbi_image_free(texData);
+
 	while (!window.shouldClose())
 	{
 		// change window color
@@ -120,7 +151,8 @@ void mainloop(ruya::Window& window)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// RENDER THE RECTANGLE!!!
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+		glBindVertexArray(vaoID);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// update frame => swaps buffers = starts showing newly rendered buffer
