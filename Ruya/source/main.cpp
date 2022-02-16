@@ -1,10 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <exception>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include "MainWindow.h"
+#include "Shader.h"
 
 enum class RenderMode {FILL, WIREFRAME};
 RenderMode renderMode = RenderMode::FILL;
@@ -58,68 +60,19 @@ std::string readFileContents(const char* fileName)
 
 void mainloop(ruya::MainWindow& mainWindow)
 {
-	// read vertex shader file contents and setup vertex shader
-	std::string vertexShaderText = readFileContents("source/shaders/vertex_shader.vert");
-	unsigned int vertexShaderID;
-	vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	const char* temp = vertexShaderText.c_str();
-	glShaderSource(vertexShaderID, 1, &temp, NULL);
-	glCompileShader(vertexShaderID);
-
-	{ // errror checking for shader compilation
-		int success;
-		char textBuffer[512];
-		glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &success);
-		if (!success)
-		{
-			glGetShaderInfoLog(vertexShaderID, 512, NULL, textBuffer);
-			std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << textBuffer << std::endl;
-			return;
-		}
+	// create the shader program
+	ruya::Shader shader;
+	try
+	{
+		shader.setShaders("source/shaders/vertex_shader.vert", "source/shaders/fragment_shader.frag");
 	}
-
-	// setup fragment shader
-	std::string fragmentShaderText = readFileContents("source/shaders/fragment_shader.frag");
-	unsigned int fragmentShaderID;
-	fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-	temp = fragmentShaderText.c_str();
-	glShaderSource(fragmentShaderID, 1, &temp, NULL);
-	glCompileShader(fragmentShaderID);
-
-	{ // errror checking for shader compilation
-		int success;
-		char textBuffer[512];
-		glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &success);
-		if (!success)
-		{
-			glGetShaderInfoLog(fragmentShaderID, 512, NULL, textBuffer);
-			std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << textBuffer << std::endl;
-			return;
-		}
+	catch (std::exception e)
+	{
+		std::cerr << e.what() << std::endl;
+		return;
 	}
-
-	// link shaders into one shader program to be used for the render calls
-	unsigned int shaderProgramID;
-	shaderProgramID = glCreateProgram();
-	glAttachShader(shaderProgramID, vertexShaderID);
-	glAttachShader(shaderProgramID, fragmentShaderID);
-	glLinkProgram(shaderProgramID);
-
-	{ // errror checking for program linkage
-		int success;
-		char textBuffer[512];
-		glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &success);
-		if (!success)
-		{
-			glGetProgramInfoLog(shaderProgramID, 512, NULL, textBuffer);
-			std::cout << "ERROR::SHADER::PROGRAM::LINKAGE_FAILED\n" << textBuffer << std::endl;
-			return;
-		}
-	}
-
-	// delete shaders, not needed afer successful linkage
-	glDeleteShader(vertexShaderID);
-	glDeleteShader(fragmentShaderID);
+	shader.use();
+	
 
 	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
 	unsigned int vaoID;
@@ -136,8 +89,8 @@ void mainloop(ruya::MainWindow& mainWindow)
 	};
 
 	unsigned int indices[] = {  
-	0, 1, 3,   // first triangle
-	1, 2, 3    // second triangle
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
 	};
 
 	// element buffer
@@ -160,31 +113,18 @@ void mainloop(ruya::MainWindow& mainWindow)
 
 
 	// activate the shader program and the vertex attribute settings
-	glUseProgram(shaderProgramID);
+	shader.use();
 	glBindVertexArray(vaoID);
+
 
 	GLFWwindow* window = mainWindow.getGLFWWindowObj();
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
-
-	// start temp
-	float timeValue = glfwGetTime();
-	float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-	int colorUniformLoc = glGetUniformLocation(shaderProgramID, "ourColor");
-	glUseProgram(shaderProgramID); // not necessary, but to remind that the uniform of the current program is changed
-	glUniform4f(colorUniformLoc, 0.0f, greenValue, 0.0f, 1.0f);
-	// end temp
 
 	while (!mainWindow.shouldClose())
 	{
 		// change window color
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		// update uniform color
-		float timeValue = glfwGetTime();
-		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-		int colorUniformLoc = glGetUniformLocation(shaderProgramID, "ourColor");
-		glUniform4f(colorUniformLoc, 0.0f, greenValue, 0.0f, 1.0f);
 
 		// RENDER THE RECTANGLE!!!
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
