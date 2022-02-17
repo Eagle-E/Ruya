@@ -1,2 +1,2 @@
 # Ruya
-A graphics engine built on top on OpenGL.
+A graphics engine built on top of OpenGL.
