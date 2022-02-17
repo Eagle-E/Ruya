@@ -3,6 +3,7 @@
 
 #include <string>
 #include "glad/glad.h"
+#include <glm/glm.hpp>
 
 namespace ruya
 {
@@ -17,7 +18,10 @@ namespace ruya
 		// MANIPULATORS
 		void setShaders(const char* vertexShaderPath, const char* fragmentShaderPath);
 		void use();
+
+		// UNIFORMS
 		void setInt(const std::string& uniformName, int value);
+		void setMatrix4D(const std::string& uniformName, const glm::mat4& matrix);
 
 		// GETTERS
 		GLuint id() { return mID; }

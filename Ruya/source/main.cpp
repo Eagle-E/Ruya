@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "Shader.h"
 #include "stb_image.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 void mainloop(ruya::Window& window);
 
@@ -158,6 +159,12 @@ void mainloop(ruya::Window& window)
 	// free image, not needed anymore
 	stbi_image_free(texData);
 	stbi_image_free(texData2);
+
+
+	// let's add a transformation matrix
+	glm::mat4 transformation(1.0f);
+	transformation = glm::rotate(transformation, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	shader.setMatrix4D("transform", transformation);
 
 	while (!window.shouldClose())
 	{

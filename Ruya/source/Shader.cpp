@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <exception>
+#include <glm/gtc/type_ptr.hpp>
 
 // hidden namespace for helper functions that are not really related to the class
 namespace
@@ -80,6 +81,12 @@ void ruya::Shader::use()
 void ruya::Shader::setInt(const std::string& uniformName, int value)
 {
 	glUniform1i(glGetUniformLocation(mID, uniformName.c_str()), value);
+}
+
+void ruya::Shader::setMatrix4D(const std::string& uniformName, const glm::mat4& matrix)
+{
+	unsigned int loc = glGetUniformLocation(mID, uniformName.c_str());
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 /*####################################################################################################################################
