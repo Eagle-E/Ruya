@@ -14,7 +14,7 @@ namespace ruya
 	/*
 	* Just a square object.
 	*/
-	class Square : public Object
+	class Square : public ruya::Object
 	{
 	public:
 		Square();

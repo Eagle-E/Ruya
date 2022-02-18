@@ -1,3 +1,4 @@
+// library headers
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -5,11 +6,22 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
-#include "Window.h"
-#include "Shader.h"
 #include "stb_image.h"
 #include <glm/gtc/matrix_transform.hpp>
 
+// my headers
+#include "Window.h"
+#include "Shader.h"
+#include "Object.h"
+#include "Square.h"
+
+// namespace qualifiers
+using std::vector;
+using ruya::Square;
+using ruya::Shader;
+using glm::vec3;
+
+// CODE
 void mainloop(ruya::Window& window);
 
 int main()
@@ -124,11 +136,14 @@ void mainloop(ruya::Window& window)
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
 	// UPDATE: change interleaved buffered data into concatenated: 
 	// v: vertex, c: color, t: texture   from vctvctvct to vvvcccttt
-	GLsizeiptr totalBytes = sizeof(vertices) + sizeof(colors) + sizeof(textureCoords);
+	Square square; 
+	vector<vec3>& squareMesh = *square.getMesh();
+	int meshSize = squareMesh.size() * sizeof(squareMesh[0]);
+	GLsizeiptr totalBytes = meshSize + sizeof(colors) + sizeof(textureCoords);
 	glBufferData(GL_ARRAY_BUFFER, totalBytes, NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices), sizeof(colors), colors);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices) + sizeof(colors), sizeof(textureCoords), textureCoords);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, meshSize, squareMesh.data());
+	glBufferSubData(GL_ARRAY_BUFFER, meshSize, sizeof(colors), colors);
+	glBufferSubData(GL_ARRAY_BUFFER, meshSize + sizeof(colors), sizeof(textureCoords), textureCoords);
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format

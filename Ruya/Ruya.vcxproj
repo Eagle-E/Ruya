@@ -155,20 +155,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Object.cpp" />
     <ClCompile Include="source\glad.c" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\Object.cpp" />
+    <ClCompile Include="source\Square.cpp" />
     <ClCompile Include="source\stb_image.cpp" />
     <ClCompile Include="source\Window.cpp" />
     <ClCompile Include="source\Shader.cpp" />
-    <ClCompile Include="Square.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Object.h" />
+    <ClInclude Include="source\Object.h" />
+    <ClInclude Include="source\Square.h" />
     <ClInclude Include="source\stb_image.h" />
     <ClInclude Include="source\Window.h" />
     <ClInclude Include="source\Shader.h" />
-    <ClInclude Include="Square.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader_file_extensions.txt" />
