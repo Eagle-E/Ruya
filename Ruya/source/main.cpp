@@ -20,7 +20,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+	
 	// create the window
 	ruya::Window window(720, 720);
 	window.makeContextCurrent();
@@ -77,12 +77,33 @@ void mainloop(ruya::Window& window)
 	glBindVertexArray(vaoID);
 
 	// triangle data, location, color and texture coords interleaved
-	float vertices[] = {
+	/*float vertices[] = {
 		// vertex           // color          // texture
 		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // left bottom
 		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // left top
 		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // right top
 		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f  // right bottom
+	};*/
+
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f,
+		-0.5f,  0.5f, 0.0f,
+		 0.5f,  0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f
+	};
+
+	float colors[] = {
+		1.0f, 0.0f, 0.0f, 
+		0.0f, 1.0f, 0.0f, 
+		1.0f, 1.0f, 1.0f, 
+		0.0f, 0.0f, 1.0f
+	};
+
+	float textureCoords[] = {
+		0.0f, 0.0f, // left bottom
+		0.0f, 1.0f, // left top
+		1.0f, 1.0f, // right top
+		1.0f, 0.0f  // right bottom
 	};
 
 	unsigned int indices[] = {  
@@ -100,15 +121,23 @@ void mainloop(ruya::Window& window)
 	unsigned int vboID;
 	glGenBuffers(1, &vboID); // create a buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
+	// UPDATE: change interleaved buffered data into concatenated: 
+	// v: vertex, c: color, t: texture   from vctvctvct to vvvcccttt
+	GLsizeiptr totalBytes = sizeof(vertices) + sizeof(colors) + sizeof(textureCoords);
+	glBufferData(GL_ARRAY_BUFFER, totalBytes, NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices), sizeof(colors), colors);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices) + sizeof(colors), sizeof(textureCoords), textureCoords);
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
+	// UPDATED according to the concatenated data format
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // loc data
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(vertices))); // color data
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // color data
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(vertices) + sizeof(colors))); // texture data
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // texture data
 
 
 	// activate the shader program and the vertex attribute settings
@@ -160,17 +189,32 @@ void mainloop(ruya::Window& window)
 	stbi_image_free(texData);
 	stbi_image_free(texData2);
 
-
-	// let's add a transformation matrix
-	glm::mat4 transformation(1.0f);
-	transformation = glm::rotate(transformation, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	shader.setMatrix4D("transform", transformation);
-
+	double lastTime = glfwGetTime();
+	double t0 = lastTime;
+	int c = 0;
 	while (!window.shouldClose())
 	{
 		// change window color
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 		glClear(GL_COLOR_BUFFER_BIT);
+	
+		// let's add a transformation matrix
+		glm::mat4 transformation(1.0f);
+		transformation = glm::rotate(transformation, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		transformation = glm::translate(transformation, glm::vec3(0.5f, -0.5f, 0.0f)); // switched the order  
+		shader.setMatrix4D("transform", transformation);
+
+		// RENDER THE RECTANGLE!!!
+		glBindVertexArray(vaoID);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		// second container
+		glm::mat4 transform(1.0f);
+		float scaleAmount = static_cast<float>(sin(glfwGetTime()));
+		transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
+		transform = glm::scale(transform, glm::vec3(scaleAmount, scaleAmount, 0.f));
+		shader.setMatrix4D("transform", transform);
+		shader.setMatrix4D("transform", transform);
 
 		// RENDER THE RECTANGLE!!!
 		glBindVertexArray(vaoID);
@@ -179,6 +223,23 @@ void mainloop(ruya::Window& window)
 		// update frame => swaps buffers = starts showing newly rendered buffer
 		// + checks for input events and calls handlers
 		window.update();
+
+		// calc FPS
+		double newTime = glfwGetTime();
+		double delta = newTime - lastTime;
+		double fps = 1 / delta * 1000;
+		//std::cout << fps << " fps\n";
+		lastTime = newTime;
+
+		double delta2 = newTime - t0;
+		if (delta2 < 1)
+			c++;
+		else
+		{
+			std::cout << c << " fps\n";
+			t0 = newTime;
+			c = 0;
+		}
 	}
 
 }
