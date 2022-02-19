@@ -4,6 +4,13 @@
 #include <glm/glm.hpp>
 #include <list>
 #include <vector>
+#include "UUID.h"
+
+using glm::vec3;
+using glm::vec4;
+using glm::mat4;
+using std::vector;
+using std::list;
 
 namespace ruya
 {
@@ -17,19 +24,34 @@ namespace ruya
 	class Object
 	{
 	public:
+		// CONSTRUCTORS & DESTRUCTOR
 		Object();
 		~Object();
 
-		glm::mat4 getModelMatrix();
+		// GETTERS
+		vector<vec3>* get_mesh() { return mMesh; }
+		mat4 get_model_matrix();
 
-		std::vector<glm::vec3>* getMesh() { return mMesh; }
-		void setMesh(std::vector<glm::vec3>* mesh) { mMesh = mesh; }
+		// MANIPULATORS
+		void set_mesh(vector<vec3>* mesh) { mMesh = mesh; }
+		void add_child(Object* obj);
+		bool remove_child(Object& obj);
+
+		// OPERATORS
+		bool operator==(const Object& other);
 
 	private:
-		glm::vec3 mPosition; // position relative to parent or world coordinates.
-		glm::vec4 mRotation;
-		glm::vec3 mScale;
-		std::vector<glm::vec3>* mMesh = nullptr;
+		vec3 mPosition; // position relative to parent or world coordinates.
+		vec4 mRotation;
+		vec3 mScale;
+		vec3 mColor;
+		vector<vec3>* mMesh = nullptr;
+		Object* mParent;
+		list<Object*> mChildren;
+		UUID mUUID;
+
+		// private helper functions
+		void dislodge_from_parent();
 	};
 }
 

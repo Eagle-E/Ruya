@@ -1,6 +1,6 @@
 #version 460 core
-in vec3 ourColor;
 in vec2 ourTexCoord;
+uniform vec3 objColor;
 uniform sampler2D ourTexture;
 uniform sampler2D ourTexture2;
 

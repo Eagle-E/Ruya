@@ -9,7 +9,7 @@ ruya::Square::Square()
 		vec3( 0.5f,  0.5f, 0.0f),
 		vec3( 0.5f, -0.5f, 0.0f)
 	};
-	setMesh(&mMesh);
+	set_mesh(&mMesh);
 }
 
 ruya::Square::~Square()

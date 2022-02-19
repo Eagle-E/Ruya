@@ -97,19 +97,6 @@ void mainloop(ruya::Window& window)
 		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f  // right bottom
 	};*/
 
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f
-	};
-
-	float colors[] = {
-		1.0f, 0.0f, 0.0f, 
-		0.0f, 1.0f, 0.0f, 
-		1.0f, 1.0f, 1.0f, 
-		0.0f, 0.0f, 1.0f
-	};
 
 	float textureCoords[] = {
 		0.0f, 0.0f, // left bottom
@@ -137,22 +124,20 @@ void mainloop(ruya::Window& window)
 	// UPDATE: change interleaved buffered data into concatenated: 
 	// v: vertex, c: color, t: texture   from vctvctvct to vvvcccttt
 	Square square; 
-	vector<vec3>& squareMesh = *square.getMesh();
+	vector<vec3>& squareMesh = *square.get_mesh();
 	int meshSize = squareMesh.size() * sizeof(squareMesh[0]);
-	GLsizeiptr totalBytes = meshSize + sizeof(colors) + sizeof(textureCoords);
+	GLsizeiptr totalBytes = meshSize  + sizeof(textureCoords);
+
 	glBufferData(GL_ARRAY_BUFFER, totalBytes, NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
 	glBufferSubData(GL_ARRAY_BUFFER, 0, meshSize, squareMesh.data());
-	glBufferSubData(GL_ARRAY_BUFFER, meshSize, sizeof(colors), colors);
-	glBufferSubData(GL_ARRAY_BUFFER, meshSize + sizeof(colors), sizeof(textureCoords), textureCoords);
+	glBufferSubData(GL_ARRAY_BUFFER, meshSize , sizeof(textureCoords), textureCoords);
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(vertices))); // color data
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(meshSize)); // texture data
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(vertices) + sizeof(colors))); // texture data
-	glEnableVertexAttribArray(2);
 
 
 	// activate the shader program and the vertex attribute settings
