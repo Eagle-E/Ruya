@@ -14,12 +14,14 @@
 #include "Shader.h"
 #include "Object.h"
 #include "Square.h"
+#include "Mesh.h"
 
 // namespace qualifiers
 using std::vector;
+using glm::vec3;
 using ruya::Square;
 using ruya::Shader;
-using glm::vec3;
+using ruya::Mesh;
 
 // CODE
 void mainloop(ruya::Window& window);
@@ -83,37 +85,33 @@ void mainloop(ruya::Window& window)
 	shader.use();
 	
 	// the object to render
-	Square square; 
+	Square square;
+	Mesh& squareMesh = *square.mesh();
 
 	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
 	unsigned int vaoID;
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-
 	// element buffer
 	unsigned int eboID;
 	glGenBuffers(1, &eboID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, square.mesh_faces_size_in_bytes(), square.mesh_faces()->data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, squareMesh.size_faces(), squareMesh.faces.data(), GL_STATIC_DRAW);
 
 	// vertex buffer
-	int meshSize = square.mesh_size_in_bytes();
-	int texCoordsSize = square.texture_coords_size_in_bytes();
-	GLsizeiptr totalBytes = meshSize  + texCoordsSize;
-	
 	unsigned int vboID;
 	glGenBuffers(1, &vboID); // create a buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
-	glBufferData(GL_ARRAY_BUFFER, totalBytes, NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	glBufferSubData(GL_ARRAY_BUFFER, 0, meshSize, square.mesh()->data());
-	glBufferSubData(GL_ARRAY_BUFFER, meshSize , texCoordsSize, square.texture_coordinates()->data());
+	glBufferData(GL_ARRAY_BUFFER, squareMesh.size(), NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
+	glBufferSubData(GL_ARRAY_BUFFER, 0, squareMesh.size_vertices(), squareMesh.vertices.data());
+	glBufferSubData(GL_ARRAY_BUFFER, squareMesh.size_vertices(), squareMesh.size_texture_coords(), squareMesh.textureCoordinates.data());
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(meshSize)); // texture data
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(squareMesh.size_vertices())); // texture data
 	glEnableVertexAttribArray(1);
 
 
@@ -196,7 +194,7 @@ void mainloop(ruya::Window& window)
 		// RENDER THE RECTANGLE!!!
 		glBindVertexArray(vaoID);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+		
 		// update frame => swaps buffers = starts showing newly rendered buffer
 		// + checks for input events and calls handlers
 		window.update();
