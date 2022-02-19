@@ -82,55 +82,32 @@ void mainloop(ruya::Window& window)
 	}
 	shader.use();
 	
+	// the object to render
+	Square square; 
 
 	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
 	unsigned int vaoID;
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	// triangle data, location, color and texture coords interleaved
-	/*float vertices[] = {
-		// vertex           // color          // texture
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // left bottom
-		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // left top
-		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // right top
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f  // right bottom
-	};*/
-
-
-	float textureCoords[] = {
-		0.0f, 0.0f, // left bottom
-		0.0f, 1.0f, // left top
-		1.0f, 1.0f, // right top
-		1.0f, 0.0f  // right bottom
-	};
-
-	unsigned int indices[] = {  
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
-	};
 
 	// element buffer
 	unsigned int eboID;
 	glGenBuffers(1, &eboID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, square.mesh_faces_size_in_bytes(), square.mesh_faces()->data(), GL_STATIC_DRAW);
 
 	// vertex buffer
+	int meshSize = square.mesh_size_in_bytes();
+	int texCoordsSize = square.texture_coords_size_in_bytes();
+	GLsizeiptr totalBytes = meshSize  + texCoordsSize;
+	
 	unsigned int vboID;
 	glGenBuffers(1, &vboID); // create a buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	// UPDATE: change interleaved buffered data into concatenated: 
-	// v: vertex, c: color, t: texture   from vctvctvct to vvvcccttt
-	Square square; 
-	vector<vec3>& squareMesh = *square.get_mesh();
-	int meshSize = squareMesh.size() * sizeof(squareMesh[0]);
-	GLsizeiptr totalBytes = meshSize  + sizeof(textureCoords);
-
 	glBufferData(GL_ARRAY_BUFFER, totalBytes, NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	glBufferSubData(GL_ARRAY_BUFFER, 0, meshSize, squareMesh.data());
-	glBufferSubData(GL_ARRAY_BUFFER, meshSize , sizeof(textureCoords), textureCoords);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, meshSize, square.mesh()->data());
+	glBufferSubData(GL_ARRAY_BUFFER, meshSize , texCoordsSize, square.texture_coordinates()->data());
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format

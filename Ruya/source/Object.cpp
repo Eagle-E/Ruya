@@ -11,11 +11,46 @@ ruya::Object::~Object()
 {
 }
 
+int ruya::Object::mesh_size_in_bytes()
+{
+    if (mMesh != nullptr)
+    {
+        if (mMesh->size() == 0) return 0;
+        else return mMesh->size() * sizeof(mMesh[0]);
+    }
+    else
+        return 0;
+}
+
+int ruya::Object::mesh_faces_size_in_bytes()
+{
+    if (mMeshFaces != nullptr)
+    {
+        if (mMeshFaces->size() == 0) return 0;
+        else return mMeshFaces->size() * sizeof(mMeshFaces[0]);
+    }
+    else
+        return 0;
+}
+
+// TODO: apply templates, code is same as mesh_size_in_bytes()
+int ruya::Object::texture_coords_size_in_bytes()
+{
+    if (mTextureCoords != nullptr)
+    {
+        if (mTextureCoords->size() == 0) return 0;
+        else return mTextureCoords->size() * sizeof(mTextureCoords[0]);
+    }
+    else
+        return 0;
+}
+
+
 /*
 * Get the model matrix that defines the transformation (scaling, rotation 
 * and translation) of this object.
 */
-mat4 ruya::Object::get_model_matrix()
+mat4 ruya::Object::model_matrix()
 {
     mat4 scalingMatrix(1.0f);
     mat4 rotationMatrix(1.0f);

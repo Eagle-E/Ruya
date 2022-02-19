@@ -6,9 +6,12 @@
 #include <vector>
 #include "UUID.h"
 
-using glm::vec3;
 using glm::vec4;
+using glm::vec3;
+using glm::vec2;
+using glm::ivec3;
 using glm::mat4;
+
 using std::vector;
 using std::list;
 
@@ -28,12 +31,19 @@ namespace ruya
 		Object();
 		~Object();
 
-		// GETTERS
-		vector<vec3>* get_mesh() { return mMesh; }
-		mat4 get_model_matrix();
+		// GETTERS & QUERIES
+		vector<vec3>* mesh() { return mMesh; }
+		vector<ivec3>* mesh_faces() { return mMeshFaces; }
+		vector<vec2>* texture_coordinates() { return mTextureCoords; }
+		int mesh_size_in_bytes();
+		int mesh_faces_size_in_bytes();
+		int texture_coords_size_in_bytes();
+		mat4 model_matrix();
 
 		// MANIPULATORS
 		void set_mesh(vector<vec3>* mesh) { mMesh = mesh; }
+		void set_mesh_faces(vector<ivec3>* faces) { mMeshFaces = faces; }
+		void set_texture_coordinates(vector<vec2>* textureCoords) { mTextureCoords = textureCoords; }
 		void add_child(Object* obj);
 		bool remove_child(Object& obj);
 
@@ -45,7 +55,9 @@ namespace ruya
 		vec4 mRotation;
 		vec3 mScale;
 		vec3 mColor;
-		vector<vec3>* mMesh = nullptr;
+		vector<vec3>* mMesh = nullptr;  // TODO: make mesh object where mesh vertices and faces will be stored
+		vector<ivec3>* mMeshFaces = nullptr;
+		vector<vec2>* mTextureCoords = nullptr;
 		Object* mParent;
 		list<Object*> mChildren;
 		UUID mUUID;

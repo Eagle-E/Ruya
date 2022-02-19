@@ -7,6 +7,8 @@
 
 using std::vector;
 using glm::vec3;
+using glm::vec2;
+using glm::ivec3;
 
 namespace ruya
 {
@@ -22,6 +24,8 @@ namespace ruya
 
 	private:
 		vector<vec3> mMesh;
+		vector<ivec3> mFaces;
+		vector<vec2> mTextureCoords;
 	};
 
 
