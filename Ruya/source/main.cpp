@@ -17,6 +17,7 @@
 #include "Square.h"
 #include "Mesh.h"
 #include "Renderer.h"
+#include "Texture.h"
 
 // namespace qualifiers
 using std::vector;
@@ -87,42 +88,14 @@ void mainloop(ruya::Window& window)
 	}
 	shader.use();
 	
+	// init renderer
 	Renderer renderer;
 
 	// the object to render
 	Square square;
-	//Mesh &squareMesh = *square.mesh();
-
-	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
-	//unsigned int vaoID;
-	//glGenVertexArrays(1, &vaoID);
-	//glBindVertexArray(vaoID);
-
-	// element buffer
-	//unsigned int eboID;
-	//glGenBuffers(1, &eboID);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, squareMesh.size_faces(), squareMesh.faces.data(), GL_STATIC_DRAW);
-	
-	// vertex buffer
-	//unsigned int vboID;
-	//glGenBuffers(1, &vboID); // create a buffer
-	//glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
-	//glBufferData(GL_ARRAY_BUFFER, squareMesh.size(), NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	//glBufferSubData(GL_ARRAY_BUFFER, 0, squareMesh.size_vertices(), squareMesh.vertices.data());
-	//glBufferSubData(GL_ARRAY_BUFFER, squareMesh.size_vertices(), squareMesh.size_texture_coords(), squareMesh.textureCoordinates.data());
-
-	// specify vertex attributes, how the data in the VBO should be evaluated
-	// UPDATED according to the concatenated data format
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
-	//glEnableVertexAttribArray(0);
-	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(squareMesh.size_vertices())); // texture data
-	//glEnableVertexAttribArray(1);
-
 
 	// activate the shader program and the vertex attribute settings
 	shader.use();
-	//glBindVertexArray(vaoID);
 	
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
 	
@@ -145,7 +118,7 @@ void mainloop(ruya::Window& window)
 	if (texData /*&& texData2*/)
 	{
 		glGenTextures(1, &texID);
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE9);
 		glBindTexture(GL_TEXTURE_2D, texID);
 		GLuint sourceColorType;
 		nrChannels == 3 ? sourceColorType = GL_RGB : sourceColorType = GL_RGBA;
@@ -154,12 +127,18 @@ void mainloop(ruya::Window& window)
 		shader.setInt("ourTexture", 0);
 
 		glGenTextures(1, &texID2);
-		glActiveTexture(GL_TEXTURE1);
+		//glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texID2);
 		nrChannels2 == 3 ? sourceColorType = GL_RGB : sourceColorType = GL_RGBA;
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width2, height2, 0, sourceColorType, GL_UNSIGNED_BYTE, texData2);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		shader.setInt("ourTexture2", 1);
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texID);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texID2);
 	}
 	else
 	{
@@ -186,8 +165,6 @@ void mainloop(ruya::Window& window)
 		shader.setMatrix4D("transform", transformation);
 
 		// RENDER THE RECTANGLE!!!
-		//glBindVertexArray(vaoID);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		renderer.render_object(square);
 
 		// second container
@@ -199,8 +176,6 @@ void mainloop(ruya::Window& window)
 		shader.setMatrix4D("transform", transform);
 
 		// RENDER THE RECTANGLE!!!
-		//glBindVertexArray(vaoID);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		renderer.render_object(square);
 		
 		// update frame => swaps buffers = starts showing newly rendered buffer

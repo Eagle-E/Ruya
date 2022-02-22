@@ -166,6 +166,7 @@
     <ClCompile Include="source\UUID.cpp" />
     <ClCompile Include="source\Window.cpp" />
     <ClCompile Include="source\Shader.cpp" />
+    <ClCompile Include="source\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Scene.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="source\UUID.h" />
     <ClInclude Include="source\Window.h" />
     <ClInclude Include="source\Shader.h" />
+    <ClInclude Include="source\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader_file_extensions.txt" />

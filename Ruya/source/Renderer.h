@@ -29,6 +29,8 @@ namespace ruya
 		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;
 		GLuint mIndexVertexAttrib; // indexes of the attributes used in the vertex shader
 		GLuint mIndexTextureAttrib;
+
+		// maximum number of active texture units: GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS 
 	};
 }
 

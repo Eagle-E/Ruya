@@ -7,6 +7,7 @@
 #include <vector>
 #include "UUID.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 using glm::vec4;
 using glm::vec3;
@@ -14,6 +15,7 @@ using glm::mat4;
 
 using std::list;
 using std::shared_ptr;
+
 namespace ruya
 {
 	/*
@@ -32,10 +34,13 @@ namespace ruya
 
 		// GETTERS & QUERIES
 		shared_ptr<Mesh> mesh() { return mMesh; }
+		shared_ptr<Texture> texture() { return mTexture; }
+
 		mat4 model_matrix();
 
 		// MANIPULATORS
 		void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }
+		void set_texture(const shared_ptr<Texture>& texture) { mTexture = texture; }
 		void add_child(Object* obj);
 		bool remove_child(Object& obj);
 
@@ -48,6 +53,7 @@ namespace ruya
 		vec3 mScale;
 		vec3 mColor;
 		shared_ptr<Mesh> mMesh; // vertices, faces, texture coords
+		shared_ptr<Texture> mTexture; // vertices, faces, texture coords
 
 		Object* mParent;
 		list<Object*> mChildren;
