@@ -15,7 +15,8 @@ ruya::UUID::UUID()
 
 }
 
-bool ruya::UUID::operator==(const UUID& other)
+
+bool ruya::UUID::operator==(const UUID& other) const
 {
 	return this->mUUID == other.mUUID;
 }

@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include "stb_image.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <memory>
 
 // my headers
 #include "Window.h"
@@ -86,7 +87,7 @@ void mainloop(ruya::Window& window)
 	
 	// the object to render
 	Square square;
-	Mesh& squareMesh = *square.mesh();
+	Mesh &squareMesh = *square.mesh();
 
 	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
 	unsigned int vaoID;
@@ -98,7 +99,7 @@ void mainloop(ruya::Window& window)
 	glGenBuffers(1, &eboID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, squareMesh.size_faces(), squareMesh.faces.data(), GL_STATIC_DRAW);
-
+	
 	// vertex buffer
 	unsigned int vboID;
 	glGenBuffers(1, &vboID); // create a buffer

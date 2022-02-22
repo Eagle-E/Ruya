@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <list>
+#include <memory>
 #include <vector>
 #include "UUID.h"
 #include "Mesh.h"
@@ -12,7 +13,7 @@ using glm::vec3;
 using glm::mat4;
 
 using std::list;
-
+using std::shared_ptr;
 namespace ruya
 {
 	/*
@@ -30,11 +31,11 @@ namespace ruya
 		~Object();
 
 		// GETTERS & QUERIES
-		Mesh* mesh() { return mMesh; }
+		shared_ptr<Mesh> mesh() { return mMesh; }
 		mat4 model_matrix();
 
 		// MANIPULATORS
-		void set_mesh(Mesh* mesh) { mMesh = mesh; }
+		void set_mesh(shared_ptr<Mesh>& mesh) { mMesh = mesh; }
 		void add_child(Object* obj);
 		bool remove_child(Object& obj);
 
@@ -46,7 +47,7 @@ namespace ruya
 		vec4 mRotation;
 		vec3 mScale;
 		vec3 mColor;
-		Mesh* mMesh; // vertices, faces, texture coords
+		shared_ptr<Mesh> mMesh; // vertices, faces, texture coords
 
 		Object* mParent;
 		list<Object*> mChildren;

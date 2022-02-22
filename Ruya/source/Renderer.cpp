@@ -28,4 +28,5 @@ void ruya::Renderer::render_object(Object& obj)
 				- pass the texture slot number via a uniform to the fragment shader when rendering
 					the object.
 	*/
+	// [1] Check if the Mesh of the object already had been buffered
 }

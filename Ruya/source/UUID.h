@@ -13,7 +13,7 @@ namespace ruya
 	{
 	public:
 		UUID();
-		bool operator==(const UUID& other);
+		bool operator==(const UUID& other) const;
 
 	private:
 		uint64_t mUUID;

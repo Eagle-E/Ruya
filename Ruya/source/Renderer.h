@@ -1,7 +1,12 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <unordered_map>
 #include "Scene.h"
+#include "UUID.h"
+#include "glad/glad.h"
+
+using std::unordered_map;
 
 namespace ruya
 {
@@ -16,7 +21,7 @@ namespace ruya
 
 	private:
 		void render_object(Object& obj);
-
+		unordered_map<UUID, GLuint> mBufferMap;
 	};
 }
 

@@ -155,10 +155,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\Scene.cpp" />
     <ClCompile Include="source\glad.c" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Mesh.cpp" />
     <ClCompile Include="source\Object.cpp" />
+    <ClCompile Include="source\Renderer.cpp" />
     <ClCompile Include="source\Square.cpp" />
     <ClCompile Include="source\stb_image.cpp" />
     <ClCompile Include="source\UUID.cpp" />
@@ -166,8 +168,10 @@
     <ClCompile Include="source\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Scene.h" />
     <ClInclude Include="source\Mesh.h" />
     <ClInclude Include="source\Object.h" />
+    <ClInclude Include="source\Renderer.h" />
     <ClInclude Include="source\Square.h" />
     <ClInclude Include="source\stb_image.h" />
     <ClInclude Include="source\UUID.h" />

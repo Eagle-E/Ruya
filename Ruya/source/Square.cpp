@@ -1,5 +1,5 @@
 #include "Square.h"
-
+#include <memory>
 
 ruya::Square::Square()
 {
@@ -9,7 +9,6 @@ ruya::Square::Square()
 		vec3( 0.5f,  0.5f, 0.0f),
 		vec3( 0.5f, -0.5f, 0.0f)
 	};
-	set_mesh(&mMesh);
 
 	mMesh.textureCoordinates = {
 		vec2(0.0f, 0.0f), // left bottom
@@ -22,6 +21,10 @@ ruya::Square::Square()
 		uvec3(0, 1, 3),   // first triangle
 		uvec3(1, 2, 3)    // second triangle
 	};
+
+	// pass pointer to parent class
+	std::shared_ptr<Mesh> p(&mMesh);
+	set_mesh(p);
 }
 
 ruya::Square::~Square()
