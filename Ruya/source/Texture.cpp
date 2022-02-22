@@ -1,6 +1,5 @@
 #include "Texture.h"
 #include <iostream>
-#include <glad/glad.h>
 #include "stb_image.h"
 
 ruya::Texture::Texture()
@@ -10,6 +9,7 @@ ruya::Texture::Texture()
 
 ruya::Texture::Texture(const char* texturePath)
 {
+	std::cout << "texture constructor" << std::endl;
 	// load texture data
 	stbi_set_flip_vertically_on_load(true);
 	mData = stbi_load(texturePath, &mWidth, &mHeight, &mChannels, 0);
@@ -29,7 +29,6 @@ ruya::Texture::Texture(const char* texturePath)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWidth, mHeight, 0, sourceColorType, GL_UNSIGNED_BYTE, mData);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	
 	/*
 		Note:	activating a texture slot then binding this texture's ID will move the texture
 				data to the corresponding texture slot space in the vram.
@@ -49,4 +48,78 @@ ruya::Texture::Texture(const char* texturePath)
 ruya::Texture::~Texture()
 {
 	stbi_image_free(mData);
+}
+
+/*
+* Get the actual maximum number of texture slots available to the fragment shader
+* that are supported by the GPU. 
+* 
+* Check function print_max_texture_slots_info() for a detailed overview of the
+* available texture slots per shader.
+*/
+int ruya::Texture::get_texture_slots_amount_fragment_shader()
+{
+	int maxUnits;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
+	return maxUnits;
+}
+
+/*
+* Prints sample info about the number of available texture slots per shader. A sample output:
+* 
+  Amount of available texture slots:
+    * Fragment shader: 32                 enum: "GL_MAX_TEXTURE_IMAGE_UNITS"
+    * Vertex shader: 32                   enum: "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS"
+    * Geometry shader: 32                 enum: "GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS"
+    * Compute shader: 32                  enum: "GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS"
+    * Tesselation control shader: 32      enum: "GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS"
+    * Tesselation evaluation shader: 32   enum: "GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS"
+    * All combined: 192                   enum: "GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS"
+*/
+void ruya::Texture::print_max_texture_slots_info()
+{
+	std::cout << "Amount of available texture slots: " << std::endl;
+
+	//That is the number of image samplers that your GPU supports in the fragment shader.
+	int MaxTextureImageUnits;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MaxTextureImageUnits);
+	std::cout	<< "  * Fragment shader: "
+				<< MaxTextureImageUnits << "\t\t\tenum: \"GL_MAX_TEXTURE_IMAGE_UNITS\"" << std::endl;
+
+	// The following is for the vertex shader
+	int MaxVertexTextureImageUnits;
+	glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &MaxVertexTextureImageUnits);
+	std::cout << "  * Vertex shader: "
+		<< MaxVertexTextureImageUnits << "\t\t\tenum: \"GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS\"" << std::endl;
+
+	// The following is for the geometry shader
+	int MaxGeometryTextureImageUnits;
+	glGetIntegerv(GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS, &MaxGeometryTextureImageUnits);
+	std::cout << "  * Geometry shader: "
+		<< MaxGeometryTextureImageUnits << "\t\t\tenum: \"GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS\"" << std::endl;
+
+
+	// The following is for the compute shader
+	int MaxComputeTextureImageUnits;
+	glGetIntegerv(GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS, &MaxComputeTextureImageUnits);
+	std::cout << "  * Compute shader: "
+		<< MaxComputeTextureImageUnits << "\t\t\tenum: \"GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS\"" << std::endl;
+
+
+	// The following is for tesselation
+	int MaxTessControlTextureImageUnits;
+	int MaxTessEvalTextureImageUnits;
+	glGetIntegerv(GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS, &MaxTessControlTextureImageUnits);
+	glGetIntegerv(GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS, &MaxTessEvalTextureImageUnits);
+	std::cout << "  * Tesselation control shader: "
+		<< MaxTessControlTextureImageUnits << "\tenum: \"GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS\"" << std::endl;
+	std::cout << "  * Tesselation evaluation shader: "
+		<< MaxTessEvalTextureImageUnits << "\tenum: \"GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS\"" << std::endl;
+
+
+	// The following is for all combined, in total
+	int MaxCombinedTextureImageUnits;
+	glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &MaxCombinedTextureImageUnits);
+	std::cout << "  * All combined: "
+		<< MaxCombinedTextureImageUnits << "\t\t\tenum: \"GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS\"" << std::endl;
 }

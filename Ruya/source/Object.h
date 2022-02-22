@@ -24,6 +24,28 @@ namespace ruya
 	* this class needs a mesh to be rendered, so we don't
 	* have duplicates of the same mesh for each reuse of 
 	* the object.
+	* 
+	* TODO: consider changing the return type of the getters for the Mesh 
+	*		and Texture (mesh(), texture()) from shared_ptr<> to a 
+	*		const reference to their pointers, like: const (Mesh*) & mesh()
+	*		This way the mesh can be accessed through a pointer, and we can
+	*		also evaluate the state of the pointer itself. So when the owner
+	*		of the mesh deletes it (delete mMesh) and sets it to nullptr, then
+	*		everyone possessing the reference to the pointer can check whether
+	*		the pointer has become a nullptr, and if so discard it so avoid 
+	*		memory violations.
+	*		Another benefit is that since it's a reference, we are sure it is
+	*		an actual pointer pointing to a Mesh obj (unless it's been set to
+	*		nullptr). And the 'const' keyword ensures that the pointer itself
+	*		cannot be altered by the users or observers of that reference to 
+	*		the pointer.
+	*		Downsides:
+	*			* return type is less readable
+	*			* users can force a cast to bypass the const, but this is kind
+	*			  of irrelevant because if you do something that is not supposed
+	*			  to be done, you can expect errors to happen. shared_ptr is the
+	*			  safe variant in this case but comes with additional overhead.
+	*		
 	*/
 	class Object
 	{

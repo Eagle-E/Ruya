@@ -26,6 +26,7 @@ using ruya::Square;
 using ruya::Shader;
 using ruya::Mesh;
 using ruya::Renderer;
+using ruya::Texture;
 
 // CODE
 void mainloop(ruya::Window& window);
@@ -89,10 +90,10 @@ void mainloop(ruya::Window& window)
 	shader.use();
 	
 	// init renderer
-	Renderer renderer;
+	//Renderer renderer;
 
 	// the object to render
-	Square square;
+	//Square square;
 
 	// activate the shader program and the vertex attribute settings
 	shader.use();
@@ -111,8 +112,9 @@ void mainloop(ruya::Window& window)
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* texData = stbi_load("resources/Wood049_1K-PNG/Wood049_1K_Color.png", &width, &height, &nrChannels, 0);
 	unsigned char* texData2 = stbi_load("resources/awesomeface.png", &width2, &height2, &nrChannels2, 0);
-
-
+	//Texture tex("resources/awesomeface.png");
+	//Texture::print_max_texture_slots_info();
+	
 	// create texture
 	GLuint texID, texID2;
 	if (texData /*&& texData2*/)
@@ -165,7 +167,7 @@ void mainloop(ruya::Window& window)
 		shader.setMatrix4D("transform", transformation);
 
 		// RENDER THE RECTANGLE!!!
-		renderer.render_object(square);
+		//renderer.render_object(square);
 
 		// second container
 		glm::mat4 transform(1.0f);
@@ -176,7 +178,7 @@ void mainloop(ruya::Window& window)
 		shader.setMatrix4D("transform", transform);
 
 		// RENDER THE RECTANGLE!!!
-		renderer.render_object(square);
+		//renderer.render_object(square);
 		
 		// update frame => swaps buffers = starts showing newly rendered buffer
 		// + checks for input events and calls handlers
