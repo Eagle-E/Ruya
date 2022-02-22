@@ -18,10 +18,10 @@ namespace ruya
 		vector<uvec3> faces;
 		vector<vec2> textureCoordinates;
 
-		long int size();
-		long int size_vertices();
-		long int size_faces();
-		long int size_texture_coords();
+		long int size() const;
+		long int size_vertices() const;
+		long int size_faces() const;
+		long int size_texture_coords() const;
 	};
 }
 

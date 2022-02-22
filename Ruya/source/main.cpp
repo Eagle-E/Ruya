@@ -16,6 +16,7 @@
 #include "Object.h"
 #include "Square.h"
 #include "Mesh.h"
+#include "Renderer.h"
 
 // namespace qualifiers
 using std::vector;
@@ -23,6 +24,7 @@ using glm::vec3;
 using ruya::Square;
 using ruya::Shader;
 using ruya::Mesh;
+using ruya::Renderer;
 
 // CODE
 void mainloop(ruya::Window& window);
@@ -73,7 +75,7 @@ std::string readFileContents(const char* fileName)
 void mainloop(ruya::Window& window)
 {
 	// create the shader program
-	ruya::Shader shader;
+	Shader shader;
 	try
 	{
 		shader.setShaders("source/shaders/vertex_shader.vert", "source/shaders/fragment_shader.frag");
@@ -85,40 +87,42 @@ void mainloop(ruya::Window& window)
 	}
 	shader.use();
 	
+	Renderer renderer;
+
 	// the object to render
 	Square square;
-	Mesh &squareMesh = *square.mesh();
+	//Mesh &squareMesh = *square.mesh();
 
 	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
-	unsigned int vaoID;
-	glGenVertexArrays(1, &vaoID);
-	glBindVertexArray(vaoID);
+	//unsigned int vaoID;
+	//glGenVertexArrays(1, &vaoID);
+	//glBindVertexArray(vaoID);
 
 	// element buffer
-	unsigned int eboID;
-	glGenBuffers(1, &eboID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, squareMesh.size_faces(), squareMesh.faces.data(), GL_STATIC_DRAW);
+	//unsigned int eboID;
+	//glGenBuffers(1, &eboID);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, squareMesh.size_faces(), squareMesh.faces.data(), GL_STATIC_DRAW);
 	
 	// vertex buffer
-	unsigned int vboID;
-	glGenBuffers(1, &vboID); // create a buffer
-	glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
-	glBufferData(GL_ARRAY_BUFFER, squareMesh.size(), NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	glBufferSubData(GL_ARRAY_BUFFER, 0, squareMesh.size_vertices(), squareMesh.vertices.data());
-	glBufferSubData(GL_ARRAY_BUFFER, squareMesh.size_vertices(), squareMesh.size_texture_coords(), squareMesh.textureCoordinates.data());
+	//unsigned int vboID;
+	//glGenBuffers(1, &vboID); // create a buffer
+	//glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
+	//glBufferData(GL_ARRAY_BUFFER, squareMesh.size(), NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, squareMesh.size_vertices(), squareMesh.vertices.data());
+	//glBufferSubData(GL_ARRAY_BUFFER, squareMesh.size_vertices(), squareMesh.size_texture_coords(), squareMesh.textureCoordinates.data());
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(squareMesh.size_vertices())); // texture data
-	glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(squareMesh.size_vertices())); // texture data
+	//glEnableVertexAttribArray(1);
 
 
 	// activate the shader program and the vertex attribute settings
 	shader.use();
-	glBindVertexArray(vaoID);
+	//glBindVertexArray(vaoID);
 	
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
 	
@@ -134,6 +138,7 @@ void mainloop(ruya::Window& window)
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* texData = stbi_load("resources/Wood049_1K-PNG/Wood049_1K_Color.png", &width, &height, &nrChannels, 0);
 	unsigned char* texData2 = stbi_load("resources/awesomeface.png", &width2, &height2, &nrChannels2, 0);
+
 
 	// create texture
 	GLuint texID, texID2;
@@ -181,8 +186,9 @@ void mainloop(ruya::Window& window)
 		shader.setMatrix4D("transform", transformation);
 
 		// RENDER THE RECTANGLE!!!
-		glBindVertexArray(vaoID);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(vaoID);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		renderer.render_object(square);
 
 		// second container
 		glm::mat4 transform(1.0f);
@@ -193,8 +199,9 @@ void mainloop(ruya::Window& window)
 		shader.setMatrix4D("transform", transform);
 
 		// RENDER THE RECTANGLE!!!
-		glBindVertexArray(vaoID);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(vaoID);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		renderer.render_object(square);
 		
 		// update frame => swaps buffers = starts showing newly rendered buffer
 		// + checks for input events and calls handlers

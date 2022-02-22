@@ -35,7 +35,7 @@ namespace ruya
 		mat4 model_matrix();
 
 		// MANIPULATORS
-		void set_mesh(shared_ptr<Mesh>& mesh) { mMesh = mesh; }
+		void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }
 		void add_child(Object* obj);
 		bool remove_child(Object& obj);
 

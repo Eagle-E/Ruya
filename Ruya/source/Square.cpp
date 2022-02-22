@@ -23,8 +23,7 @@ ruya::Square::Square()
 	};
 
 	// pass pointer to parent class
-	std::shared_ptr<Mesh> p(&mMesh);
-	set_mesh(p);
+	set_mesh(std::shared_ptr<Mesh>(&mMesh));
 }
 
 ruya::Square::~Square()

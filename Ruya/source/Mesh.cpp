@@ -20,7 +20,7 @@ namespace
 *   - face indexes
 *   - texture coordinates
 */
-long int ruya::Mesh::size()
+long int ruya::Mesh::size() const
 {
     long int total = 0;
     total += size_vertices();
@@ -32,7 +32,7 @@ long int ruya::Mesh::size()
 /*
 * Size of vertices in bytes
 */
-long int ruya::Mesh::size_vertices()
+long int ruya::Mesh::size_vertices() const
 {
     return vector_size_in_bytes(vertices);
 }
@@ -40,7 +40,7 @@ long int ruya::Mesh::size_vertices()
 /*
 * Size of face indexes in bytes
 */
-long int ruya::Mesh::size_faces()
+long int ruya::Mesh::size_faces() const
 {
 	return vector_size_in_bytes(faces);
 }
@@ -48,7 +48,7 @@ long int ruya::Mesh::size_faces()
 /*
 * Size of texture coordinates in bytes
 */
-long int ruya::Mesh::size_texture_coords()
+long int ruya::Mesh::size_texture_coords() const
 {
 	return vector_size_in_bytes(textureCoordinates);
 }

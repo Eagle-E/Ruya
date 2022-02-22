@@ -3,8 +3,16 @@
 
 using std::list;
 
+ruya::Renderer::Renderer()
+	: mIndexVertexAttrib(0), mIndexTextureAttrib(1)
+{
+
+}
+
 void ruya::Renderer::render_scene(Scene& scene)
 {
+	// TODO: add code to use this renderers shader program (opengl call)
+
 	list<Object*>& objects = scene.get_scene_objects();
 	for (Object* obj : objects)
 	{
@@ -12,6 +20,13 @@ void ruya::Renderer::render_scene(Scene& scene)
 	}
 }
 
+/*
+* Handles the necessary OpenGL calls to render the object with the shader program
+* that this Renderer has. If the Mesh of the Object is being rendered for the first
+* time, the necessary buffers (VAO, VBO & EBO) will be created automatically.
+* 
+* @pre the correct shader program needs to be made current before calling this function.
+*/
 void ruya::Renderer::render_object(Object& obj)
 {
 	/*
@@ -28,5 +43,57 @@ void ruya::Renderer::render_object(Object& obj)
 				- pass the texture slot number via a uniform to the fragment shader when rendering
 					the object.
 	*/
-	// [1] Check if the Mesh of the object already had been buffered
+	
+	// TODO:	when a mesh gets deleted that is in the unordered_map, it needs to be removed.
+	//			Consider attaching a custom destroctor on the shared_ptr that is being used as
+	//			key, that will remove the 'null' shared_ptr.
+
+	// [1] Check if the Mesh of the object already had been buffered, if not create the buffers
+	if (mMeshVaoMap.find(obj.mesh()) == mMeshVaoMap.end())
+	{
+		GLuint meshVaoID = buffer_mesh(*obj.mesh());
+		mMeshVaoMap[obj.mesh()] = meshVaoID;
+	}
+	
+	// [2] Bind the vao and render
+	size_t numIndexes = obj.mesh()->faces.size() * 3;
+	glBindVertexArray(mMeshVaoMap[obj.mesh()]);
+	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
+}
+
+/*
+* Does the necessary OpenGL calls the create VAO, VBO and EBO for the given mesh.
+* 
+* 
+* @returns the VAO ID that contains info about the buffers containing the mesh's data.
+*/
+GLuint ruya::Renderer::buffer_mesh(const Mesh& mesh)
+{
+	// create a vertex buffer object (VAO) so we don't have to repeat VBO and vertex attribute stuff
+	GLuint vaoID;
+	glGenVertexArrays(1, &vaoID);
+	glBindVertexArray(vaoID);
+
+	// element buffer
+	GLuint eboID;
+	glGenBuffers(1, &eboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.size_faces(), mesh.faces.data(), GL_STATIC_DRAW);
+
+	// vertex buffer, concatenate mesh data: first vertex data then texture data, ...
+	GLuint vboID;
+	glGenBuffers(1, &vboID); // create a buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
+	glBufferData(GL_ARRAY_BUFFER, mesh.size(), NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
+	glBufferSubData(GL_ARRAY_BUFFER, 0, mesh.size_vertices(), mesh.vertices.data());
+	glBufferSubData(GL_ARRAY_BUFFER, mesh.size_vertices(), mesh.size_texture_coords(), mesh.textureCoordinates.data());
+
+	// specify vertex attributes, how the data in the VBO should be evaluated
+	// UPDATED according to the concatenated data format
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(mesh.size_vertices())); // texture data
+	glEnableVertexAttribArray(1);
+
+	return vaoID;
 }

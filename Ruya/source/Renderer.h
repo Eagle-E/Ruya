@@ -2,11 +2,13 @@
 #define RENDERER_H
 
 #include <unordered_map>
+#include <memory>
 #include "Scene.h"
-#include "UUID.h"
+#include "Mesh.h"
 #include "glad/glad.h"
 
 using std::unordered_map;
+using std::shared_ptr;
 
 namespace ruya
 {
@@ -16,12 +18,17 @@ namespace ruya
 	class Renderer
 	{
 	public:
+		Renderer();
 		void render_scene(Scene& scene);
+		void render_object(Object& obj);
 
 
 	private:
-		void render_object(Object& obj);
-		unordered_map<UUID, GLuint> mBufferMap;
+		GLuint buffer_mesh(const Mesh& mesh);
+
+		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;
+		GLuint mIndexVertexAttrib; // indexes of the attributes used in the vertex shader
+		GLuint mIndexTextureAttrib;
 	};
 }
 
