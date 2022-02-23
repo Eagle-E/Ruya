@@ -19,6 +19,8 @@ ruya::Texture::Texture(const char* texturePath)
 	{
 		std::cerr << "Error loading texture: " << stbi_failure_reason() << "\nTexture path: " << texturePath << std::endl;
 		mData = nullptr;
+		mTextureID = 0;
+		return;
 	}
 
 	// create opengl texture
@@ -57,7 +59,7 @@ ruya::Texture::~Texture()
 * Check function print_max_texture_slots_info() for a detailed overview of the
 * available texture slots per shader.
 */
-int ruya::Texture::get_texture_slots_amount_fragment_shader()
+int ruya::Texture::get_num_texture_slots_fragment_shader()
 {
 	int maxUnits;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);

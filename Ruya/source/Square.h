@@ -23,7 +23,6 @@ namespace ruya
 		~Square();
 
 	private:
-		Mesh mMesh;
 	};
 
 

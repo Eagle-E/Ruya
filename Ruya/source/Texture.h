@@ -21,9 +21,9 @@ namespace ruya
 		unsigned char* data() { return mData; }
 
 		static void print_max_texture_slots_info();
+		static int get_num_texture_slots_fragment_shader();
 
 	private:
-		static int get_texture_slots_amount_fragment_shader();
 
 		int mWidth;
 		int mHeight;

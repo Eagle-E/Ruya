@@ -8,6 +8,7 @@ out vec4 FragColor;
 
 void main()
 {
+    /* 
     //FragColor = mix(texture(ourTexture, ourTexCoord), texture(ourTexture2, ourTexCoord), 0.2);
     
     // quick maths
@@ -20,9 +21,10 @@ void main()
     float i = 0.9; // intensity
     p  = -1 * pow((-p*i + 1*i), 2) + 1;
     FragColor = mix(texture(ourTexture, ourTexCoord) * p, texture(ourTexture2, ourTexCoord) * p, 0.2);
+    */
 
 
-    //FragColor = texture(ourTexture, ourTexCoord) * vec4(ourColor, 1.0f); // funky wood color
+    FragColor = texture(ourTexture, ourTexCoord); 
 } 
 
 
