@@ -9,7 +9,6 @@ ruya::Texture::Texture()
 
 ruya::Texture::Texture(const char* texturePath)
 {
-	std::cout << "texture constructor" << std::endl;
 	// load texture data
 	stbi_set_flip_vertically_on_load(true);
 	mData = stbi_load(texturePath, &mWidth, &mHeight, &mChannels, 0);

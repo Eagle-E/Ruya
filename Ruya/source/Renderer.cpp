@@ -108,7 +108,7 @@ ruya::Renderer::TextureSlotManager::TextureSlotManager()
 		// init all slots to 0 (= contains no texture)
 		mSlotTextureMap[i] = 0; 
 		// init priorities in numerical order
-		list<GLuint>::const_iterator slotIter = mSlotPriority.insert(mSlotPriority.end(), i); 
+		list<GLuint>::iterator slotIter = mSlotPriority.insert(mSlotPriority.end(), i); 
 		// init slot iterators
 		mSlotPriorityRefMap[i] = slotIter;
 	}
@@ -172,17 +172,28 @@ GLuint ruya::Renderer::TextureSlotManager::free_slot()
 
 /*
 * Moves given slot up one position in the priority list.
+* (this is done when an already-binded texture is being rendered again)
 */
-void ruya::Renderer::TextureSlotManager::increment_priority(list<GLuint>::const_iterator& slotIt)
+void ruya::Renderer::TextureSlotManager::increment_priority(list<GLuint>::iterator& slotIt)
 {
-	//TODO:
+	// can't increment position if it's the first in the list
+	if (slotIt == mSlotPriority.begin())
+		return;
+
+	// swap values of elements at pos "slotIt" and the one before
+	GLuint temp1 = *slotIt;
+	slotIt--;
+	GLuint temp2 = *slotIt;
+	*slotIt = temp1;
+	slotIt++;
+	*slotIt = temp2;
 }
 
 /*
 * Makes given slot from the mSlotPriority list top priority by placing it at the front of the list.
 * @post: slotIt has been updated but is still pointing to the same slot (that is now at the front of the priority list)
 */
-void ruya::Renderer::TextureSlotManager::set_top_priority(list<GLuint>::const_iterator& slotIt)
+void ruya::Renderer::TextureSlotManager::set_top_priority(list<GLuint>::iterator& slotIt)
 {
 	// save slot number and remove slot from priority list
 	GLuint slot = *slotIt;

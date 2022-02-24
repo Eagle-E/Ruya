@@ -45,13 +45,13 @@ namespace ruya
 
 		private:
 			GLuint free_slot();
-			void increment_priority(list<GLuint>::const_iterator& slotIt);
-			void set_top_priority(list<GLuint>::const_iterator& slotIt);
+			void increment_priority(list<GLuint>::iterator& slotIt);
+			void set_top_priority(list<GLuint>::iterator& slotIt);
 
 			unordered_map<GLuint, GLuint> mTextureSlotMap; // mapping texture id to texture slot, not loaded if slot = 0
 			unordered_map<GLuint, GLuint> mSlotTextureMap; // mapping slots to textures
 			list<GLuint> mSlotPriority; // last item in map is the next one to use (and free up for new textures if necessary)
-			unordered_map<GLuint, list<GLuint>::const_iterator> mSlotPriorityRefMap; // for each slot, contains iterator pointing to its location in the priority list.
+			unordered_map<GLuint, list<GLuint>::iterator> mSlotPriorityRefMap; // for each slot, contains iterator pointing to its location in the priority list.
 		};
 
 	public:
