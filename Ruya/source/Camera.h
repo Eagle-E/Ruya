@@ -1,7 +1,10 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#define _USE_MATH_DEFINES
 #include <glm/glm.hpp>
+
+#define M_PI       3.14159265358979323846   // pi
 
 namespace ruya
 {

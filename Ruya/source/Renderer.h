@@ -11,6 +11,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Window.h"
+#include "Camera.h"
 
 using std::unordered_map;
 using std::list;
@@ -18,6 +19,7 @@ using std::shared_ptr;
 using glm::mat4;
 using ruya::Shader;
 using ruya::Window;
+using ruya::Camera;
 
 class ruya::Texture;
 
@@ -61,15 +63,17 @@ namespace ruya
 		};
 
 	public:
-		Renderer(Shader& shader, Window& window);
+		Renderer(Shader& shader, Window& window, Camera& camera);
 		void render_scene(Scene& scene);
 		void render_object(Object& obj);
+		void render_object(Object& obj, const mat4& viewProjectTransform);
 
 
 	private:
 		GLuint buffer_mesh(const Mesh& mesh);
 		Shader& mShader;
 		Window& mWindow;
+		Camera& mCamera;
 		mat4 mProjection;
 
 		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;

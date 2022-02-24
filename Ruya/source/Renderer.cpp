@@ -9,8 +9,8 @@
 
 using std::list;
 
-ruya::Renderer::Renderer(Shader& shader, Window& window)
-	: mIndexVertexAttrib(0), mIndexTextureAttrib(1), mShader(shader), mWindow(window)
+ruya::Renderer::Renderer(Shader& shader, Window& window, Camera& camera)
+	: mIndexVertexAttrib(0), mIndexTextureAttrib(1), mShader(shader), mWindow(window), mCamera(camera)
 {
 	mProjection = mat4(1.0f);
 	mProjection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
@@ -21,11 +21,14 @@ void ruya::Renderer::render_scene(Scene& scene)
 	// make shader current
 	mShader.use();
 
+	// get view-projection matrix
+	mat4 VP = mProjection * mCamera.getViewMatrix();
+
 	// render scene objects
 	list<Object*>& objects = scene.get_scene_objects();
 	for (Object* obj : objects)
 	{
-		render_object(*obj);
+		render_object(*obj, VP);
 	}
 }
 
@@ -36,27 +39,61 @@ void ruya::Renderer::render_scene(Scene& scene)
 * 
 * @pre the correct shader program needs to be made current before calling this function.
 */
-void ruya::Renderer::render_object(Object& obj)
+void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform)
 {
 	// TODO:	when a mesh gets deleted that is in the unordered_map, it needs to be removed.
 	//			Consider attaching a custom destroctor on the shared_ptr that is being used as
 	//			key, that will remove the 'null' shared_ptr.
 
-	// [1] Check if the Mesh of the object already had been buffered, if not create the buffers
+	// Check if the Mesh of the object already had been buffered, if not create the buffers
 	if (mMeshVaoMap.find(obj.mesh()) == mMeshVaoMap.end())
 	{
 		GLuint meshVaoID = buffer_mesh(*obj.mesh());
 		mMeshVaoMap[obj.mesh()] = meshVaoID;
 	}
 	
-	// [2] Bind the textures and set their uniform location
+	// Bind the textures and set their uniform location
 	if (obj.texture())
 	{
 		GLuint textureSlot = mSlotManager.bind_texture(*obj.texture());
 		mShader.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
 	}
 
-	// [3] Bind the vao and render
+	// calc model-view-projection matrix
+	mat4 MVP = viewProjectTransform * obj.model_matrix();
+	mShader.setMatrix4D("MVP", MVP);
+
+	// Bind the vao and render
+	size_t numIndexes = obj.mesh()->faces.size() * 3;
+	glBindVertexArray(mMeshVaoMap[obj.mesh()]);
+	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
+}
+
+void ruya::Renderer::render_object(Object& obj)
+{
+	// TODO:	when a mesh gets deleted that is in the unordered_map, it needs to be removed.
+	//			Consider attaching a custom destroctor on the shared_ptr that is being used as
+	//			key, that will remove the 'null' shared_ptr.
+
+	// Check if the Mesh of the object already had been buffered, if not create the buffers
+	if (mMeshVaoMap.find(obj.mesh()) == mMeshVaoMap.end())
+	{
+		GLuint meshVaoID = buffer_mesh(*obj.mesh());
+		mMeshVaoMap[obj.mesh()] = meshVaoID;
+	}
+
+	// Bind the textures and set their uniform location
+	if (obj.texture())
+	{
+		GLuint textureSlot = mSlotManager.bind_texture(*obj.texture());
+		mShader.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
+	}
+
+	// calc model-view-projection matrix
+	mat4 MVP = mProjection * mCamera.getViewMatrix() * obj.model_matrix();
+	mShader.setMatrix4D("MVP", MVP);
+
+	// Bind the vao and render
 	size_t numIndexes = obj.mesh()->faces.size() * 3;
 	glBindVertexArray(mMeshVaoMap[obj.mesh()]);
 	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);

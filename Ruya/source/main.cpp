@@ -92,7 +92,8 @@ void mainloop(ruya::Window& window)
 	shader.use();
 	
 	// init renderer
-	Renderer renderer(shader);
+	Camera camera;
+	Renderer renderer(shader, window, camera);
 
 	// the object to render
 	Square square1;
@@ -124,10 +125,10 @@ void mainloop(ruya::Window& window)
 		glClear(GL_COLOR_BUFFER_BIT);
 	
 		// let's add a transformation matrix
-		glm::mat4 transformation(1.0f);
-		transformation = glm::rotate(transformation, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-		transformation = glm::translate(transformation, glm::vec3(0.5f, -0.5f, 0.0f)); // switched the order  
-		shader.setMatrix4D("transform", transformation);
+		glm::vec4 rot(0.0f, 0.0f, 1.0f, glm::degrees((float)glfwGetTime()));
+		glm::vec3 translation(0.5f, -0.5f, 0.0f); // switched the order  
+		square1.set_rotation(rot);
+		square1.set_position(translation);
 
 		// RENDER THE RECTANGLE!!!
 		renderer.render_object(square1);
@@ -135,10 +136,10 @@ void mainloop(ruya::Window& window)
 		// second container
 		glm::mat4 transform(1.0f);
 		float scaleAmount = static_cast<float>(sin(glfwGetTime()));
-		transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
-		transform = glm::scale(transform, glm::vec3(scaleAmount, scaleAmount, 0.f));
-		shader.setMatrix4D("transform", transform);
-		shader.setMatrix4D("transform", transform);
+		translation = glm::vec3(-0.5f, 0.5f, 0.0f);
+		glm::vec3 scale(scaleAmount, scaleAmount, 0.f);
+		square2.set_position(translation);
+		square2.set_scale(scale);
 
 		// RENDER THE RECTANGLE!!!
 		renderer.render_object(square2);

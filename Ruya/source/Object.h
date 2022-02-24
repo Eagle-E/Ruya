@@ -61,8 +61,13 @@ namespace ruya
 		mat4 model_matrix();
 
 		// MANIPULATORS
-		void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }
-		void set_texture(const shared_ptr<Texture>& texture) { mTexture = texture; }
+		inline void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }
+		inline void set_texture(const shared_ptr<Texture>& texture) { mTexture = texture; }
+		void set_position(const glm::vec3& position) { mPosition = position; }
+		void set_rotation(const glm::vec4& rotation) { mRotation = rotation; }
+		void set_scale(const glm::vec3& scale) { mScale = scale; }
+		void set_color(const glm::vec3& color) { mColor = color; }
+
 		void add_child(Object* obj);
 		bool remove_child(Object& obj);
 
