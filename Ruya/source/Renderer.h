@@ -4,17 +4,23 @@
 #include <unordered_map>
 #include <list>
 #include <memory>
-#include "glad/glad.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glad/glad.h>
 
 #include "Scene.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Window.h"
 
 using std::unordered_map;
 using std::list;
 using std::shared_ptr;
+using glm::mat4;
 using ruya::Shader;
+using ruya::Window;
+
 class ruya::Texture;
+
 
 namespace ruya
 {
@@ -55,7 +61,7 @@ namespace ruya
 		};
 
 	public:
-		Renderer(Shader& shader);
+		Renderer(Shader& shader, Window& window);
 		void render_scene(Scene& scene);
 		void render_object(Object& obj);
 
@@ -63,6 +69,8 @@ namespace ruya
 	private:
 		GLuint buffer_mesh(const Mesh& mesh);
 		Shader& mShader;
+		Window& mWindow;
+		mat4 mProjection;
 
 		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;
 		GLuint mIndexVertexAttrib = 0; // indexes of the attributes used in the vertex shader

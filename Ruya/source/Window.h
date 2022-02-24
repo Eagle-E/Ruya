@@ -21,7 +21,8 @@ namespace ruya
 		GLFWwindow* getGLFWWindowObj();
 		int height() { return mHeight; }
 		int width() { return mWidth; }
-	
+		float aspect_ratio() { return static_cast<float>(mWidth) / static_cast<float>(mHeight); }
+
 		// QUERRIES
 		bool shouldClose() { return glfwWindowShouldClose(mGLFWwindow); }
 

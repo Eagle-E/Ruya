@@ -1,13 +1,19 @@
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Renderer.h"
 #include <list>
 #include "Texture.h"
 
+
 using std::list;
 
-ruya::Renderer::Renderer(Shader& shader)
-	: mIndexVertexAttrib(0), mIndexTextureAttrib(1), mShader(shader)
+ruya::Renderer::Renderer(Shader& shader, Window& window)
+	: mIndexVertexAttrib(0), mIndexTextureAttrib(1), mShader(shader), mWindow(window)
 {
-
+	mProjection = mat4(1.0f);
+	mProjection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
 }
 
 void ruya::Renderer::render_scene(Scene& scene)

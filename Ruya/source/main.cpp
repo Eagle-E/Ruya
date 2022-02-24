@@ -18,6 +18,7 @@
 #include "Mesh.h"
 #include "Renderer.h"
 #include "Texture.h"
+#include "Camera.h"
 
 // namespace qualifiers
 using std::vector;
@@ -27,6 +28,7 @@ using ruya::Shader;
 using ruya::Mesh;
 using ruya::Renderer;
 using ruya::Texture;
+using ruya::Camera;
 
 // CODE
 void mainloop(ruya::Window& window);
