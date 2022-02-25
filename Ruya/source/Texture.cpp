@@ -25,6 +25,14 @@ ruya::Texture::Texture(const char* texturePath)
 	// create opengl texture
 	glGenTextures(1, &mTextureID);
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
+	
+	// texture settings
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT); // wrap around in s- and t-axi
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST); // nearest neighbor filtering with best fitting mipmap when minifying
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // bilinear interpolation when magnifying
+
+	// generate opengl texture and "move it to the GPU" (whether it actually gets moved is driver dependent)
 	GLuint sourceColorType;
 	mChannels == 3 ? sourceColorType = GL_RGB : sourceColorType = GL_RGBA;
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWidth, mHeight, 0, sourceColorType, GL_UNSIGNED_BYTE, mData);

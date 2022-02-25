@@ -13,31 +13,31 @@ namespace ruya
     public:
         Camera();
 
-        void updateAngle(float dx, float dy);
+        void update_angle(float dx, float dy);
 
         glm::vec3 position() const;
 
-        float getHorizontalAngle() const;
-        float getVerticalAngle() const;
-        glm::mat4 getViewMatrix() const;
+        float get_horizontal_angle() const;
+        float get_vertical_angle() const;
+        glm::mat4 get_view_matrix() const;
 
-        void goForward();
-        void goBackWard();
-        void goRight();
-        void goLeft();
-        void goUp();
-        void goDown();
+        void go_forward();
+        void go_backward();
+        void go_right();
+        void go_left();
+        void go_up();
+        void go_down();
 
-        glm::vec3 getCamFront() const;
+        glm::vec3 get_cam_front() const;
 
     private:
-        void calculateMovement(float& dx, float& dy);
+        void calculate_movement(float& dx, float& dy);
 
         glm::vec3 mCamPos;  // cam position on world
         glm::vec3 mCamUp;   // necessary vector for the calculation of the camview
         glm::vec3 mCamFront; // vector pointing the direction the cam is faced
         float mHorizontalAngle, mVerticalAngle;
-        float mCamSpeed = 0.5f;
+        float mCamSpeed = 0.01f;
 
         // camera constants
         const short CAM_START_HIGHT = 6;

@@ -23,6 +23,8 @@ namespace ruya
 		~Square();
 
 	private:
+		static std::shared_ptr<Mesh> init_square_mesh();
+		static std::shared_ptr<Mesh> mMesh;
 	};
 
 

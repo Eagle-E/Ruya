@@ -36,7 +36,27 @@ void ruya::Window::update()
 
 	// check for events
 	glfwPollEvents(); // check if there are any events
-	processInputs(mGLFWwindow);
+	processInputs();
+}
+
+void ruya::Window::add_event_callback(int glfwEventID, VOID_FPTR callback)
+{
+	// event type is not registered yet
+	if (mEventCallbackMap.find(glfwEventID) == mEventCallbackMap.end())
+	{
+		mEventCallbackMap[glfwEventID] = list<VOID_FPTR>();
+	}
+
+	mEventCallbackMap[glfwEventID].push_back(callback);
+}
+
+void ruya::Window::remove_event_callback(VOID_FPTR callback)
+{
+	unordered_map<int, list<VOID_FPTR>>::iterator it = mEventCallbackMap.begin();
+	for (it; it != mEventCallbackMap.end(); it++)
+	{
+		it->second.remove(callback);
+	}
 }
 
 void ruya::Window::windowResizeCallback(GLFWwindow* window, int width, int height)
@@ -45,13 +65,13 @@ void ruya::Window::windowResizeCallback(GLFWwindow* window, int width, int heigh
 }
 
 
-void ruya::Window::processInputs(GLFWwindow* window)
-{
+void ruya::Window::processInputs()
+{		
 	// Close window if ESC key is pressed
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+	if (glfwGetKey(mGLFWwindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(mGLFWwindow, true);
 
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && allowRenderModeChange)
+	if (glfwGetKey(mGLFWwindow, GLFW_KEY_1) == GLFW_PRESS && allowRenderModeChange)
 	{
 		switch (renderMode)
 		{
@@ -67,8 +87,29 @@ void ruya::Window::processInputs(GLFWwindow* window)
 
 		allowRenderModeChange = false;
 	}
-	else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE)
+	else if (glfwGetKey(mGLFWwindow, GLFW_KEY_1) == GLFW_RELEASE)
 	{
 		allowRenderModeChange = true;
+	}
+
+	call_handlers_on_key_press(GLFW_KEY_UP);
+	call_handlers_on_key_press(GLFW_KEY_DOWN);
+	call_handlers_on_key_press(GLFW_KEY_LEFT);
+	call_handlers_on_key_press(GLFW_KEY_RIGHT);
+	call_handlers_on_key_press(GLFW_KEY_W);
+	call_handlers_on_key_press(GLFW_KEY_S);
+	call_handlers_on_key_press(GLFW_KEY_A);
+	call_handlers_on_key_press(GLFW_KEY_D);
+	call_handlers_on_key_press(GLFW_KEY_SPACE);
+	call_handlers_on_key_press(GLFW_KEY_LEFT_SHIFT);
+}
+
+
+void ruya::Window::call_handlers_on_key_press(int glfwKeyEventID)
+{
+	if (glfwGetKey(mGLFWwindow, glfwKeyEventID) == GLFW_PRESS)
+	{
+		for (auto callback : mEventCallbackMap[glfwKeyEventID])
+			callback();
 	}
 }

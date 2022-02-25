@@ -14,6 +14,10 @@ ruya::Renderer::Renderer(Shader& shader, Window& window, Camera& camera)
 {
 	mProjection = mat4(1.0f);
 	mProjection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
+	
+	// enable depth test
+	mShader.use();
+	glEnable(GL_DEPTH_TEST);
 }
 
 void ruya::Renderer::render_scene(Scene& scene)
@@ -21,8 +25,10 @@ void ruya::Renderer::render_scene(Scene& scene)
 	// make shader current
 	mShader.use();
 
+	
+
 	// get view-projection matrix
-	mat4 VP = mProjection * mCamera.getViewMatrix();
+	mat4 VP = mProjection * mCamera.get_view_matrix();
 
 	// render scene objects
 	list<Object*>& objects = scene.get_scene_objects();
@@ -90,7 +96,7 @@ void ruya::Renderer::render_object(Object& obj)
 	}
 
 	// calc model-view-projection matrix
-	mat4 MVP = mProjection * mCamera.getViewMatrix() * obj.model_matrix();
+	mat4 MVP = mProjection * mCamera.get_view_matrix() * obj.model_matrix();
 	mShader.setMatrix4D("MVP", MVP);
 
 	// Bind the vao and render
