@@ -52,7 +52,8 @@ namespace ruya
 		unordered_map<int, list<VOID_FPTR>> mEventCallbackMap;
 
 		// PRIVATE FUNCTIONS
-		static void windowResizeCallback(GLFWwindow* window, int width, int height);
+		static void windowResizeCallbackStatic(GLFWwindow* window, int width, int height);
+		void windowResizeCallback(GLFWwindow* window, int width, int height);
 		void processInputs();
 	};
 

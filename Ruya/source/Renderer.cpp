@@ -12,8 +12,7 @@ using std::list;
 ruya::Renderer::Renderer(Shader& shader, Window& window, Camera& camera)
 	: mIndexVertexAttrib(0), mIndexTextureAttrib(1), mShader(shader), mWindow(window), mCamera(camera)
 {
-	mProjection = mat4(1.0f);
-	mProjection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
+	
 	
 	// enable depth test
 	mShader.use();
@@ -28,7 +27,8 @@ void ruya::Renderer::render_scene(Scene& scene)
 	
 
 	// get view-projection matrix
-	mat4 VP = mProjection * mCamera.get_view_matrix();
+	mat4 projection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
+	mat4 VP = projection * mCamera.get_view_matrix();
 
 	// render scene objects
 	list<Object*>& objects = scene.get_scene_objects();
@@ -96,7 +96,8 @@ void ruya::Renderer::render_object(Object& obj)
 	}
 
 	// calc model-view-projection matrix
-	mat4 MVP = mProjection * mCamera.get_view_matrix() * obj.model_matrix();
+	mat4 projection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
+	mat4 MVP = projection * mCamera.get_view_matrix() * obj.model_matrix();
 	mShader.setMatrix4D("MVP", MVP);
 
 	// Bind the vao and render

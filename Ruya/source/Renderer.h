@@ -74,7 +74,6 @@ namespace ruya
 		Shader& mShader;
 		Window& mWindow;
 		Camera& mCamera;
-		mat4 mProjection;
 
 		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;
 		GLuint mIndexVertexAttrib = 0; // indexes of the attributes used in the vertex shader

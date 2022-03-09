@@ -16,7 +16,8 @@ ruya::Window::Window(int width, int height)
 	glViewport(0, 0, 1480, 720);
 
 	// callback when window is resized
-	glfwSetFramebufferSizeCallback(mGLFWwindow, windowResizeCallback); // when the window gets resized, the viewport has to be updated
+	glfwSetWindowUserPointer(mGLFWwindow, this);
+	glfwSetFramebufferSizeCallback(mGLFWwindow, windowResizeCallbackStatic); // when the window gets resized, the viewport has to be updated
 }
 
 ruya::Window::~Window()
@@ -59,9 +60,16 @@ void ruya::Window::remove_event_callback(VOID_FPTR callback)
 	}
 }
 
+void ruya::Window::windowResizeCallbackStatic(GLFWwindow* window, int width, int height)
+{
+	static_cast<Window*>(glfwGetWindowUserPointer(window))->windowResizeCallback(window, width, height);
+}
+
 void ruya::Window::windowResizeCallback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+	mWidth = width;
+	mHeight = height;
 }
 
 
