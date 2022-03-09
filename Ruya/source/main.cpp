@@ -176,15 +176,26 @@ void mainloop(ruya::Window& window)
 	window.add_event_callback(GLFW_KEY_RIGHT, &turn_right);
 
 	// the object to render
-	Square square1;
-	Square square2;
-	shared_ptr<Texture> tex1 = std::make_shared<Texture>("resources/Wood049_1K-PNG/Wood049_1K_Color.png");
-	shared_ptr<Texture> tex2 = std::make_shared<Texture>("resources/Leather026_1K-PNG/Leather026_1K_Color.png");
-	square1.set_texture(tex1);
-	square2.set_texture(tex2);
+	vector< shared_ptr<Texture>> textures;
+	textures.push_back(std::make_shared<Texture>("resources/Wood049_1K-PNG/Wood049_1K_Color.png"));
+	textures.push_back(std::make_shared<Texture>("resources/Leather026_1K-PNG/Leather026_1K_Color.png"));
+	textures.push_back(std::make_shared<Texture>("resources/Marble023_1K-PNG/Marble023_1K_Color.png"));
+	textures.push_back(std::make_shared<Texture>("resources/Metal032_1K-PNG/Metal032_1K_Color.png"));
+	textures.push_back(std::make_shared<Texture>("resources/Fabric004_1K-PNG/Fabric004_1K_Color.png"));
 
-	Cube cube1;
-	cube1.set_texture(tex1);
+	vector<Cube> cubes;
+	int r = 3;
+	float d = 1.75f;
+	for (int i = -r; i <= r; i++)
+	{
+		for (int j = -r; j <= r; j++)
+		{
+			Cube newCube;
+			newCube.set_position(vec3(d * i, d * j, 0.0f));
+			newCube.set_texture(textures[i%textures.size()]);
+			cubes.push_back(newCube);
+		}
+	}
 
 	// activate the shader program and the vertex attribute settings
 	shader.use();
@@ -200,18 +211,22 @@ void mainloop(ruya::Window& window)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 		// some transforming
-		square1.set_rotation(glm::vec4(0.0f, 0.0f, 1.0f, glm::degrees((float)glfwGetTime())));
-		square1.set_position(glm::vec3(2.5f, -2.5f, 0.0f));
-		
-		float scaleAmount = static_cast<float>(sin(glfwGetTime()));
-		square2.set_position(glm::vec3(-2.5f, 2.5f, 0.0f));
-		square2.set_scale(glm::vec3(scaleAmount, scaleAmount, 0.f));
+		float xs = 0.45f; // rotation speeds
+		float ys = 0.90f;
+		float zs = 0.15f;
+
+		for (Cube & cube : cubes)
+		{
+			float degrees = glm::degrees((float)glfwGetTime());
+			cube.set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
+		}
 
 		// RENDER!!!
-		renderer.render_object(square1);
-		renderer.render_object(square2);
-		renderer.render_object(cube1);
-
+		for (Cube c : cubes)
+		{
+			renderer.render_object(c);
+		}
+		
 		// update frame => swaps buffers = starts showing newly rendered buffer
 		// + checks for input events and calls handlers
 		window.update();

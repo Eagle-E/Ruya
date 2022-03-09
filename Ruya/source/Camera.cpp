@@ -8,8 +8,14 @@ ruya::Camera::Camera() : mHorizontalAngle(0), mVerticalAngle(0)
     mCamUp = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
-void ruya::Camera::update_angle(float dx, float dy)
+
+/*
+* Update the angle at which the camera is looking at
+*/
+void ruya::Camera::update_angle(float horizontalAngle, float verticalAngle)
 {
+    float dx = horizontalAngle;
+    float dy = verticalAngle;
     if (dx == 0 && dy == 0)
         return;
 

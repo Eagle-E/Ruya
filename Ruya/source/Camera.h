@@ -31,7 +31,7 @@ namespace ruya
         glm::vec3 get_cam_front() const;
 
     private:
-        void calculate_movement(float& dx, float& dy);
+        void calculate_movement(float& horizontalAngle, float& verticalAngle);
 
         glm::vec3 mCamPos;  // cam position on world
         glm::vec3 mCamUp;   // necessary vector for the calculation of the camview
@@ -40,7 +40,6 @@ namespace ruya
         float mCamSpeed = 0.01f;
 
         // camera constants
-        const short CAM_START_HIGHT = 6;
         const double MAX_VERTICAL_ANGLE = M_PI/3, MIN_VERTICAL_ANGLE = -MAX_VERTICAL_ANGLE; //radians
         const double MAX_HORIZONTAL_ANGLE = 2*M_PI, MIN_HORIZONTAL_ANGLE = -MAX_HORIZONTAL_ANGLE; //radians
         const unsigned int SENSITIVITY = 2000; //higher number -> lower sensitivity
