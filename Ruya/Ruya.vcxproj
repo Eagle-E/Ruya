@@ -169,6 +169,7 @@
     <ClCompile Include="source\Window.cpp" />
     <ClCompile Include="source\Shader.cpp" />
     <ClCompile Include="source\Texture.cpp" />
+    <ClCompile Include="source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Cube.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="source\Window.h" />
     <ClInclude Include="source\Shader.h" />
     <ClInclude Include="source\Texture.h" />
+    <ClInclude Include="source\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader_file_extensions.txt" />
@@ -190,6 +192,9 @@
   <ItemGroup>
     <None Include="source\shaders\fragment_shader.frag" />
     <None Include="source\shaders\vertex_shader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\awesomeface.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

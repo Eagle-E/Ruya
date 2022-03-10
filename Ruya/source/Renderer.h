@@ -79,14 +79,13 @@ namespace ruya
 		GLuint mIndexVertexAttrib = 0; // indexes of the attributes used in the vertex shader
 		GLuint mIndexTextureAttrib = 1;
 		TextureSlotManager mSlotManager;
-		
 	};
 }
 
 #endif
 
 
-// LOW_PRIORITY LOCK
+// LOW_PRIORITY LOCK PROBLEM DESCRIPTION
 /*
 *		Suppose you want to render a million pairs of objects. You render the first obj
 *		of the pair then the second. The texture of the first one will get the last slot

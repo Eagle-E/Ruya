@@ -20,6 +20,7 @@
 #include "Texture.h"
 #include "Camera.h"
 #include "Cube.h"
+#include "Timer.h"
 
 // namespace qualifiers
 using std::vector;
@@ -142,6 +143,7 @@ void turn_down()
 
 void mainloop(ruya::Window& window)
 {
+
 	// create the shader program
 	Shader shader;
 	try
@@ -201,11 +203,13 @@ void mainloop(ruya::Window& window)
 	shader.use();
 	
 	glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
-	double lastTime = glfwGetTime();
-	double t0 = lastTime;
-	int c = 0;
+	ruya::Timer timerFPS, timerOutput; 
+	timerOutput.start();
+
 	while (!window.shouldClose())
 	{
+		timerFPS.start();
+		
 		// change window color
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -232,21 +236,15 @@ void mainloop(ruya::Window& window)
 		window.update();
 
 		// calc FPS
-		double newTime = glfwGetTime();
-		double delta = newTime - lastTime;
-		double fps = 1 / delta * 1000;
-		//std::cout << fps << " fps\n";
-		lastTime = newTime;
-		delta_seconds = delta;
+		timerFPS.stop();
+		double frameTime = timerFPS.elapsed_time_s();
+		int fps = 1 / frameTime;
+		//double fps = frameTime;
 
-		double delta2 = newTime - t0;
-		if (delta2 < 1)
-			c++;
-		else
+		if (timerOutput.elapsed_time_s() > 1.0)
 		{
-			std::cout << c << " fps\n";
-			t0 = newTime;
-			c = 0;
+			std::cout << fps << " fps\tElapsed time: " << timerOutput.time_since_creation_s() << "s\n";
+			timerOutput.start();
 		}
 	}
 }
