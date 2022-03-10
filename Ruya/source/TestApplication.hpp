@@ -217,9 +217,14 @@ namespace ruya
 			}
 
 			// MOUSE MOVEMENT
+			update_camera_look_direction();
+		}
+
+		void update_camera_look_direction()
+		{
 			// get new pos
-			dvec2 pos;	
-			glfwGetCursorPos(glfwWindow, &(pos.x), &(pos.y));
+			dvec2 pos;
+			glfwGetCursorPos(mWindow.get_GLFW_window(), &(pos.x), &(pos.y));
 
 			// init mouse pos if this is the first time
 			if (-1 <= mOldMousePos.x && mOldMousePos.x <= -0.95
