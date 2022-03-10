@@ -1,9 +1,17 @@
 #include "Window.h"
 #include <iostream>
+#include <exception>
 
 ruya::Window::Window(int width, int height)
 	: mWidth(width), mHeight(height)
 {
+	// Hint windowing system the version of opengl used. This code is tested on gtx 1050m which supports
+			// opengl 4.6 at the moment.
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	mGLFWwindow = glfwCreateWindow(width, height, "opengl window", nullptr, nullptr);
 	if (mGLFWwindow == nullptr)
 	{
@@ -12,12 +20,20 @@ ruya::Window::Window(int width, int height)
 		return;
 	}
 
+	make_context_current();
+
+	// init functions pointers to opengl functions
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		throw std::exception("Failed to initialize GLAD (which is responsible for the opengl function pointers)");
+	}
+
 	// opengl settings
-	glViewport(0, 0, 1480, 720);
+	glViewport(0, 0, width, height);
 
 	// callback when window is resized
 	glfwSetWindowUserPointer(mGLFWwindow, this);
-	glfwSetFramebufferSizeCallback(mGLFWwindow, windowResizeCallbackStatic); // when the window gets resized, the viewport has to be updated
+	glfwSetFramebufferSizeCallback(mGLFWwindow, resize_callback_static); // when the window gets resized, the viewport has to be updated
 }
 
 ruya::Window::~Window()
@@ -25,7 +41,7 @@ ruya::Window::~Window()
 	glfwDestroyWindow(mGLFWwindow);
 }
 
-GLFWwindow* ruya::Window::getGLFWWindowObj()
+GLFWwindow* ruya::Window::get_GLFW_window()
 {
 	return mGLFWwindow;
 }
@@ -37,7 +53,7 @@ void ruya::Window::update()
 
 	// check for events
 	glfwPollEvents(); // check if there are any events
-	processInputs();
+	process_inputs();
 }
 
 void ruya::Window::add_event_callback(int glfwEventID, VOID_FPTR callback)
@@ -60,12 +76,12 @@ void ruya::Window::remove_event_callback(VOID_FPTR callback)
 	}
 }
 
-void ruya::Window::windowResizeCallbackStatic(GLFWwindow* window, int width, int height)
+void ruya::Window::resize_callback_static(GLFWwindow* window, int width, int height)
 {
-	static_cast<Window*>(glfwGetWindowUserPointer(window))->windowResizeCallback(window, width, height);
+	static_cast<Window*>(glfwGetWindowUserPointer(window))->resize_callback(window, width, height);
 }
 
-void ruya::Window::windowResizeCallback(GLFWwindow* window, int width, int height)
+void ruya::Window::resize_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 	mWidth = width;
@@ -73,7 +89,7 @@ void ruya::Window::windowResizeCallback(GLFWwindow* window, int width, int heigh
 }
 
 
-void ruya::Window::processInputs()
+void ruya::Window::process_inputs()
 {		
 	// Close window if ESC key is pressed
 	if (glfwGetKey(mGLFWwindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)

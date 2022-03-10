@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <unordered_map>
 #include <list>
@@ -23,16 +24,16 @@ namespace ruya
 		~Window();
 
 		// GETTERS & SETTERS
-		GLFWwindow* getGLFWWindowObj();
+		GLFWwindow* get_GLFW_window();
 		int height() { return mHeight; }
 		int width() { return mWidth; }
 		float aspect_ratio() { return static_cast<float>(mWidth) / static_cast<float>(mHeight); }
 
 		// QUERRIES
-		bool shouldClose() { return glfwWindowShouldClose(mGLFWwindow); }
+		bool should_close() { return glfwWindowShouldClose(mGLFWwindow); }
 
 		// MANIPULATORS
-		void makeContextCurrent() { glfwMakeContextCurrent(mGLFWwindow); }
+		void make_context_current() { glfwMakeContextCurrent(mGLFWwindow); }
 		void update();
 		void add_event_callback(int glfwEventID, VOID_FPTR callback);
 		void remove_event_callback(VOID_FPTR callback);
@@ -52,9 +53,9 @@ namespace ruya
 		unordered_map<int, list<VOID_FPTR>> mEventCallbackMap;
 
 		// PRIVATE FUNCTIONS
-		static void windowResizeCallbackStatic(GLFWwindow* window, int width, int height);
-		void windowResizeCallback(GLFWwindow* window, int width, int height);
-		void processInputs();
+		static void resize_callback_static(GLFWwindow* window, int width, int height);
+		void resize_callback(GLFWwindow* window, int width, int height);
+		void process_inputs();
 	};
 
 

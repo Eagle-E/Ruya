@@ -1,0 +1,244 @@
+#ifndef TEST_APPLICATION_H
+#define TEST_APPLICATION_H
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <exception>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
+#include "stb_image.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <memory>
+
+#include "Application.h"
+#include "Window.h"
+#include "Shader.h"
+#include "Object.h"
+#include "Square.h"
+#include "Mesh.h"
+#include "Renderer.h"
+#include "Texture.h"
+#include "Camera.h"
+#include "Cube.h"
+#include "Timer.h"
+
+using std::vector;
+using glm::vec3;		using glm::vec2;		using glm::dvec2;
+using ruya::Square;		using ruya::Shader;
+using ruya::Mesh;		using ruya::Renderer;
+using ruya::Texture;	using ruya::Camera;
+using ruya::Cube;		using ruya::Timer;
+
+namespace ruya
+{
+	class TestApplication : public Application
+	{
+	private: // VARIABLES
+		Camera mCamera;
+		Timer mFrameTimer;
+		Window& mWindow;
+		dvec2 mOldMousePos;
+
+	public: // FUNCTIONS
+		/*** CONSTRUCT ***/
+		TestApplication(Window& window) : mWindow(window), mOldMousePos(-1.0, -1.0)
+		{
+			glfwSetInputMode(window.get_GLFW_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+
+		/*** DESTRUCT ***/
+		~TestApplication()
+		{
+			glfwTerminate(); // clean up all reasources allocated by glfw.
+		}
+
+
+
+		/*** MAINLOOP ***/
+		void run()
+		{
+			// create the shader program
+			Shader shader;
+			try
+			{
+				shader.setShaders("source/shaders/vertex_shader.vert", "source/shaders/fragment_shader.frag");
+			}
+			catch (std::exception e)
+			{
+				std::cerr << e.what() << std::endl;
+				return;
+			}
+			shader.use();
+
+			// init renderer
+			//Camera camera;
+			Renderer renderer(shader, mWindow, mCamera);
+			
+			// the object to render
+			vector< shared_ptr<Texture>> textures;
+			textures.push_back(std::make_shared<Texture>("resources/Wood049_1K-PNG/Wood049_1K_Color.png"));
+			textures.push_back(std::make_shared<Texture>("resources/Leather026_1K-PNG/Leather026_1K_Color.png"));
+			textures.push_back(std::make_shared<Texture>("resources/Marble023_1K-PNG/Marble023_1K_Color.png"));
+			textures.push_back(std::make_shared<Texture>("resources/Metal032_1K-PNG/Metal032_1K_Color.png"));
+			textures.push_back(std::make_shared<Texture>("resources/Fabric004_1K-PNG/Fabric004_1K_Color.png"));
+
+			vector<Cube> cubes;
+			int r = 3;
+			float d = 1.75f;
+			for (int i = -r; i <= r; i++)
+			{
+				for (int j = -r; j <= r; j++)
+				{
+					Cube newCube;
+					newCube.set_position(vec3(d * i, d * j, 0.0f));
+					newCube.set_texture(textures[i % textures.size()]);
+					cubes.push_back(newCube);
+				}
+			}
+
+			// activate the shader program and the vertex attribute settings
+			shader.use();
+
+			glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
+			ruya::Timer timerOutput;
+			timerOutput.start();
+
+			while (!mWindow.should_close())
+			{
+				mFrameTimer.start();
+				// change window color
+				glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+				// some transforming
+				float xs = 0.45f; // rotation speeds
+				float ys = 0.90f;
+				float zs = 0.15f;
+
+				for (Cube& cube : cubes)
+				{
+					float degrees = glm::degrees((float)glfwGetTime());
+					cube.set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
+				}
+
+				// RENDER!!!
+				for (Cube c : cubes)
+				{
+					renderer.render_object(c);
+				}
+
+				// update frame => swaps buffers = starts showing newly rendered buffer
+				// + checks for input events and calls handlers
+				mWindow.update();
+
+				// calc FPS
+				mFrameTimer.stop();
+				double frameTime = mFrameTimer.elapsed_time_s();
+				double fps = 1 / frameTime;
+				//double fps = frameTime;
+
+				if (timerOutput.elapsed_time_s() > 1.0)
+				{
+					std::cout << fps << " fps"
+						<< "\tElapsed time: " << timerOutput.time_since_creation_s() << "s" 
+						<< "\tmouse pos: ("<< mOldMousePos.x <<","<< mOldMousePos.y <<")\n";
+					timerOutput.start();
+				}
+
+				poll_events();
+			}
+		}
+		
+		void poll_events()
+		{
+			GLFWwindow* glfwWindow = mWindow.get_GLFW_window();
+			
+			// move camera forward/backward/left/right perpendicular with the xz plane
+			// move camera up/down along y-axis
+			float moveSpeed = 8.0f; // units per second
+			float dt = mFrameTimer.elapsed_time_s();
+
+			if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)
+			{
+				vec3 direction = mCamera.get_cam_front();
+				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
+				vec3 pos = mCamera.position();
+				pos.x += moveDirection.x * moveSpeed * dt;
+				pos.z += moveDirection.y * moveSpeed * dt;
+				mCamera.set_position(pos);
+			}
+
+			if (glfwGetKey(glfwWindow, GLFW_KEY_S) == GLFW_PRESS)
+			{
+				vec3 direction = mCamera.get_cam_front();
+				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
+				vec3 pos = mCamera.position();
+				pos.x -= moveDirection.x * moveSpeed * dt;
+				pos.z -= moveDirection.y * moveSpeed * dt;
+				mCamera.set_position(pos);
+			}
+
+			if (glfwGetKey(glfwWindow, GLFW_KEY_A) == GLFW_PRESS)
+			{
+				vec3 direction = mCamera.get_cam_front();
+				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
+				moveDirection = vec2(moveDirection.y, -moveDirection.x); // turn clockwise 90deg from forward direction
+				vec3 pos = mCamera.position();
+				pos.x += moveDirection.x * moveSpeed * dt;
+				pos.z += moveDirection.y * moveSpeed * dt;
+				mCamera.set_position(pos);
+			}
+
+			if (glfwGetKey(glfwWindow, GLFW_KEY_D) == GLFW_PRESS)
+			{
+				vec3 direction = mCamera.get_cam_front();
+				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
+				moveDirection = vec2(-moveDirection.y, moveDirection.x); // turn clockwise 90deg from forward direction
+				vec3 pos = mCamera.position();
+				pos.x += moveDirection.x * moveSpeed * dt;
+				pos.z += moveDirection.y * moveSpeed * dt;
+				mCamera.set_position(pos);
+			}
+
+			if (glfwGetKey(glfwWindow, GLFW_KEY_SPACE) == GLFW_PRESS)
+			{
+				vec3 pos = mCamera.position();
+				pos.y += moveSpeed * mFrameTimer.elapsed_time_s();
+				mCamera.set_position(pos);
+			}
+
+			if (glfwGetKey(glfwWindow, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+			{
+				vec3 pos = mCamera.position();
+				pos.y -= moveSpeed * mFrameTimer.elapsed_time_s();
+				mCamera.set_position(pos);
+			}
+
+			// MOUSE MOVEMENT
+			// get new pos
+			dvec2 pos;	
+			glfwGetCursorPos(glfwWindow, &(pos.x), &(pos.y));
+
+			// init mouse pos if this is the first time
+			if (-1 <= mOldMousePos.x && mOldMousePos.x <= -0.95
+				&& -1 <= mOldMousePos.y && mOldMousePos.y <= -0.95)
+			{
+				mOldMousePos = pos;
+			}
+
+			// movement difference
+			dvec2 deltaPos = pos - mOldMousePos;
+			//deltaPos.y *= -1; // mouse y is negative upwards, flip y-axis
+
+			// turn camera
+			double turnSpeed = 0.0005;
+			mCamera.update_angle(deltaPos.x * turnSpeed, deltaPos.y * turnSpeed);
+
+			mOldMousePos = pos;
+		}
+	};
+}
+
+#endif

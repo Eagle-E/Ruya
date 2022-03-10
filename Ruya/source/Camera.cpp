@@ -93,6 +93,11 @@ glm::vec3 ruya::Camera::get_cam_front() const
     return mCamFront;
 }
 
+glm::vec3 ruya::Camera::get_cam_up() const
+{
+    return mCamUp;
+}
+
 
 glm::vec3 ruya::Camera::position() const
 {

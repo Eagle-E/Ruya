@@ -2,9 +2,11 @@
 
 #include <iostream>
 
-ruya::Timer::Timer()
+ruya::Timer::Timer(bool start)
 	: mTStart(steady_clock::now()), mTStop(steady_clock::now()), mTCreation(steady_clock::now())
 {
+	if (start)
+		this->start();
 }
 
 void ruya::Timer::start()

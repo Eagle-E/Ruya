@@ -13,7 +13,7 @@ namespace ruya
 	class Timer
 	{
 	public:
-		Timer();
+		Timer(bool start = false);
 		void start();
 		void stop();
 		double elapsed_time_s() const;

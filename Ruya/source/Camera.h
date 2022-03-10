@@ -16,6 +16,7 @@ namespace ruya
         void update_angle(float dx, float dy);
 
         glm::vec3 position() const;
+        void set_position(const glm::vec3& position) { mCamPos = position; }
 
         float get_horizontal_angle() const;
         float get_vertical_angle() const;
@@ -29,6 +30,7 @@ namespace ruya
         void go_down();
 
         glm::vec3 get_cam_front() const;
+        glm::vec3 get_cam_up() const;
 
     private:
         void calculate_movement(float& horizontalAngle, float& verticalAngle);
