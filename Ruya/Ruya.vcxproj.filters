@@ -138,12 +138,15 @@
     <Text Include="shader_file_extensions.txt">
       <Filter>Etc</Filter>
     </Text>
+    <Text Include="icosahedron_model.txt">
+      <Filter>Model\Shapes</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="source\shaders\vertex_no_tex.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="source\shaders\fragment_no_tex.frag">
+    <None Include="source\shaders\fragment_basic_lighting.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="source\shaders\fragment_shader.frag">
@@ -152,6 +155,7 @@
     <None Include="source\shaders\vertex_shader.vert">
       <Filter>Shaders\old</Filter>
     </None>
+    <None Include="source\shaders\fragment_light_source.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\awesomeface.png">

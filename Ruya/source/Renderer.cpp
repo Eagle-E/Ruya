@@ -27,8 +27,8 @@ void ruya::Renderer::render_scene(Scene& scene)
 	
 
 	// get view-projection matrix
-	mat4 projection = glm::perspective(glm::radians(mCamera.get_fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
-	mat4 VP = projection * mCamera.get_view_matrix();
+	mat4 projection = glm::perspective(glm::radians(mCamera.fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
+	mat4 VP = projection * mCamera.view_matrix();
 
 	// render scene objects
 	list<Object*>& objects = scene.get_scene_objects();
@@ -95,9 +95,13 @@ void ruya::Renderer::render_object(Object& obj)
 		mShader.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
 	}
 
+	// pass the color
+	mShader.setVec3("objColor", obj.color());
+	mShader.setVec3("globalLightColor", vec3(1.0f, 1.0f, 1.0f));
+
 	// calc model-view-projection matrix
-	mat4 projection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
-	mat4 MVP = projection * mCamera.get_view_matrix() * obj.model_matrix();
+	mat4 projection = glm::perspective(glm::radians(mCamera.fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
+	mat4 MVP = projection * mCamera.view_matrix() * obj.model_matrix();
 	mShader.setMatrix4D("MVP", MVP);
 
 	// Bind the vao and render
@@ -136,9 +140,9 @@ GLuint ruya::Renderer::buffer_mesh(const Mesh& mesh)
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format
 	glVertexAttribPointer(mIndexVertexAttrib, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
-	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(mIndexVertexAttrib);
 	glVertexAttribPointer(mIndexTextureAttrib, 2, GL_FLOAT, GL_FALSE, 0, (void*)(mesh.size_vertices())); // texture data
-	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(mIndexTextureAttrib);
 
 	return vaoID;
 }

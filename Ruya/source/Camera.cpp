@@ -34,21 +34,41 @@ void ruya::Camera::update_angle(float horizontalAngle, float verticalAngle)
     this->mCamFront.y = sin(mVerticalAngle);
 }
 
-float ruya::Camera::get_horizontal_angle() const
+float ruya::Camera::horizontal_angle() const
 {
     return mHorizontalAngle;
 }
 
-float ruya::Camera::get_vertical_angle() const
+float ruya::Camera::vertical_angle() const
 {
     return mVerticalAngle;
 }
 
-glm::mat4 ruya::Camera::get_view_matrix() const
+glm::mat4 ruya::Camera::view_matrix() const
 {
     return glm::lookAt(mCamPos, mCamPos + mCamFront, mCamUp);
 }
 
+
+glm::vec3 ruya::Camera::cam_front() const
+{
+    return mCamFront;
+}
+
+glm::vec3 ruya::Camera::cam_up() const
+{
+    return mCamUp;
+}
+
+
+glm::vec3 ruya::Camera::position() const
+{
+    return mCamPos;
+}
+
+
+
+/*
 void ruya::Camera::go_forward()
 {
     mCamPos = mCamPos + mCamFront * mCamSpeed;
@@ -80,26 +100,5 @@ void ruya::Camera::go_down()
     glm::vec3 right = glm::cross(mCamFront, mCamUp);
     mCamPos = mCamPos - glm::normalize(glm::cross(right, mCamFront)) * mCamSpeed;
 }
+*/
 
-void ruya::Camera::calculate_movement(float& dx, float& dy)
-{
-    dx = sin(-mHorizontalAngle) * SENSITIVITY;
-    dy = sin(mVerticalAngle) * SENSITIVITY;
-//    dz = cos(mHorizontalAngle) * SENSITIVITY;
-}
-
-glm::vec3 ruya::Camera::get_cam_front() const
-{
-    return mCamFront;
-}
-
-glm::vec3 ruya::Camera::get_cam_up() const
-{
-    return mCamUp;
-}
-
-
-glm::vec3 ruya::Camera::position() const
-{
-    return mCamPos;
-}

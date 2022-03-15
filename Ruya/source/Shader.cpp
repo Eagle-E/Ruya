@@ -89,6 +89,12 @@ void ruya::Shader::setMatrix4D(const std::string& uniformName, const glm::mat4& 
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void ruya::Shader::setVec3(const std::string& uniformName, const glm::vec3& vec)
+{
+	unsigned int loc = glGetUniformLocation(mID, uniformName.c_str());
+	glUniform3f(loc, vec.x, vec.y, vec.z);
+}
+
 /*####################################################################################################################################
 *
 *	Helper Functions

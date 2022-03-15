@@ -191,10 +191,12 @@
     <ClInclude Include="source\TestApplication.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="icosahedron_model.txt" />
     <Text Include="shader_file_extensions.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\fragment_no_tex.frag" />
+    <None Include="source\shaders\fragment_basic_lighting.frag" />
+    <None Include="source\shaders\fragment_light_source.frag" />
     <None Include="source\shaders\fragment_shader.frag" />
     <None Include="source\shaders\vertex_shader.vert" />
     <None Include="source\shaders\vertex_no_tex.vert" />

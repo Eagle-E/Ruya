@@ -17,28 +17,25 @@ namespace ruya
 
         // GETTERS
         glm::vec3 position() const;
-        float get_fov() const { return mFov; }
-        float get_horizontal_angle() const;
-        float get_vertical_angle() const;
-        glm::mat4 get_view_matrix() const;
+        float fov() const { return mFov; }
+        float horizontal_angle() const;
+        float vertical_angle() const;
+        glm::mat4 view_matrix() const;
+        glm::vec3 cam_front() const;
+        glm::vec3 cam_up() const;
 
         // SETTERS & MANIPULATORS
         void set_position(const glm::vec3& position) { mCamPos = position; }
         void set_fov(float fov) { mFov = fov; }
 
-        void go_forward();
-        void go_backward();
-        void go_right();
-        void go_left();
-        void go_up();
-        void go_down();
-
-        glm::vec3 get_cam_front() const;
-        glm::vec3 get_cam_up() const;
+        //void go_forward();
+        //void go_backward();
+        //void go_right();
+        //void go_left();
+        //void go_up();
+        //void go_down();
 
     private:
-        void calculate_movement(float& horizontalAngle, float& verticalAngle);
-
         glm::vec3 mCamPos;  // cam position on world
         glm::vec3 mCamUp;   // necessary vector for the calculation of the camview
         glm::vec3 mCamFront; // vector pointing the direction the cam is faced

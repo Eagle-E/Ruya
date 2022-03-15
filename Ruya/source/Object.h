@@ -57,8 +57,8 @@ namespace ruya
 		// GETTERS & QUERIES
 		shared_ptr<Mesh> mesh() { return mMesh; }
 		shared_ptr<Texture> texture() { return mTexture; }
-
 		mat4 model_matrix();
+		vec3 color() const { return mColor; }
 
 		// MANIPULATORS
 		inline void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }

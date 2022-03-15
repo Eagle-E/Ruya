@@ -66,7 +66,7 @@ namespace ruya
 			try
 			{
 				//shader.setShaders("source/shaders/vertex_shader.vert", "source/shaders/fragment_shader.frag");
-				shader.setShaders("source/shaders/vertex_no_tex.vert", "source/shaders/fragment_no_tex.frag");
+				shader.setShaders("source/shaders/vertex_no_tex.vert", "source/shaders/fragment_basic_lighting.frag");
 			}
 			catch (std::exception e)
 			{
@@ -88,21 +88,26 @@ namespace ruya
 			textures.push_back(std::make_shared<Texture>("resources/Fabric004_1K-PNG/Fabric004_1K_Color.png"));
 
 			vector<Cube> cubes;
-			int r = 3;
+			int radius = 3; // radius of grid, so grid will have 2r+1 cols and rows
 			float d = 1.75f;
-			for (int i = -r; i <= r; i++)
+			for (float i = -radius; i <= radius; i++)
 			{
-				for (int j = -r; j <= r; j++)
+				for (float j = -radius; j <= radius; j++)
 				{
 					Cube newCube;
-					newCube.set_position(vec3(d * i, d * j, -25.0f));
-					newCube.set_texture(textures[i % textures.size()]);
+					newCube.set_position(vec3(d * i, d * j, -5.0f));
+					float g = (i + radius) / (2 * radius) * 0.8 + 0.1; // map i and j from [-r, r] to [0.1, 0.8]
+					float b = (j + radius) / (2 * radius) * 0.8 + 0.1;
+					//float r = (b + g) / 2.0f;
+					float r = 0.0f;
+					newCube.set_color(vec3(r, g, b));
+					//newCube.set_texture(textures[i % textures.size()]);
 					cubes.push_back(newCube);
 				}
 			}
 
 			Icosahedron ico;
-			ico.print_model_data();
+			ico.set_color(vec3(1.0f, 0.5f, 0.31f));
 
 			// activate the shader program and the vertex attribute settings
 			shader.use();
@@ -131,10 +136,10 @@ namespace ruya
 				}
 
 				// RENDER!!!
-				//for (Cube c : cubes)
-				//{
-				//	renderer.render_object(c);
-				//}
+				for (Cube c : cubes)
+				{
+					renderer.render_object(c);
+				}
 
 				renderer.render_object(ico);
 
@@ -171,7 +176,7 @@ namespace ruya
 
 			if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)
 			{
-				vec3 direction = mCamera.get_cam_front();
+				vec3 direction = mCamera.cam_front();
 				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
 				vec3 pos = mCamera.position();
 				pos.x += moveDirection.x * moveSpeed * dt;
@@ -181,7 +186,7 @@ namespace ruya
 
 			if (glfwGetKey(glfwWindow, GLFW_KEY_S) == GLFW_PRESS)
 			{
-				vec3 direction = mCamera.get_cam_front();
+				vec3 direction = mCamera.cam_front();
 				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
 				vec3 pos = mCamera.position();
 				pos.x -= moveDirection.x * moveSpeed * dt;
@@ -191,7 +196,7 @@ namespace ruya
 
 			if (glfwGetKey(glfwWindow, GLFW_KEY_A) == GLFW_PRESS)
 			{
-				vec3 direction = mCamera.get_cam_front();
+				vec3 direction = mCamera.cam_front();
 				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
 				moveDirection = vec2(moveDirection.y, -moveDirection.x); // turn clockwise 90deg from forward direction
 				vec3 pos = mCamera.position();
@@ -202,7 +207,7 @@ namespace ruya
 
 			if (glfwGetKey(glfwWindow, GLFW_KEY_D) == GLFW_PRESS)
 			{
-				vec3 direction = mCamera.get_cam_front();
+				vec3 direction = mCamera.cam_front();
 				vec2 moveDirection = glm::normalize(glm::vec2(direction.x, direction.z));
 				moveDirection = vec2(-moveDirection.y, moveDirection.x); // turn clockwise 90deg from forward direction
 				vec3 pos = mCamera.position();
