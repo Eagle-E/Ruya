@@ -23,6 +23,7 @@
 #include "Camera.h"
 #include "Cube.h"
 #include "Timer.h"
+#include "Icosahedron.h"
 
 using std::vector;
 using glm::vec3;		using glm::vec2;		using glm::dvec2;
@@ -30,6 +31,7 @@ using ruya::Square;		using ruya::Shader;
 using ruya::Mesh;		using ruya::Renderer;
 using ruya::Texture;	using ruya::Camera;
 using ruya::Cube;		using ruya::Timer;
+using ruya::Icosahedron;
 
 namespace ruya
 {
@@ -63,7 +65,8 @@ namespace ruya
 			Shader shader;
 			try
 			{
-				shader.setShaders("source/shaders/vertex_shader.vert", "source/shaders/fragment_shader.frag");
+				//shader.setShaders("source/shaders/vertex_shader.vert", "source/shaders/fragment_shader.frag");
+				shader.setShaders("source/shaders/vertex_no_tex.vert", "source/shaders/fragment_no_tex.frag");
 			}
 			catch (std::exception e)
 			{
@@ -98,6 +101,9 @@ namespace ruya
 				}
 			}
 
+			Icosahedron ico;
+			ico.set_position(vec3(0.0f));
+
 			// activate the shader program and the vertex attribute settings
 			shader.use();
 
@@ -121,13 +127,16 @@ namespace ruya
 				{
 					float degrees = glm::degrees((float)glfwGetTime());
 					cube.set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
+					//ico.set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
 				}
 
 				// RENDER!!!
-				for (Cube c : cubes)
-				{
-					renderer.render_object(c);
-				}
+				//for (Cube c : cubes)
+				//{
+				//	renderer.render_object(c);
+				//}
+
+				renderer.render_object(ico);
 
 				// update frame => swaps buffers = starts showing newly rendered buffer
 				// + checks for input events and calls handlers
@@ -141,9 +150,9 @@ namespace ruya
 
 				if (timerOutput.elapsed_time_s() > 1.0)
 				{
-					std::cout << fps << " fps"
-						<< "\tElapsed time: " << timerOutput.time_since_creation_s() << "s" 
-						<< "\tmouse pos: ("<< mOldMousePos.x <<","<< mOldMousePos.y <<")\n";
+					//std::cout << fps << " fps"
+					//	<< "\tElapsed time: " << timerOutput.time_since_creation_s() << "s" 
+					//	<< "\tmouse pos: ("<< mOldMousePos.x <<","<< mOldMousePos.y <<")\n";
 					timerOutput.start();
 				}
 

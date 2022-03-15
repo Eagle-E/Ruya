@@ -24,7 +24,7 @@ ruya::Cube::~Cube()
 std::shared_ptr<Mesh> ruya::Cube::init_mesh()
 {
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
-
+	
 	mesh->vertices = {
 		// front face
 		vec3(  0.5f,  0.5f,  0.5f), // 0 rtf

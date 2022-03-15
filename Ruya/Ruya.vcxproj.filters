@@ -30,6 +30,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{3ede889f-3dd1-45a7-940c-6acbf920cd97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\old">
+      <UniqueIdentifier>{829f01a4-a866-4805-b195-dc52d1e35ad5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\glad.c">
@@ -137,11 +140,17 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\fragment_shader.frag">
+    <None Include="source\shaders\vertex_no_tex.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="source\shaders\vertex_shader.vert">
+    <None Include="source\shaders\fragment_no_tex.frag">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="source\shaders\fragment_shader.frag">
+      <Filter>Shaders\old</Filter>
+    </None>
+    <None Include="source\shaders\vertex_shader.vert">
+      <Filter>Shaders\old</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
