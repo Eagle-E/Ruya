@@ -102,7 +102,7 @@ namespace ruya
 			}
 
 			Icosahedron ico;
-			ico.set_position(vec3(0.0f));
+			ico.print_model_data();
 
 			// activate the shader program and the vertex attribute settings
 			shader.use();

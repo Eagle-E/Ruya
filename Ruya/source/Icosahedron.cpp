@@ -119,6 +119,35 @@ ruya::Icosahedron::Icosahedron()
 	set_mesh(mMesh);
 }
 
+void ruya::Icosahedron::print_model_data() const
+{
+	auto printvec = [](vec3 v)
+	{
+		std::cout << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+	};
+	auto printuvec = [](uvec3 v)
+	{
+		std::cout << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+	};
+
+	Mesh& mesh = *this->mMesh;
+	std::cout << "vertices: \n";
+	for (vec3& v : mesh.vertices)
+	{
+		std::cout << "\t";
+		printvec(v);
+		std::cout << "\n";
+	}
+	std::cout << "\n";
+	std::cout << "faces: \n";
+	for (uvec3& v : mesh.faces)
+	{
+		std::cout << "\t";
+		printuvec(v);
+		std::cout << "\n";
+	}
+}
+
 std::shared_ptr<Mesh> ruya::Icosahedron::init_mesh()
 {
 
@@ -180,9 +209,8 @@ std::shared_ptr<Mesh> ruya::Icosahedron::init_mesh()
 		{
 			insert_face_unique(mesh->faces, uvec3(i, pair.x, pair.y));
 		}
+
 	}
-
-
 
 	return mesh;
 }
