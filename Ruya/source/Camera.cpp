@@ -1,7 +1,7 @@
 #include "camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-ruya::Camera::Camera() : mHorizontalAngle(0), mVerticalAngle(0)
+ruya::Camera::Camera() : mHorizontalAngle(0), mVerticalAngle(0), mFov(45.0f)
 {
     mCamPos = glm::vec3(0.0f, 0.0f, 10.0f);
     mCamFront = glm::vec3(0.0f, 0, -1.0f);

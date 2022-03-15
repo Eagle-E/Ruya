@@ -77,6 +77,9 @@
     <ClCompile Include="source\Timer.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="source\Icosahedron.cpp">
+      <Filter>Model\Shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Window.h">
@@ -123,6 +126,9 @@
     </ClInclude>
     <ClInclude Include="source\TestApplication.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Icosahedron.h">
+      <Filter>Model\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

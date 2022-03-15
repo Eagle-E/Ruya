@@ -15,12 +15,16 @@ namespace ruya
 
         void update_angle(float dx, float dy);
 
+        // GETTERS
         glm::vec3 position() const;
-        void set_position(const glm::vec3& position) { mCamPos = position; }
-
+        float get_fov() const { return mFov; }
         float get_horizontal_angle() const;
         float get_vertical_angle() const;
         glm::mat4 get_view_matrix() const;
+
+        // SETTERS & MANIPULATORS
+        void set_position(const glm::vec3& position) { mCamPos = position; }
+        void set_fov(float fov) { mFov = fov; }
 
         void go_forward();
         void go_backward();
@@ -39,7 +43,10 @@ namespace ruya
         glm::vec3 mCamUp;   // necessary vector for the calculation of the camview
         glm::vec3 mCamFront; // vector pointing the direction the cam is faced
         float mHorizontalAngle, mVerticalAngle;
+        float mFov;
+        
         float mCamSpeed = 0.01f;
+
 
         // camera constants
         const double MAX_VERTICAL_ANGLE = M_PI/3, MIN_VERTICAL_ANGLE = -MAX_VERTICAL_ANGLE; //radians

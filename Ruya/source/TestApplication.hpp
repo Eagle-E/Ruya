@@ -92,7 +92,7 @@ namespace ruya
 				for (int j = -r; j <= r; j++)
 				{
 					Cube newCube;
-					newCube.set_position(vec3(d * i, d * j, 0.0f));
+					newCube.set_position(vec3(d * i, d * j, -25.0f));
 					newCube.set_texture(textures[i % textures.size()]);
 					cubes.push_back(newCube);
 				}

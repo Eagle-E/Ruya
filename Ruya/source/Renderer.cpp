@@ -27,7 +27,7 @@ void ruya::Renderer::render_scene(Scene& scene)
 	
 
 	// get view-projection matrix
-	mat4 projection = glm::perspective(glm::radians(45.0f), mWindow.aspect_ratio(), 0.1f, 300.0f);
+	mat4 projection = glm::perspective(glm::radians(mCamera.get_fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
 	mat4 VP = projection * mCamera.get_view_matrix();
 
 	// render scene objects
