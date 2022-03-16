@@ -16,12 +16,15 @@ namespace ruya
 	{
 		vector<vec3> vertices;
 		vector<uvec3> faces;
+		vector<vec3> normals;
 		vector<vec2> textureCoordinates;
 
 		long int size() const;
 		long int size_vertices() const;
 		long int size_faces() const;
+		long int size_normals() const;
 		long int size_texture_coords() const;
+		void update_surface_normals();
 	};
 }
 

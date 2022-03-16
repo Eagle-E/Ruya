@@ -12,6 +12,7 @@ ruya::Square::Square()
 {
 	// pass pointer to parent class
 	set_mesh(mMesh);
+	mMesh->update_surface_normals();
 }
 
 ruya::Square::~Square()

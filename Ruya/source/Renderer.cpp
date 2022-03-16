@@ -9,22 +9,22 @@
 
 using std::list;
 
-ruya::Renderer::Renderer(Shader& shader, Window& window, Camera& camera)
-	: mIndexVertexAttrib(0), mIndexTextureAttrib(1), mShader(shader), mWindow(window), mCamera(camera)
+ruya::Renderer::Renderer(Shader& shaderObjects, Shader& shaderLights, Window& window, Camera& camera)
+	: INDEX_VERTEX_ATTRIB(0), INDEX_TEXTURE_ATTRIB(1), mWindow(window), mCamera(camera),
+	mShaderObjects(shaderObjects), mShaderLights(shaderLights)
 {
 	
 	
 	// enable depth test
-	mShader.use();
+	mShaderObjects.use();
 	glEnable(GL_DEPTH_TEST);
 }
 
 void ruya::Renderer::render_scene(Scene& scene)
 {
-	// make shader current
-	mShader.use();
-
-	
+	// OBJECTS
+	// activate object shader to render objects
+	mShaderObjects.use();
 
 	// get view-projection matrix
 	mat4 projection = glm::perspective(glm::radians(mCamera.fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
@@ -34,7 +34,15 @@ void ruya::Renderer::render_scene(Scene& scene)
 	list<Object*>& objects = scene.get_scene_objects();
 	for (Object* obj : objects)
 	{
-		render_object(*obj, VP);
+		render_object(*obj, VP, **scene.get_light_sources().begin());
+	}
+
+	// LIGHT SOURCES
+	mShaderLights.use();
+	list<LightSource*> lights = scene.get_light_sources();
+	for (LightSource* light : lights)
+	{
+		render_light_source(*light, VP);
 	}
 }
 
@@ -45,35 +53,44 @@ void ruya::Renderer::render_scene(Scene& scene)
 * 
 * @pre the correct shader program needs to be made current before calling this function.
 */
-void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform)
-{
-	// TODO:	when a mesh gets deleted that is in the unordered_map, it needs to be removed.
-	//			Consider attaching a custom destroctor on the shared_ptr that is being used as
-	//			key, that will remove the 'null' shared_ptr.
-
-	// Check if the Mesh of the object already had been buffered, if not create the buffers
-	if (mMeshVaoMap.find(obj.mesh()) == mMeshVaoMap.end())
-	{
-		GLuint meshVaoID = buffer_mesh(*obj.mesh());
-		mMeshVaoMap[obj.mesh()] = meshVaoID;
-	}
-	
+void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light)
+{	
 	// Bind the textures and set their uniform location
 	if (obj.texture())
 	{
 		GLuint textureSlot = mSlotManager.bind_texture(*obj.texture());
-		mShader.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
+		mShaderObjects.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
 	}
 
-	// calc model-view-projection matrix
-	mat4 MVP = viewProjectTransform * obj.model_matrix();
-	mShader.setMatrix4D("MVP", MVP);
+	// pass the color
+	mShaderObjects.setVec3("objColor", obj.color());
+	mShaderObjects.setVec3("lightColor", light.color());
+	mShaderObjects.setVec3("lightPosition", light.position());
 
-	// Bind the vao and render
-	size_t numIndexes = obj.mesh()->faces.size() * 3;
-	glBindVertexArray(mMeshVaoMap[obj.mesh()]);
-	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
+	// calc model-view-projection matrix
+	mat4 ModelMatrix = obj.model_matrix();
+	mat4 MVP = viewProjectTransform * ModelMatrix;
+	mShaderObjects.setMatrix4D("MVP", MVP);
+	mShaderObjects.setMatrix4D("ModelMat", ModelMatrix);
+
+	// render mesh
+	draw_mesh(obj.mesh());
 }
+
+void ruya::Renderer::render_light_source(LightSource& light, const mat4& viewProjectTransform)
+{
+	// color uniform
+	mShaderLights.setVec3("objColor", light.color());
+
+	// calc model-view-projection matrix
+	mat4 MVP = viewProjectTransform * light.model().model_matrix();
+	mShaderObjects.setMatrix4D("MVP", MVP);
+
+	// render mesh
+	draw_mesh(light.model().mesh());
+}
+
+
 
 void ruya::Renderer::render_object(Object& obj)
 {
@@ -92,21 +109,42 @@ void ruya::Renderer::render_object(Object& obj)
 	if (obj.texture())
 	{
 		GLuint textureSlot = mSlotManager.bind_texture(*obj.texture());
-		mShader.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
+		mShaderObjects.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
 	}
 
 	// pass the color
-	mShader.setVec3("objColor", obj.color());
-	mShader.setVec3("globalLightColor", vec3(1.0f, 1.0f, 1.0f));
+	mShaderObjects.setVec3("objColor", obj.color());
+	mShaderObjects.setVec3("globalLightColor", vec3(1.0f, 1.0f, 1.0f));
 
 	// calc model-view-projection matrix
 	mat4 projection = glm::perspective(glm::radians(mCamera.fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
 	mat4 MVP = projection * mCamera.view_matrix() * obj.model_matrix();
-	mShader.setMatrix4D("MVP", MVP);
+	mShaderObjects.setMatrix4D("MVP", MVP);
 
 	// Bind the vao and render
-	size_t numIndexes = obj.mesh()->faces.size() * 3;
-	glBindVertexArray(mMeshVaoMap[obj.mesh()]);
+	draw_mesh(obj.mesh());
+}
+
+/*
+* Renders the given mesh by binding the vao and making the draw call.
+* Is also responsible for checking if the mesh has been buffered yet.
+* @pre the mesh must have been buffered earlier with buffer_mesh()
+*/
+void ruya::Renderer::draw_mesh(const shared_ptr<Mesh>& mesh)
+{
+	// TODO:	when a mesh gets deleted that is in the unordered_map, it needs to be removed.
+	//			Consider attaching a custom destroctor on the shared_ptr that is being used as
+	//			key, that will remove the 'null' shared_ptr.
+	
+	// Check if the Mesh of the object already had been buffered, if not create the buffers
+	if (mMeshVaoMap.find(mesh) == mMeshVaoMap.end())
+	{
+		GLuint meshVaoID = buffer_mesh(*mesh);
+		mMeshVaoMap[mesh] = meshVaoID;
+	}
+
+	size_t numIndexes = mesh->faces.size() * 3;
+	glBindVertexArray(mMeshVaoMap[mesh]);
 	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
 }
 
@@ -131,18 +169,25 @@ GLuint ruya::Renderer::buffer_mesh(const Mesh& mesh)
 
 	// vertex buffer, concatenate mesh data: first vertex data then texture data, ...
 	GLuint vboID;
+	long int sizeVert = mesh.size_vertices();
+	long int sizeNormals = mesh.size_normals();
+	long int sizeTex = mesh.size_texture_coords();
+	
 	glGenBuffers(1, &vboID); // create a buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vboID); // set buffer's type to array buffer
 	glBufferData(GL_ARRAY_BUFFER, mesh.size(), NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	glBufferSubData(GL_ARRAY_BUFFER, 0, mesh.size_vertices(), mesh.vertices.data());
-	glBufferSubData(GL_ARRAY_BUFFER, mesh.size_vertices(), mesh.size_texture_coords(), mesh.textureCoordinates.data());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeVert, mesh.vertices.data());
+	glBufferSubData(GL_ARRAY_BUFFER, sizeVert, sizeNormals, mesh.normals.data());
+	glBufferSubData(GL_ARRAY_BUFFER, sizeVert + sizeNormals, sizeTex, mesh.textureCoordinates.data());
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format
-	glVertexAttribPointer(mIndexVertexAttrib, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
-	glEnableVertexAttribArray(mIndexVertexAttrib);
-	glVertexAttribPointer(mIndexTextureAttrib, 2, GL_FLOAT, GL_FALSE, 0, (void*)(mesh.size_vertices())); // texture data
-	glEnableVertexAttribArray(mIndexTextureAttrib);
+	glVertexAttribPointer(INDEX_VERTEX_ATTRIB, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
+	glEnableVertexAttribArray(INDEX_VERTEX_ATTRIB);
+	glVertexAttribPointer(INDEX_NORMAL_ATTRIB, 3, GL_FLOAT, GL_FALSE, 0, (void*)(sizeVert)); // normal data
+	glEnableVertexAttribArray(INDEX_NORMAL_ATTRIB);
+	glVertexAttribPointer(INDEX_TEXTURE_ATTRIB, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeVert + sizeNormals)); // texture data
+	glEnableVertexAttribArray(INDEX_TEXTURE_ATTRIB);
 
 	return vaoID;
 }

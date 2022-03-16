@@ -59,6 +59,7 @@ namespace ruya
 		shared_ptr<Texture> texture() { return mTexture; }
 		mat4 model_matrix();
 		vec3 color() const { return mColor; }
+		vec3 position() const { return mPosition; }
 
 		// MANIPULATORS
 		inline void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }

@@ -7,9 +7,16 @@ int main()
 	window.make_context_current();
 	
 	ruya::TestApplication app(window);
-	app.run();
 
-	// main loop
+	try
+	{
+		app.run();
+	}
+	catch (std::exception e)
+	{
+		std::cerr << e.what() << std::endl;
+		return 1;
+	}
 	
 	return 0;
 }

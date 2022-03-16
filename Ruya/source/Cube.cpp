@@ -15,6 +15,7 @@ std::shared_ptr<Mesh> ruya::Cube::mMesh = init_mesh();
 ruya::Cube::Cube()
 {
 	set_mesh(mMesh);
+	//mMesh->update_surface_normals();
 }
 
 ruya::Cube::~Cube()
@@ -113,6 +114,44 @@ std::shared_ptr<Mesh> ruya::Cube::init_mesh()
 
 		uvec3(20, 22, 23), // left
 		uvec3(20, 21, 22),
+	};
+
+	mesh->normals = {
+		// front
+		vec3(0.0f, 0.0f, 1.0f),
+		vec3(0.0f, 0.0f, 1.0f),
+		vec3(0.0f, 0.0f, 1.0f),
+		vec3(0.0f, 0.0f, 1.0f),
+
+		// top 
+		vec3(0.0f, 1.0f, 0.0f),
+		vec3(0.0f, 1.0f, 0.0f),
+		vec3(0.0f, 1.0f, 0.0f),
+		vec3(0.0f, 1.0f, 0.0f),
+
+		// bottom 
+		vec3(0.0f, -1.0f, 0.0f),
+		vec3(0.0f, -1.0f, 0.0f),
+		vec3(0.0f, -1.0f, 0.0f),
+		vec3(0.0f, -1.0f, 0.0f),
+
+		// back 
+		vec3(0.0f, 0.0f, -1.0f),
+		vec3(0.0f, 0.0f, -1.0f),
+		vec3(0.0f, 0.0f, -1.0f),
+		vec3(0.0f, 0.0f, -1.0f),
+
+		// right 
+		vec3(1.0f, 0.0f, 0.0f),
+		vec3(1.0f, 0.0f, 0.0f),
+		vec3(1.0f, 0.0f, 0.0f),
+		vec3(1.0f, 0.0f, 0.0f),
+
+		// left 
+		vec3(-1.0f, 0.0f, 0.0f),
+		vec3(-1.0f, 0.0f, 0.0f),
+		vec3(-1.0f, 0.0f, 0.0f),
+		vec3(-1.0f, 0.0f, 0.0f),
 	};
 
 

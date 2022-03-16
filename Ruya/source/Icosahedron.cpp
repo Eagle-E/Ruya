@@ -117,6 +117,8 @@ std::shared_ptr<Mesh> ruya::Icosahedron::mMesh = init_mesh();
 ruya::Icosahedron::Icosahedron()
 {
 	set_mesh(mMesh);
+	mMesh->update_surface_normals();
+
 }
 
 void ruya::Icosahedron::print_model_data() const

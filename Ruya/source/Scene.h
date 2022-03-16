@@ -3,6 +3,7 @@
 
 #include <list>
 #include "Object.h"
+#include "LightSource.h"
 
 using std::list;
 
@@ -18,11 +19,14 @@ namespace ruya
 		~Scene();
 
 		list<Object*>& get_scene_objects() { return mObjects; }
+		list<LightSource*>& get_light_sources() { return mLightSources; }
 		void add_object(Object* obj);
+		void add_light(LightSource* light);
 		//bool remove_object(Object* obj); // TODO: is this necessary?
 
 	private:
 		list<Object*> mObjects;
+		list<LightSource*> mLightSources;
 	};
 }
 

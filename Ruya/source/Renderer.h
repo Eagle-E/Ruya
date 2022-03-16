@@ -63,21 +63,26 @@ namespace ruya
 		};
 
 	public:
-		Renderer(Shader& shader, Window& window, Camera& camera);
+		Renderer(Shader& shaderObjects, Shader& shaderLights, Window& window, Camera& camera);
 		void render_scene(Scene& scene);
 		void render_object(Object& obj);
-		void render_object(Object& obj, const mat4& viewProjectTransform);
 
 
 	private:
+		void render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light);
+		void render_light_source(LightSource& light, const mat4& viewProjectTransform);
+		void draw_mesh(const shared_ptr<Mesh>& mesh);
+
 		GLuint buffer_mesh(const Mesh& mesh);
-		Shader& mShader;
+		Shader& mShaderObjects;
+		Shader& mShaderLights;
 		Window& mWindow;
 		Camera& mCamera;
 
 		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;
-		GLuint mIndexVertexAttrib = 0; // indexes of the attributes used in the vertex shader
-		GLuint mIndexTextureAttrib = 1;
+		const GLuint INDEX_VERTEX_ATTRIB = 0; // indexes of the attributes used in the vertex shader
+		const GLuint INDEX_NORMAL_ATTRIB = 1;
+		const GLuint INDEX_TEXTURE_ATTRIB = 2;
 		TextureSlotManager mSlotManager;
 	};
 }

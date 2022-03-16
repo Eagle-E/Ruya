@@ -83,6 +83,9 @@
     <ClCompile Include="source\Icosahedron.cpp">
       <Filter>Model\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="source\LightSource.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Window.h">
@@ -133,6 +136,9 @@
     <ClInclude Include="source\Icosahedron.h">
       <Filter>Model\Shapes</Filter>
     </ClInclude>
+    <ClInclude Include="source\LightSource.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader_file_extensions.txt">
@@ -155,7 +161,9 @@
     <None Include="source\shaders\vertex_shader.vert">
       <Filter>Shaders\old</Filter>
     </None>
-    <None Include="source\shaders\fragment_light_source.frag" />
+    <None Include="source\shaders\fragment_light_source.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\awesomeface.png">

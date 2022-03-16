@@ -10,6 +10,11 @@ ruya::Scene::~Scene()
 	{
 		delete *i;
 	}
+
+	for (auto i = mLightSources.begin(); i != mLightSources.end(); i++)
+	{
+		delete* i;
+	}
 }
 
 /*
@@ -19,5 +24,10 @@ ruya::Scene::~Scene()
 void ruya::Scene::add_object(Object* obj)
 {
 	mObjects.push_back(obj);
+}
+
+void ruya::Scene::add_light(LightSource* light)
+{
+	mLightSources.push_back(light);
 }
 

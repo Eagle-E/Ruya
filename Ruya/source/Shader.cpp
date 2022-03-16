@@ -37,7 +37,6 @@ ruya::Shader::Shader() : mID(0)
 ruya::Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
 {
 	setShaders(vertexShaderPath, fragmentShaderPath);
-	use();
 }
 
 /*
