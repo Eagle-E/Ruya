@@ -102,7 +102,7 @@ namespace ruya
 				}
 			}
 
-			Icosahedron ico;
+			Cube ico;
 			Cube* newCubeptr = new Cube();
 			Icosahedron* newIco= new Icosahedron();
 			newCubeptr->set_position(vec3(3.0f, -1.0f, -2.0f));
@@ -114,13 +114,14 @@ namespace ruya
 			light->model().set_mesh(ico.mesh()); // the icosahedron obj and the lightsource will share the same mesh
 			light->model().set_position(vec3(0.0f));
 			light->model().set_color(vec3(1.0f, 0.5f, 0.31f));
+			//light->model().set_color(vec3(1.0f, 1.0f, 1.0f));
 
 			
 			scene.add_object(newCubeptr);
 			scene.add_object(newIco);
 			scene.add_light(light);
 
-			glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color
+			glm::vec4 bgColor(0.7f, 0.7f, 0.9f, 1.0f); // background color
 			ruya::Timer timerOutput;
 			timerOutput.start();
 
@@ -158,9 +159,9 @@ namespace ruya
 
 				if (timerOutput.elapsed_time_s() > 1.0)
 				{
-					//std::cout << fps << " fps"
-					//	<< "\tElapsed time: " << timerOutput.time_since_creation_s() << "s" 
-					//	<< "\tmouse pos: ("<< mOldMousePos.x <<","<< mOldMousePos.y <<")\n";
+					std::cout << fps << " fps"
+						<< "\tElapsed time: " << timerOutput.time_since_creation_s() << "s" 
+						<< "\tmouse pos: ("<< mOldMousePos.x <<","<< mOldMousePos.y <<")\n";
 					timerOutput.start();
 				}
 

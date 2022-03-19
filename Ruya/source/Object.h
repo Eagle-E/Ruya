@@ -58,6 +58,8 @@ namespace ruya
 		shared_ptr<Mesh> mesh() { return mMesh; }
 		shared_ptr<Texture> texture() { return mTexture; }
 		mat4 model_matrix();
+		mat4 inverse_model_matrix();
+		std::pair<mat4, mat4> model_matrix_and_inverse(); // first model, second inverse model
 		vec3 color() const { return mColor; }
 		vec3 position() const { return mPosition; }
 

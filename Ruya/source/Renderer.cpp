@@ -1,6 +1,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "glm/gtx/string_cast.hpp"
 
 #include "Renderer.h"
 #include <list>
@@ -9,6 +10,7 @@
 
 
 using std::list;
+using glm::mat4;	using glm::mat3;
 
 ruya::Renderer::Renderer(Shader& shaderObjects, Shader& shaderLights, Window& window, Camera& camera)
 	: mWindow(window), mCamera(camera), mShaderObjects(shaderObjects), mShaderLights(shaderLights),
@@ -63,16 +65,18 @@ void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform
 		mShaderObjects.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
 	}
 
-	// pass the color
+
+	std::pair<mat4, mat4> Model_ModelInv = obj.model_matrix_and_inverse();
+
+	// pass uniform data
 	mShaderObjects.setVec3("objColor", obj.color());
 	mShaderObjects.setVec3("lightColor", light.color());
-	mShaderObjects.setVec3("lightPosition", light.position());
+	vec4 lightPosInObjSpace = Model_ModelInv.second * vec4(light.position(), 1.0f);
+	mShaderObjects.setVec3("LightPosInObjSpace", vec3(lightPosInObjSpace) / lightPosInObjSpace.w);
 
 	// calc model-view-projection matrix
-	mat4 ModelMatrix = obj.model_matrix();
-	mat4 MVP = viewProjectTransform * ModelMatrix;
+	mat4 MVP = viewProjectTransform * Model_ModelInv.first;
 	mShaderObjects.setMatrix4D("MVP", MVP);
-	mShaderObjects.setMatrix4D("ModelMat", ModelMatrix);
 
 	// render mesh
 	draw_mesh(obj.mesh());
@@ -86,7 +90,10 @@ void ruya::Renderer::render_light_source(LightSource& light, const mat4& viewPro
 	// calc model-view-projection matrix
 	mat4 MVP = viewProjectTransform * light.model().model_matrix();
 	mShaderObjects.setMatrix4D("MVP", MVP);
-
+	std::cout << glm::to_string(MVP[0]) << "\n";
+	std::cout << glm::to_string(MVP[1]) << "\n";
+	std::cout << glm::to_string(MVP[2]) << "\n";
+	std::cout << glm::to_string(MVP[3]) << "\n";
 	// render mesh
 	draw_mesh(light.model().mesh());
 }

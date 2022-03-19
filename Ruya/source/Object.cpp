@@ -9,6 +9,7 @@ ruya::Object::Object()
 
 ruya::Object::~Object()
 {
+    
 }
 
 
@@ -36,6 +37,46 @@ mat4 ruya::Object::model_matrix()
     translationMatrix = glm::translate(translationMatrix, mPosition);
 
     return translationMatrix * rotationMatrix * scalingMatrix;
+}
+
+/*
+* The inverse of the model matrix. 
+*
+* Translation is disregarded, the inverse of Scale * Rotation is returned. 
+* Rotation and uniform scaling is orthonormal so the inverse of the model 
+* matrix is just its transpose. 
+* 
+* If the scaling is non-uniform (different amount for x, y and/or z axis, then
+* the inverse has to be calculated the normal way.
+*/
+mat4 ruya::Object::inverse_model_matrix()
+{
+    return model_matrix_and_inverse().second;
+}
+
+std::pair<mat4, mat4> ruya::Object::model_matrix_and_inverse()
+{
+    std::pair<mat4, mat4> model_invModel;
+    float d1 = abs(mScale.x - mScale.y);
+    float d2 = abs(mScale.y - mScale.z);
+    float d3 = abs(mScale.x - mScale.z);
+
+    model_invModel.first = model_matrix();
+
+    float thresh = 0.001;
+    if (d1 > thresh || d2 > thresh || d3 > thresh)
+        model_invModel.second = glm::inverse(model_invModel.first);
+    else
+    {
+        model_invModel.second =  mat4(glm::transpose(glm::mat3(model_invModel.first)));
+        model_invModel.second[3][0] = -mPosition[0];
+        model_invModel.second[3][1] = -mPosition[1];
+        model_invModel.second[3][2] = -mPosition[2];
+        model_invModel.second[3][3] = 1.0f;
+        
+    }
+
+    return model_invModel;
 }
 
 /*
