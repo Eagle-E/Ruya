@@ -90,10 +90,7 @@ void ruya::Renderer::render_light_source(LightSource& light, const mat4& viewPro
 	// calc model-view-projection matrix
 	mat4 MVP = viewProjectTransform * light.model().model_matrix();
 	mShaderObjects.setMatrix4D("MVP", MVP);
-	std::cout << glm::to_string(MVP[0]) << "\n";
-	std::cout << glm::to_string(MVP[1]) << "\n";
-	std::cout << glm::to_string(MVP[2]) << "\n";
-	std::cout << glm::to_string(MVP[3]) << "\n";
+
 	// render mesh
 	draw_mesh(light.model().mesh());
 }
@@ -122,7 +119,6 @@ void ruya::Renderer::render_object(Object& obj)
 
 	// pass the color
 	mShaderObjects.setVec3("objColor", obj.color());
-	mShaderObjects.setVec3("globalLightColor", vec3(1.0f, 1.0f, 1.0f));
 
 	// calc model-view-projection matrix
 	mat4 projection = glm::perspective(glm::radians(mCamera.fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
