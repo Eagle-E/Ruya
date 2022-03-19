@@ -76,24 +76,6 @@ void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform
 
 	// render mesh
 	draw_mesh(obj.mesh());
-
-	//test
-	if (test) {
-		test = false;
-		vec3 l = light.position();
-		vec4 p2 = vec4(obj.mesh()->vertices[0], 1.0f);
-		p2 = ModelMatrix * p2;
-		vec3 p = vec3(p2.x/p2.y, p2.y / p2.y, p2.z / p2.y);
-		vec3 n = obj.mesh()->normals[0]; n = glm::normalize(n);
-		vec3 d = l - p; d = glm::normalize(d);
-		float dot = glm::dot(d, n);
-		float diff = dot > 0.0f ? dot : 0.0f;
-		std::cout << "Vertex pos p = (" << p.x << ", " << p.y << ", " << p.z << ")\n";
-		std::cout << "Light pos l = (" << l.x << ", " << l.y << ", " << l.z << ")\n";
-		std::cout << "The light direction is l-p = (" << d.x << ", " << d.y << ", " << d.z << ")\n";
-		std::cout << "normal = (" << n.x << ", " << n.y << ", " << n.z << ")\n";
-		std::cout << "dot prod d*n = " << dot << "\n";
-	}
 }
 
 void ruya::Renderer::render_light_source(LightSource& light, const mat4& viewProjectTransform)
@@ -198,10 +180,6 @@ GLuint ruya::Renderer::buffer_mesh(const Mesh& mesh)
 	glBufferSubData(GL_ARRAY_BUFFER, sizeVert, sizeNormals, mesh.normals.data());
 	glBufferSubData(GL_ARRAY_BUFFER, sizeVert + sizeNormals, sizeTex, mesh.textureCoordinates.data());
 	
-	//glBufferData(GL_ARRAY_BUFFER, sizeVert + sizeNormals, NULL, GL_STATIC_DRAW); // allocate memory and copy vertices to GPU
-	//glBufferSubData(GL_ARRAY_BUFFER, 0, sizeVert, mesh.vertices.data());
-	//glBufferSubData(GL_ARRAY_BUFFER, sizeVert, sizeNormals, mesh.normals.data());
-	//glBufferSubData(GL_ARRAY_BUFFER, sizeVert + sizeNormals, sizeTex, mesh.textureCoordinates.data());
 
 	// specify vertex attributes, how the data in the VBO should be evaluated
 	// UPDATED according to the concatenated data format
@@ -212,15 +190,6 @@ GLuint ruya::Renderer::buffer_mesh(const Mesh& mesh)
 	glVertexAttribPointer(INDEX_TEXTURE_ATTRIB, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeVert + sizeNormals)); // texture data
 	glEnableVertexAttribArray(INDEX_TEXTURE_ATTRIB);
 
-	//glVertexAttribPointer(INDEX_VERTEX_ATTRIB, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // loc data
-	//glEnableVertexAttribArray(INDEX_VERTEX_ATTRIB);
-	//
-	//glVertexAttribPointer(INDEX_NORMAL_ATTRIB, 3, GL_FLOAT, GL_FALSE, 0, (void*)(sizeVert)); // normal data
-	//glEnableVertexAttribArray(INDEX_NORMAL_ATTRIB);
-	//
-	//glVertexAttribPointer(INDEX_TEXTURE_ATTRIB, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeVert + sizeNormals)); // texture data
-	//glEnableVertexAttribArray(INDEX_TEXTURE_ATTRIB);
-	
 
 	return vaoID;
 }
