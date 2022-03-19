@@ -80,10 +80,12 @@ namespace ruya
 		Camera& mCamera;
 
 		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;
-		const GLuint INDEX_VERTEX_ATTRIB = 0; // indexes of the attributes used in the vertex shader
-		const GLuint INDEX_NORMAL_ATTRIB = 1;
-		const GLuint INDEX_TEXTURE_ATTRIB = 2;
+		const GLuint INDEX_VERTEX_ATTRIB; // indexes of the attributes used in the vertex shader
+		const GLuint INDEX_NORMAL_ATTRIB;
+		const GLuint INDEX_TEXTURE_ATTRIB;
 		TextureSlotManager mSlotManager;
+
+		bool test = true;
 	};
 }
 

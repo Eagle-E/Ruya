@@ -3,7 +3,7 @@
 
 int main()
 {
-	ruya::Window window(1000, 1200);
+	ruya::Window window(1450, 875);
 	window.make_context_current();
 	
 	ruya::TestApplication app(window);

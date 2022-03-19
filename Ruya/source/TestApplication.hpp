@@ -65,8 +65,8 @@ namespace ruya
 		void run()
 		{
 			// init renderer and shaders
-			Shader shaderObjects("source/shaders/vertex_no_tex.vert", "source/shaders/fragment_basic_lighting.frag");
-			Shader shaderLights("source/shaders/vertex_no_tex.vert", "source/shaders/fragment_light_source.frag");
+			Shader shaderObjects("source/shaders/vertex_basic_lighting.vert", "source/shaders/fragment_basic_lighting.frag");
+			Shader shaderLights("source/shaders/vertex_basic_lighting.vert", "source/shaders/fragment_light_source.frag");
 			Renderer renderer(shaderObjects, shaderLights, mWindow, mCamera);
 			
 			// init scene
@@ -81,7 +81,7 @@ namespace ruya
 			textures.push_back(std::make_shared<Texture>("resources/Fabric004_1K-PNG/Fabric004_1K_Color.png"));
 
 			vector<Cube*> cubes;
-			int radius = 3; // radius of grid, so grid will have 2r+1 cols and rows
+			int radius = 0; // radius of grid, so grid will have 2r+1 cols and rows
 			float d = 1.75f;
 			for (float i = -radius; i <= radius; i++)
 			{
@@ -90,23 +90,34 @@ namespace ruya
 					Cube* newCubeptr = new Cube();
 					Cube& newCube = *newCubeptr;
 					newCube.set_position(vec3(d * i, d * j, -5.0f));
+					newCube.set_scale(vec3(3.0f, 3.0f, 3.0f));
 					float g = (i + radius) / (2 * radius) * 0.8 + 0.1; // map i and j from [-r, r] to [0.1, 0.8]
 					float b = (j + radius) / (2 * radius) * 0.8 + 0.1;
 					//float r = (b + g) / 2.0f;
 					float r = 0.0f;
-					newCube.set_color(vec3(r, g, b));
+					//newCube.set_color(vec3(r, g, b));
 					//newCube.set_texture(textures[i % textures.size()]);
 					cubes.push_back(newCubeptr);
-					scene.add_object(newCubeptr);
+					//scene.add_object(newCubeptr);
 				}
 			}
 
 			Icosahedron ico;
+			Cube* newCubeptr = new Cube();
+			Icosahedron* newIco= new Icosahedron();
+			newCubeptr->set_position(vec3(3.0f, -1.0f, -2.0f));
+			newIco->set_position(vec3(-3.0f, -1.0f, -2.0f));
+			//newCubeptr->set_scale(vec3(3.0f, 3.0f, 3.0f));
+
 			//ico.set_color(vec3(1.0f, 0.5f, 0.31f));
-			LightSource * light = new LightSource(vec3(1.0f, 0.5f, 0.31f));
+			LightSource * light = new LightSource(vec3(1.0f, 1.0f, 1.0f));
 			light->model().set_mesh(ico.mesh()); // the icosahedron obj and the lightsource will share the same mesh
 			light->model().set_position(vec3(0.0f));
+			light->model().set_color(vec3(1.0f, 0.5f, 0.31f));
 
+			
+			scene.add_object(newCubeptr);
+			scene.add_object(newIco);
 			scene.add_light(light);
 
 			glm::vec4 bgColor(1.0f, 1.0f, 1.0f, 1.0f); // background color

@@ -149,7 +149,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\vertex_no_tex.vert">
+    <None Include="source\shaders\vertex_basic_lighting.vert">
       <Filter>Shaders</Filter>
     </None>
     <None Include="source\shaders\fragment_basic_lighting.frag">
