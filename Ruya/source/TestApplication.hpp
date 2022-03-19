@@ -102,7 +102,7 @@ namespace ruya
 				}
 			}
 
-			Cube ico;
+			Icosahedron ico;
 			Cube* newCubeptr = new Cube();
 			Icosahedron* newIco= new Icosahedron();
 			newCubeptr->set_position(vec3(3.0f, -1.0f, -2.0f));

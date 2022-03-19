@@ -117,7 +117,10 @@ std::shared_ptr<Mesh> ruya::Icosahedron::mMesh = init_mesh();
 ruya::Icosahedron::Icosahedron()
 {
 	set_mesh(mMesh);
-	mMesh->update_surface_normals();
+	
+	// init normals
+	//mMesh->update_surface_normals();
+
 
 }
 
@@ -212,6 +215,21 @@ std::shared_ptr<Mesh> ruya::Icosahedron::init_mesh()
 			insert_face_unique(mesh->faces, uvec3(i, pair.x, pair.y));
 		}
 
+	}
+
+	// init mesh, sum face normals then normalize
+	mesh->normals.clear();
+	mesh->normals.resize(mesh->vertices.size());
+
+	for (const uvec3& face : mesh->faces)
+	{
+		vec3 v0 = mesh->vertices[face[0]];
+		vec3 v1 = mesh->vertices[face[1]];
+		vec3 v2 = mesh->vertices[face[2]];
+		vec3 normal = glm::normalize(v0 + v1 + v2);
+		mesh->normals[face[0]] = normal;
+		mesh->normals[face[1]] = normal;
+		mesh->normals[face[2]] = normal;
 	}
 
 	return mesh;
