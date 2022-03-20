@@ -69,6 +69,9 @@ namespace ruya
 
 
 	private:
+		static void GLAPIENTRY debug_mesage_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, 
+														const GLchar* message, const void* userParam);
+
 		void render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light);
 		void render_light_source(LightSource& light, const mat4& viewProjectTransform);
 		void draw_mesh(const shared_ptr<Mesh>& mesh);
