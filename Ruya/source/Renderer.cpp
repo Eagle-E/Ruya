@@ -12,18 +12,18 @@
 using std::list;
 using glm::mat4;	using glm::mat3;
 
-ruya::Renderer::Renderer(Shader& shaderObjects, Shader& shaderLights, Window& window, Camera& camera)
-	: mWindow(window), mCamera(camera), mShaderObjects(shaderObjects), mShaderLights(shaderLights),
+ruya::Renderer::Renderer(Shader* shaderObjects, Shader* shaderLights, Window* window, Camera* camera)
+	: mWindow(window), mCamera(camera), mSmoothShaderObjects(shaderObjects), mShaderLights(shaderLights),
 	INDEX_VERTEX_ATTRIB(0),
 	INDEX_NORMAL_ATTRIB(1),
 	INDEX_TEXTURE_ATTRIB(2)
 {
 	// enable depth test
-	mShaderObjects.use();
 	glEnable(GL_DEPTH_TEST);
 
 	// During init, enable debug output
 	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(debug_mesage_callback, 0);
 }
 
@@ -31,21 +31,27 @@ void ruya::Renderer::render_scene(Scene& scene)
 {
 	// OBJECTS
 	// activate object shader to render objects
-	mShaderObjects.use();
+	Shader* activeObjectShader = nullptr;
+	switch (mShadingMode)
+	{
+		case ShadingMode::SMOOTH:	activeObjectShader = mSmoothShaderObjects;	break;
+		case ShadingMode::FLAT:		activeObjectShader = mFlatShaderObjects;	break;
+	}
+	activeObjectShader->use();
 
 	// get view-projection matrix
-	mat4 projection = glm::perspective(glm::radians(mCamera.fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
-	mat4 VP = projection * mCamera.view_matrix();
+	mat4 projection = glm::perspective(glm::radians(mCamera->fov()), mWindow->aspect_ratio(), 0.1f, 300.0f);
+	mat4 VP = projection * mCamera->view_matrix();
 
 	// render scene objects
 	list<Object*>& objects = scene.get_scene_objects();
 	for (Object* obj : objects)
 	{
-		render_object(*obj, VP, **(scene.get_light_sources().begin()) );
+		render_object(*obj, VP, **(scene.get_light_sources().begin()), activeObjectShader);
 	}
 
 	// LIGHT SOURCES
-	mShaderLights.use();
+	mShaderLights->use();
 	list<LightSource*> lights = scene.get_light_sources();
 	for (LightSource* light : lights)
 	{
@@ -60,27 +66,26 @@ void ruya::Renderer::render_scene(Scene& scene)
 * 
 * @pre the correct shader program needs to be made current before calling this function.
 */
-void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light)
+void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light, Shader* activeShader)
 {	
 	// Bind the textures and set their uniform location
 	if (obj.texture())
 	{
 		GLuint textureSlot = mSlotManager.bind_texture(*obj.texture());
-		mShaderObjects.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
+		activeShader->setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
 	}
-
 
 	std::pair<mat4, mat4> Model_ModelInv = obj.model_matrix_and_inverse();
 
 	// pass uniform data
-	mShaderObjects.setVec3("objColor", obj.color());
-	mShaderObjects.setVec3("lightColor", light.color());
+	activeShader->setVec3("objColor", obj.color());
+	activeShader->setVec3("lightColor", light.color());
 	vec4 lightPosInObjSpace = Model_ModelInv.second * vec4(light.position(), 1.0f);
-	mShaderObjects.setVec3("LightPosInObjSpace", vec3(lightPosInObjSpace) / lightPosInObjSpace.w);
+	activeShader->setVec3("LightPosInObjSpace", vec3(lightPosInObjSpace) / lightPosInObjSpace.w);
 
 	// calc model-view-projection matrix
 	mat4 MVP = viewProjectTransform * Model_ModelInv.first;
-	mShaderObjects.setMatrix4D("MVP", MVP);
+	activeShader->setMatrix4D("MVP", MVP);
 
 	// render mesh
 	draw_mesh(obj.mesh());
@@ -89,13 +94,11 @@ void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform
 void ruya::Renderer::render_light_source(LightSource& light, const mat4& viewProjectTransform)
 {
 	// color uniform
-	mShaderLights.setVec3("objColor", light.model().color());
-	int error = glGetError();
+	mShaderLights->setVec3("objColor", light.model().color());
 
 	// calc model-view-projection matrix
 	mat4 MVP = viewProjectTransform * light.model().model_matrix();
-	mShaderLights.setMatrix4D("MVP", MVP);
-	error = glGetError();
+	mShaderLights->setMatrix4D("MVP", MVP);
 
 	// render mesh
 	draw_mesh(light.model().mesh());
@@ -120,16 +123,16 @@ void ruya::Renderer::render_object(Object& obj)
 	if (obj.texture())
 	{
 		GLuint textureSlot = mSlotManager.bind_texture(*obj.texture());
-		mShaderObjects.setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
+		mSmoothShaderObjects->setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
 	}
 
 	// pass the color
-	mShaderObjects.setVec3("objColor", obj.color());
+	mSmoothShaderObjects->setVec3("objColor", obj.color());
 
 	// calc model-view-projection matrix
-	mat4 projection = glm::perspective(glm::radians(mCamera.fov()), mWindow.aspect_ratio(), 0.1f, 300.0f);
-	mat4 MVP = projection * mCamera.view_matrix() * obj.model_matrix();
-	mShaderObjects.setMatrix4D("MVP", MVP);
+	mat4 projection = glm::perspective(glm::radians(mCamera->fov()), mWindow->aspect_ratio(), 0.1f, 300.0f);
+	mat4 MVP = projection * mCamera->view_matrix() * obj.model_matrix();
+	mSmoothShaderObjects->setMatrix4D("MVP", MVP);
 
 	// Bind the vao and render
 	draw_mesh(obj.mesh());
@@ -138,6 +141,8 @@ void ruya::Renderer::render_object(Object& obj)
 void GLAPIENTRY ruya::Renderer::debug_mesage_callback(GLenum source, GLenum type, GLuint id, GLenum severity, 
 													  GLsizei length, const GLchar* message, const void* userParam)
 {
+	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+
 	const char* strSeverity = "Unknown";
 	switch (severity)
 	{
@@ -199,11 +204,13 @@ void ruya::Renderer::draw_mesh(const shared_ptr<Mesh>& mesh)
 		GLuint meshVaoID = buffer_mesh(*mesh);
 		mMeshVaoMap[mesh] = meshVaoID;
 	}
+	int error = glGetError();
+
 
 	size_t numIndexes = mesh->faces.size() * 3;
 	glBindVertexArray(mMeshVaoMap[mesh]);
 	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
-	int error = glGetError();
+	error = glGetError();
 	int a = 0;
 }
 
@@ -248,7 +255,8 @@ GLuint ruya::Renderer::buffer_mesh(const Mesh& mesh)
 	glVertexAttribPointer(INDEX_TEXTURE_ATTRIB, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeVert + sizeNormals)); // texture data
 	glEnableVertexAttribArray(INDEX_TEXTURE_ATTRIB);
 
-
+	// unbind vertex array buffer
+	glBindVertexArray(0);
 	return vaoID;
 }
 

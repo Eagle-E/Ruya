@@ -29,32 +29,60 @@ namespace
 	}
 }
 
-ruya::Shader::Shader() : mID(0)
+ruya::Shader::Shader() : mProgramID(0), mVertexShaderID(0), mFragmentShaderID(0), mGeometryShaderID(0)
 {
 	
 }
 
 ruya::Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
+	: mProgramID(0), mVertexShaderID(0), mFragmentShaderID(0), mGeometryShaderID(0)
 {
-	setShaders(vertexShaderPath, fragmentShaderPath);
+	//setShaders(vertexShaderPath, "", fragmentShaderPath);
+	setShader(Type::VERTEX_SHADER, vertexShaderPath);
+	setShader(Type::FRAGMENT_SHADER, fragmentShaderPath);
+	createShaderProgram();
+}
+
+ruya::Shader::Shader(const char* vertexShaderPath, const char* geometryShaderPath, const char* fragmentShaderPath)
+	: mProgramID(0), mVertexShaderID(0), mFragmentShaderID(0), mGeometryShaderID(0)
+{
+	setShader(Type::VERTEX_SHADER, vertexShaderPath);
+	setShader(Type::FRAGMENT_SHADER, fragmentShaderPath);
+	setShader(Type::GEOMETRY_SHADER, geometryShaderPath);
+	createShaderProgram();
+}
+
+ruya::Shader::~Shader()
+{
+	glDeleteShader(mVertexShaderID);
+	glDeleteShader(mFragmentShaderID);
+	glDeleteShader(mGeometryShaderID);
 }
 
 /*
 * Creates an opengl shader program with the given vertex and fragment shaders
 * @throws std::exception when something went wrong, appropriate message is passed with the exception obj
 */
-void ruya::Shader::setShaders(const char* vertexShaderPath, const char* fragmentShaderPath)
+void ruya::Shader::setShaders(const char* vertexShaderPath, const char* geometryShaderPath, const char* fragmentShaderPath)
 {
 	try
 	{
 		// get contents of the vertex and fragment shaders
-		std::string vertexShaderText = readFileContents(vertexShaderPath);
-		std::string fragmentShaderText = readFileContents(fragmentShaderPath);
+		std::string vertexShaderText = "";	  
+		std::string fragmentShaderText = "";  
+		std::string geometryShaderText = "";  
+
+		if (vertexShaderPath != "")		vertexShaderText = readFileContents(vertexShaderPath);
+		if (fragmentShaderPath != "")	fragmentShaderText = readFileContents(fragmentShaderPath);
+		if (geometryShaderPath != "")	geometryShaderText = readFileContents(geometryShaderPath);
+
 
 		// create the shaders and the shader program
-		GLuint vertexShaderID = createShader(GL_VERTEX_SHADER, vertexShaderText);
-		GLuint fragmentShaderID = createShader(GL_FRAGMENT_SHADER, fragmentShaderText);
-		mID = createShaderProgram(vertexShaderID, fragmentShaderID);
+		GLuint vertexShaderID = 0, fragmentShaderID = 0, geometryShaderID = 0;
+		if (vertexShaderText != "")		vertexShaderID = createShader(GL_VERTEX_SHADER, vertexShaderText);
+		if (fragmentShaderText != "")	fragmentShaderID = createShader(GL_FRAGMENT_SHADER, fragmentShaderText);
+		if (geometryShaderText != "")	geometryShaderID = createShader(GL_GEOMETRY_SHADER, geometryShaderText);
+		mProgramID = createShaderProgram();
 		
 		// delete shaders, not needed afer successful linkage
 		glDeleteShader(vertexShaderID);
@@ -66,7 +94,29 @@ void ruya::Shader::setShaders(const char* vertexShaderPath, const char* fragment
 		errorMsg += e.what();
 		throw std::exception(errorMsg.c_str());
 	}
+}
 
+/*
+* Sets the corresponding shader type to given shader file
+* @pre: shaderPath must be the path of a shader file, cannot be ""
+*/
+void ruya::Shader::setShader(Type shaderType, const char* shaderPath)
+{
+	if (shaderType == Type::VERTEX_SHADER)
+	{
+		if (mVertexShaderID > 0) glDeleteShader(mVertexShaderID);
+		mVertexShaderID = createShader(GL_VERTEX_SHADER, readFileContents(shaderPath));
+	}
+	else if (shaderType == Type::GEOMETRY_SHADER)
+	{
+		if (mGeometryShaderID > 0) glDeleteShader(mGeometryShaderID);
+		mGeometryShaderID = createShader(GL_GEOMETRY_SHADER, readFileContents(shaderPath));
+	}
+	else if (shaderType == Type::FRAGMENT_SHADER)
+	{
+		if (mFragmentShaderID > 0) glDeleteShader(mFragmentShaderID);
+		mFragmentShaderID = createShader(GL_FRAGMENT_SHADER, readFileContents(shaderPath));
+	}
 }
 
 /*
@@ -74,23 +124,23 @@ void ruya::Shader::setShaders(const char* vertexShaderPath, const char* fragment
 */
 void ruya::Shader::use()
 {
-	glUseProgram(mID);
+	glUseProgram(mProgramID);
 }
 
 void ruya::Shader::setInt(const std::string& uniformName, int value)
 {
-	glUniform1i(glGetUniformLocation(mID, uniformName.c_str()), value);
+	glUniform1i(glGetUniformLocation(mProgramID, uniformName.c_str()), value);
 }
 
 void ruya::Shader::setMatrix4D(const std::string& uniformName, const glm::mat4& matrix)
 {
-	unsigned int loc = glGetUniformLocation(mID, uniformName.c_str());
+	unsigned int loc = glGetUniformLocation(mProgramID, uniformName.c_str());
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void ruya::Shader::setVec3(const std::string& uniformName, const glm::vec3& vec)
 {
-	unsigned int loc = glGetUniformLocation(mID, uniformName.c_str());
+	unsigned int loc = glGetUniformLocation(mProgramID, uniformName.c_str());
 	glUniform3f(loc, vec.x, vec.y, vec.z);
 }
 
@@ -135,32 +185,38 @@ GLuint ruya::Shader::createShader(GLenum shaderType, const std::string& shaderCo
 	return shaderID;
 }
 
+
+
 /*
-* Creates a shader program, then attaches given shaders, then links program.
+* Creates a shader program, then attaches shaders created so far (with setShader()), then links program.
+*	- Also deletes current program if there is one, and sets mProgramID to the newly created program.
 * @throws std::exception is linkage failed.
 * @returns the program id of the created shader program.
 */
-GLuint ruya::Shader::createShaderProgram(GLuint vertexShaderID, GLuint fragmentShaderID)
+GLuint ruya::Shader::createShaderProgram()
 {
 	// link shaders into one shader program to be used for the render calls
-	GLuint shaderProgramID;
-	shaderProgramID = glCreateProgram();
-	glAttachShader(shaderProgramID, vertexShaderID);
-	glAttachShader(shaderProgramID, fragmentShaderID);
-	glLinkProgram(shaderProgramID);
+	if (mProgramID > 0) glDeleteProgram(mProgramID);
+	mProgramID = glCreateProgram();
+
+	for (const GLuint shaderID : {mVertexShaderID, mFragmentShaderID, mGeometryShaderID})
+	{
+		if (shaderID > 0) glAttachShader(mProgramID, shaderID);
+	}
+	glLinkProgram(mProgramID);
 
 	// errror checking for program linkage
 	int success;
 	char textBuffer[512];
-	glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &success);
+	glGetProgramiv(mProgramID, GL_LINK_STATUS, &success);
 	if (!success)
 	{
-		glGetProgramInfoLog(shaderProgramID, 512, NULL, textBuffer);
+		glGetProgramInfoLog(mProgramID, 512, NULL, textBuffer);
 		std::string errorMsg = "[ruya::Shader::createShaderProgram()] Shader program linkage failed.\n";
 		errorMsg += textBuffer;
 		errorMsg += "\n";
 		throw std::exception(errorMsg.c_str());
 	}
 
-	return shaderProgramID;
+	return mProgramID;
 }

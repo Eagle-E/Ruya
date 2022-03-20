@@ -2,8 +2,11 @@
 #define SHADER_H
 
 #include <string>
+#include <vector>
 #include "glad/glad.h"
 #include <glm/glm.hpp>
+
+using std::vector;
 
 namespace ruya
 {
@@ -14,9 +17,10 @@ namespace ruya
 		// CONSTRUCTORS & DESTRUCTOR
 		Shader();
 		Shader(const char * vertexShaderPath, const char * fragmentShaderPath);
+		Shader(const char * vertexShaderPath, const char* geometryShaderPath, const char * fragmentShaderPath);
+		~Shader();
 		
 		// MANIPULATORS
-		void setShaders(const char* vertexShaderPath, const char* fragmentShaderPath);
 		void use();
 
 		// UNIFORMS
@@ -25,14 +29,19 @@ namespace ruya
 		void setVec3(const std::string& uniformName, const glm::vec3& vec);
 
 		// GETTERS
-		GLuint id() { return mID; }
+		GLuint id() { return mProgramID; }
 
 	private:
-		GLuint mID; // the shader id
+		GLuint mProgramID; // the shader id
+		GLuint mVertexShaderID, mFragmentShaderID, mGeometryShaderID;
 
 		// HELPER FUNCTIONS
+		enum class Type{VERTEX_SHADER, GEOMETRY_SHADER, FRAGMENT_SHADER};
+		void setShaders(const char* vertexShaderPath, const char* geometryShaderPath, const char* fragmentShaderPath);
+		void setShader(Type shaderType, const char* shaderPath);
+
 		GLuint createShader(GLenum shaderType, const std::string& shaderContent);
-		GLuint createShaderProgram(GLuint vertexShaderID, GLuint fragmentShaderID);
+		GLuint createShaderProgram();
 	};
 
 }

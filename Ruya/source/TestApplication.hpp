@@ -65,10 +65,13 @@ namespace ruya
 		void run()
 		{
 			// init renderer and shaders
-			Shader shaderObjects("source/shaders/phong/object.vert", "source/shaders/phong/object.frag");
-			Shader shaderLights("source/shaders/phong/object.vert", "source/shaders/phong/light_source.frag");
-			Renderer renderer(shaderObjects, shaderLights, mWindow, mCamera);
-			
+			Shader shaderPhongObjects("source/shaders/phong/object.vert", "source/shaders/phong/object.frag");
+			Shader shaderPhongLights("source/shaders/phong/object.vert", "source/shaders/phong/light_source.frag");
+			Shader shaderFlat("source/shaders/flat/flat_vert.vert", "source/shaders/flat/flat_geom.geom", "source/shaders/flat/flat_frag.frag");
+			Renderer renderer(&shaderPhongObjects, &shaderPhongLights, &mWindow, &mCamera);
+			renderer.set_flat_shader(&shaderFlat);
+			renderer.set_shading_mode(Renderer::ShadingMode::FLAT);
+
 			// init scene
 			Scene scene;
 
@@ -87,6 +90,7 @@ namespace ruya
 			{
 				for (float j = -radius; j <= radius; j++)
 				{
+					/*
 					Cube* newCubeptr = new Cube();
 					Cube& newCube = *newCubeptr;
 					newCube.set_position(vec3(d * i, d * j, -5.0f));
@@ -98,6 +102,7 @@ namespace ruya
 					//newCube.set_texture(textures[i % textures.size()]);
 					cubes.push_back(newCubeptr);
 					scene.add_object(newCubeptr);
+					*/
 				}
 			}
 
@@ -120,7 +125,7 @@ namespace ruya
 			scene.add_object(newIco);
 			scene.add_light(light);
 
-			glm::vec4 bgColor(0.7f, 0.7f, 0.9f, 1.0f); // background color
+			glm::vec4 bgColor(0.9f, 0.9f, 0.9f, 1.0f); // background color
 			ruya::Timer timerOutput;
 			timerOutput.start();
 

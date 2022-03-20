@@ -63,24 +63,29 @@ namespace ruya
 		};
 
 	public:
-		Renderer(Shader& shaderObjects, Shader& shaderLights, Window& window, Camera& camera);
+		enum class ShadingMode { SMOOTH, FLAT };
+
+		Renderer(Shader* shaderObjects, Shader* shaderLights, Window* window, Camera* camera);
 		void render_scene(Scene& scene);
 		void render_object(Object& obj);
-
+		void set_flat_shader(Shader* flatShader) { mFlatShaderObjects = flatShader; }
+		void set_shading_mode(ShadingMode mode) { mShadingMode = mode; }
 
 	private:
 		static void GLAPIENTRY debug_mesage_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, 
 														const GLchar* message, const void* userParam);
 
-		void render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light);
+		void render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light, Shader * activeShader);
 		void render_light_source(LightSource& light, const mat4& viewProjectTransform);
 		void draw_mesh(const shared_ptr<Mesh>& mesh);
 
 		GLuint buffer_mesh(const Mesh& mesh);
-		Shader& mShaderObjects;
-		Shader& mShaderLights;
-		Window& mWindow;
-		Camera& mCamera;
+		Shader* mSmoothShaderObjects;
+		Shader* mShaderLights;
+		Shader* mFlatShaderObjects;
+		Window* mWindow;
+		Camera* mCamera;
+		ShadingMode mShadingMode;
 
 		unordered_map<shared_ptr<Mesh>, GLuint> mMeshVaoMap;
 		const GLuint INDEX_VERTEX_ATTRIB; // indexes of the attributes used in the vertex shader

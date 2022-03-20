@@ -195,10 +195,12 @@
   <ItemGroup>
     <Text Include="icosahedron_model.txt" />
     <Text Include="shader_file_extensions.txt" />
+    <Text Include="source\shaders\shader_file_extensions.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\flat\flat_shading.frag" />
-    <None Include="source\shaders\flat\flat_shading.vert" />
+    <None Include="source\shaders\flat\flat_frag.frag" />
+    <None Include="source\shaders\flat\flat_geom.geom" />
+    <None Include="source\shaders\flat\flat_vert.vert" />
     <None Include="source\shaders\old\fragment_shader.frag" />
     <None Include="source\shaders\old\vertex_shader.vert" />
     <None Include="source\shaders\phong\object.frag" />

@@ -153,12 +153,15 @@
     <Text Include="icosahedron_model.txt">
       <Filter>Model\Shapes</Filter>
     </Text>
+    <Text Include="source\shaders\shader_file_extensions.txt">
+      <Filter>Shaders</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\flat\flat_shading.frag">
+    <None Include="source\shaders\flat\flat_frag.frag">
       <Filter>Shaders\flat</Filter>
     </None>
-    <None Include="source\shaders\flat\flat_shading.vert">
+    <None Include="source\shaders\flat\flat_vert.vert">
       <Filter>Shaders\flat</Filter>
     </None>
     <None Include="source\shaders\phong\object.frag">
@@ -175,6 +178,9 @@
     </None>
     <None Include="source\shaders\old\vertex_shader.vert">
       <Filter>Shaders\old</Filter>
+    </None>
+    <None Include="source\shaders\flat\flat_geom.geom">
+      <Filter>Shaders\flat</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
