@@ -45,10 +45,12 @@ namespace ruya
 		Timer mFrameTimer;
 		Window& mWindow;
 		dvec2 mOldMousePos;
+		bool mAllowShadingModeChange;
+		Renderer* mRenderer;
 
 	public: // FUNCTIONS
 		/*** CONSTRUCT ***/
-		TestApplication(Window& window) : mWindow(window), mOldMousePos(-1.0, -1.0)
+		TestApplication(Window& window) : mWindow(window), mOldMousePos(-1.0, -1.0), mAllowShadingModeChange(true)
 		{
 			glfwSetInputMode(window.get_GLFW_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
@@ -71,6 +73,7 @@ namespace ruya
 			Renderer renderer(&shaderPhongObjects, &shaderPhongLights, &mWindow, &mCamera);
 			renderer.set_flat_shader(&shaderFlat);
 			renderer.set_shading_mode(Renderer::ShadingMode::FLAT);
+			mRenderer = &renderer;
 
 			// init scene
 			Scene scene;
@@ -237,6 +240,23 @@ namespace ruya
 				pos.y -= moveSpeed * mFrameTimer.elapsed_time_s();
 				mCamera.set_position(pos);
 			}
+
+			if (glfwGetKey(glfwWindow, GLFW_KEY_2) == GLFW_PRESS && mAllowShadingModeChange)
+			{
+				if (mRenderer != nullptr)
+				{
+					if (mRenderer->shading_mode() == Renderer::ShadingMode::FLAT)
+						mRenderer->set_shading_mode(Renderer::ShadingMode::SMOOTH);
+					else 
+						mRenderer->set_shading_mode(Renderer::ShadingMode::FLAT);
+					mAllowShadingModeChange = false;
+				}
+			}
+			if (glfwGetKey(glfwWindow, GLFW_KEY_2) == GLFW_RELEASE)
+			{
+				mAllowShadingModeChange = true;
+			}
+
 
 			// MOUSE MOVEMENT
 			update_camera_look_direction();

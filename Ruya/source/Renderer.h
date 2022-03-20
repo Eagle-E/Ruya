@@ -70,6 +70,7 @@ namespace ruya
 		void render_object(Object& obj);
 		void set_flat_shader(Shader* flatShader) { mFlatShaderObjects = flatShader; }
 		void set_shading_mode(ShadingMode mode) { mShadingMode = mode; }
+		ShadingMode shading_mode() const { return mShadingMode; }
 
 	private:
 		static void GLAPIENTRY debug_mesage_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, 
