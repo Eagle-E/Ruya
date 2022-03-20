@@ -197,13 +197,11 @@
     <Text Include="shader_file_extensions.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\flat\flat_shading.frag" />
-    <None Include="source\shaders\flat\flat_shading.vert" />
-    <None Include="source\shaders\old\fragment_shader.frag" />
-    <None Include="source\shaders\old\vertex_shader.vert" />
-    <None Include="source\shaders\phong\object.frag" />
-    <None Include="source\shaders\phong\light_source.frag" />
-    <None Include="source\shaders\phong\object.vert" />
+    <None Include="source\shaders\fragment_basic_lighting.frag" />
+    <None Include="source\shaders\fragment_light_source.frag" />
+    <None Include="source\shaders\fragment_shader.frag" />
+    <None Include="source\shaders\vertex_shader.vert" />
+    <None Include="source\shaders\vertex_basic_lighting.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\awesomeface.png" />
