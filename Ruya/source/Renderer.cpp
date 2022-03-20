@@ -21,6 +21,10 @@ ruya::Renderer::Renderer(Shader& shaderObjects, Shader& shaderLights, Window& wi
 	// enable depth test
 	mShaderObjects.use();
 	glEnable(GL_DEPTH_TEST);
+
+	// During init, enable debug output
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(debug_mesage_callback, 0);
 }
 
 void ruya::Renderer::render_scene(Scene& scene)
@@ -86,10 +90,12 @@ void ruya::Renderer::render_light_source(LightSource& light, const mat4& viewPro
 {
 	// color uniform
 	mShaderLights.setVec3("objColor", light.model().color());
+	int error = glGetError();
 
 	// calc model-view-projection matrix
 	mat4 MVP = viewProjectTransform * light.model().model_matrix();
-	mShaderObjects.setMatrix4D("MVP", MVP);
+	mShaderLights.setMatrix4D("MVP", MVP);
+	error = glGetError();
 
 	// render mesh
 	draw_mesh(light.model().mesh());
@@ -129,6 +135,53 @@ void ruya::Renderer::render_object(Object& obj)
 	draw_mesh(obj.mesh());
 }
 
+void GLAPIENTRY ruya::Renderer::debug_mesage_callback(GLenum source, GLenum type, GLuint id, GLenum severity, 
+													  GLsizei length, const GLchar* message, const void* userParam)
+{
+	const char* strSeverity = "Unknown";
+	switch (severity)
+	{
+		case GL_DEBUG_SEVERITY_HIGH: strSeverity = "High"; break;
+		case GL_DEBUG_SEVERITY_MEDIUM: strSeverity = "Medium"; break;
+		case GL_DEBUG_SEVERITY_LOW: strSeverity = "Low"; break;
+		case GL_DEBUG_SEVERITY_NOTIFICATION: strSeverity = "Notification"; break;
+	}
+
+	const char* strType = "Unknown";
+	switch (type)
+	{
+		case GL_DEBUG_TYPE_ERROR: strType = "** ERROR **";
+		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: strType = "Depracated Behavior";
+		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: strType = "Undefined Behavior";
+		case GL_DEBUG_TYPE_PORTABILITY: strType = "Portability";
+		case GL_DEBUG_TYPE_PERFORMANCE: strType = "Performance";
+		case GL_DEBUG_TYPE_OTHER: strType = "Other";
+		case GL_DEBUG_TYPE_MARKER: strType = "Marker";
+		case GL_DEBUG_TYPE_PUSH_GROUP: strType = "Push Group";
+		case GL_DEBUG_TYPE_POP_GROUP: strType = "Pop Group";
+	}
+
+	const char* strSource = "Unknown";
+	switch (source)
+	{
+		case GL_DEBUG_SOURCE_API: strSource = "API";
+		case GL_DEBUG_SOURCE_WINDOW_SYSTEM: strSource = "Window System";
+		case GL_DEBUG_SOURCE_SHADER_COMPILER: strSource = "Shader Compiler";
+		case GL_DEBUG_SOURCE_THIRD_PARTY: strSource = "Third Party";
+		case GL_DEBUG_SOURCE_APPLICATION: strSource = "Application";
+		case GL_DEBUG_SOURCE_OTHER: strSource = "Other";
+	}
+
+	
+
+	std::cerr << "[DEBUG] type = " << strType
+		<< "\n\t source = " << strSource
+		<< "\n\t severity = " << strSeverity
+		<< "\n\t message = " << message
+		<< "\n\n";
+	//fprintf(stderr, " % s \n\tsource = 0x \n\ttype = 0x % x \n\tseverity = 0x % x \n\tmessage = % s\n\n",
+	//				strError, source, type, severity, message);
+}
 /*
 * Renders the given mesh by binding the vao and making the draw call.
 * Is also responsible for checking if the mesh has been buffered yet.
@@ -150,6 +203,8 @@ void ruya::Renderer::draw_mesh(const shared_ptr<Mesh>& mesh)
 	size_t numIndexes = mesh->faces.size() * 3;
 	glBindVertexArray(mMeshVaoMap[mesh]);
 	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
+	int error = glGetError();
+	int a = 0;
 }
 
 /*

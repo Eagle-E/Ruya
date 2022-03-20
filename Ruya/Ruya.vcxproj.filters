@@ -33,6 +33,12 @@
     <Filter Include="Shaders\old">
       <UniqueIdentifier>{829f01a4-a866-4805-b195-dc52d1e35ad5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\flat">
+      <UniqueIdentifier>{a8cfbde0-c99a-45c9-8fd1-70e2995d65d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\phong">
+      <UniqueIdentifier>{39f6326d-72c6-40df-9983-338baeec9f14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\glad.c">
@@ -149,20 +155,26 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\vertex_basic_lighting.vert">
-      <Filter>Shaders</Filter>
+    <None Include="source\shaders\flat\flat_shading.frag">
+      <Filter>Shaders\flat</Filter>
     </None>
-    <None Include="source\shaders\fragment_basic_lighting.frag">
-      <Filter>Shaders</Filter>
+    <None Include="source\shaders\flat\flat_shading.vert">
+      <Filter>Shaders\flat</Filter>
     </None>
-    <None Include="source\shaders\fragment_shader.frag">
+    <None Include="source\shaders\phong\object.frag">
+      <Filter>Shaders\phong</Filter>
+    </None>
+    <None Include="source\shaders\phong\light_source.frag">
+      <Filter>Shaders\phong</Filter>
+    </None>
+    <None Include="source\shaders\phong\object.vert">
+      <Filter>Shaders\phong</Filter>
+    </None>
+    <None Include="source\shaders\old\fragment_shader.frag">
       <Filter>Shaders\old</Filter>
     </None>
-    <None Include="source\shaders\vertex_shader.vert">
+    <None Include="source\shaders\old\vertex_shader.vert">
       <Filter>Shaders\old</Filter>
-    </None>
-    <None Include="source\shaders\fragment_light_source.frag">
-      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
