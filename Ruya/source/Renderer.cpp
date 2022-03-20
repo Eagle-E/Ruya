@@ -14,6 +14,7 @@ using glm::mat4;	using glm::mat3;
 
 ruya::Renderer::Renderer(Shader* shaderObjects, Shader* shaderLights, Window* window, Camera* camera)
 	: mWindow(window), mCamera(camera), mSmoothShaderObjects(shaderObjects), mShaderLights(shaderLights),
+	  mFlatShaderObjects(nullptr), mShadingMode(ShadingMode::SMOOTH),
 	INDEX_VERTEX_ATTRIB(0),
 	INDEX_NORMAL_ATTRIB(1),
 	INDEX_TEXTURE_ATTRIB(2)
