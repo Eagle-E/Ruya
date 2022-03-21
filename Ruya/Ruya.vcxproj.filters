@@ -92,6 +92,9 @@
     <ClCompile Include="source\LightSource.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="source\Material.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Window.h">
@@ -143,6 +146,9 @@
       <Filter>Model\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="source\LightSource.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Material.h">
       <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>

@@ -144,6 +144,18 @@ void ruya::Shader::setVec3(const std::string& uniformName, const glm::vec3& vec)
 	glUniform3f(loc, vec.x, vec.y, vec.z);
 }
 
+void ruya::Shader::setVec3(const std::string& uniformName, float x, float y, float z)
+{
+	unsigned int loc = glGetUniformLocation(mProgramID, uniformName.c_str());
+	glUniform3f(loc, x, y, z);
+}
+
+void ruya::Shader::setFloat(const std::string& uniformName, float value)
+{
+	unsigned int loc = glGetUniformLocation(mProgramID, uniformName.c_str());
+	glUniform1f(loc, value);
+}
+
 /*####################################################################################################################################
 *
 *	Helper Functions

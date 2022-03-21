@@ -8,6 +8,7 @@
 #include "UUID.h"
 #include "Mesh.h"
 #include "Texture.h"
+#include "Material.h"
 
 using glm::vec4;
 using glm::vec3;
@@ -60,9 +61,10 @@ namespace ruya
 		mat4 model_matrix();
 		mat4 inverse_model_matrix();
 		std::pair<mat4, mat4> model_matrix_and_inverse(); // first model, second inverse model
-		vec3 color() const { return mColor; }
-		vec3 position() const { return mPosition; }
-		vec3 scale() const { return mScale; }
+		vec3 color() const		{ return mColor; }
+		vec3 position() const	{ return mPosition; }
+		vec3 scale() const		{ return mScale; }
+		Material& material()	{ return mMaterial; }
 
 		// MANIPULATORS
 		inline void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }
@@ -74,7 +76,8 @@ namespace ruya
 		void set_color(const glm::vec3& color) { mColor = color; }
 		void set_color(float r, float g, float b) { mColor.r = r; mColor.g = g; mColor.b = b; }
 		void set_rotation(const glm::vec3& rotation) { mRotation = rotation; } // resets rotation to given amount per axis
-		
+		void set_material(const Material& material) { mMaterial = material; }
+
 		void rotate(float x, float y, float z);
 		void rotate_x(float degrees) { mRotation.x = fmod(mRotation.x + degrees, 360); } // idem rotate() but on 1 axis
 		void rotate_y(float degrees) { mRotation.y = fmod(mRotation.y + degrees, 360); } 
@@ -93,6 +96,7 @@ namespace ruya
 		vec3 mColor;
 		shared_ptr<Mesh> mMesh; // vertices, faces, texture coords
 		shared_ptr<Texture> mTexture; // vertices, faces, texture coords
+		Material mMaterial;
 
 		Object* mParent;
 		list<Object*> mChildren;

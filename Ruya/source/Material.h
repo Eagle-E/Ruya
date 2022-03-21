@@ -47,7 +47,7 @@ namespace ruya
         static const Material white_rubber;
         static const Material yellow_rubber;
     };
-
+    /*
     const Material Materials::emerald           (0.0215f,    0.1745f,    0.0215f,    0.07568f,   0.61424f,     0.07568f,     0.633f,       0.727811f,    0.633f,       0.6f);
     const Material Materials::jade              (0.135f,     0.2225f,    0.1575f,    0.54f,      0.89f,        0.63f,        0.316228f,    0.316228f,    0.316228f,    0.1f);
     const Material Materials::obsidian          (0.05375f,   0.05f,      0.06625f,   0.18275f,   0.17f,        0.22525f,     0.332741f,    0.328634f,    0.346435f,    0.3f);
@@ -72,7 +72,7 @@ namespace ruya
     const Material Materials::red_rubber        (0.05f,      0.0f,       0.0f,       0.5f,       0.4f,         0.4f,         0.7f,         0.04f,        0.04f,        0.078125f);
     const Material Materials::white_rubber      (0.05f,      0.05f,      0.05f,      0.5f,       0.5f,         0.5f,         0.7f,         0.7f,         0.7f,         0.078125f);
     const Material Materials::yellow_rubber     (0.05f,      0.05f,      0.0f,       0.5f,       0.5f,         0.4f,         0.7f,         0.7f,         0.04f,        0.078125f);                                       
-
+    */
 }
 
 #endif MATERIAL_H

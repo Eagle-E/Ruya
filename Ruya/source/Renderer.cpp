@@ -88,6 +88,18 @@ void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform
 	activeShader->setVec3("lightPosInObjSpace", vec3(lightPosInObjSpace) / lightPosInObjSpace.w);
 	activeShader->setVec3("cameraPosInObjSpace", vec3(cameraPosInObjSpace) / cameraPosInObjSpace.w);
 
+	// material uniform
+	Material& material = obj.material();
+	activeShader->setVec3("material.ambient", material.ambient);
+	activeShader->setVec3("material.diffuse", material.diffuse);
+	activeShader->setVec3("material.specular", material.specular);
+	activeShader->setFloat("material.shininess", material.shininess);
+
+	// light uniform
+	activeShader->setVec3("light.ambient", light.ambient());
+	activeShader->setVec3("light.diffuse", light.diffuse());
+	activeShader->setVec3("light.specular", light.specular());
+
 	// calc model-view-projection matrix
 	mat4 MVP = viewProjectTransform * Model_ModelInv.first;
 	activeShader->setMatrix4D("MVP", MVP);

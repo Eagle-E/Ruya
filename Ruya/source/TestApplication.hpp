@@ -117,6 +117,7 @@ namespace ruya
 			floor->set_scale(100.0f);
 			floor->set_position(0, -floor->scale().y/2 - 10.0f, 0);
 			floor->set_color(0.65f, 0.85f, 0.95f);
+			floor->set_material(Materials::chrome);
 			//newCubeptr->set_scale(vec3(3.0f, 3.0f, 3.0f));
 
 			//ico.set_color(vec3(1.0f, 0.5f, 0.31f));
@@ -125,7 +126,9 @@ namespace ruya
 			light->model().set_position(vec3(0.0f));
 			light->model().set_color(vec3(1.0f, 0.5f, 0.31f));
 			//light->model().set_color(vec3(1.0f, 1.0f, 1.0f));
-
+			light->set_ambient(vec3(0.2f, 0.2f, 0.2f));
+			light->set_diffuse(vec3(0.8f, 0.8f, 0.8f));
+			light->set_specular(vec3( 1.0f, 1.0f, 1.0f));
 			
 			scene.add_object(newCubeptr);
 			scene.add_object(newIco);

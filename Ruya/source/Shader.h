@@ -25,8 +25,10 @@ namespace ruya
 
 		// UNIFORMS
 		void setInt(const std::string& uniformName, int value);
-		void setMatrix4D(const std::string& uniformName, const glm::mat4& matrix);
+		void setFloat(const std::string& uniformName, float value);
 		void setVec3(const std::string& uniformName, const glm::vec3& vec);
+		void setVec3(const std::string& uniformName, float x, float y, float z);
+		void setMatrix4D(const std::string& uniformName, const glm::mat4& matrix);
 
 		// GETTERS
 		GLuint id() { return mProgramID; }
