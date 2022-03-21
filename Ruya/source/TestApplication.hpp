@@ -72,7 +72,6 @@ namespace ruya
 			Shader shaderFlat("source/shaders/flat/flat_vert.vert", "source/shaders/flat/flat_geom.geom", "source/shaders/flat/flat_frag.frag");
 			Renderer renderer(&shaderPhongObjects, &shaderPhongLights, &mWindow, &mCamera);
 			renderer.set_flat_shader(&shaderFlat);
-			renderer.set_shading_mode(Renderer::ShadingMode::FLAT);
 			mRenderer = &renderer;
 
 			// init scene
@@ -111,9 +110,13 @@ namespace ruya
 
 			Cube ico;
 			Cube* newCubeptr = new Cube();
+			Cube* floor = new Cube();
 			Icosahedron* newIco= new Icosahedron();
 			newCubeptr->set_position(vec3(3.0f, -1.0f, -2.0f));
 			newIco->set_position(vec3(-3.0f, -1.0f, -2.0f));
+			floor->set_scale(100.0f);
+			floor->set_position(0, -floor->scale().y/2 - 10.0f, 0);
+			floor->set_color(0.65f, 0.85f, 0.95f);
 			//newCubeptr->set_scale(vec3(3.0f, 3.0f, 3.0f));
 
 			//ico.set_color(vec3(1.0f, 0.5f, 0.31f));
@@ -127,6 +130,8 @@ namespace ruya
 			scene.add_object(newCubeptr);
 			scene.add_object(newIco);
 			scene.add_light(light);
+			scene.add_object(floor);
+
 
 			glm::vec4 bgColor(0.9f, 0.9f, 0.9f, 1.0f); // background color
 			ruya::Timer timerOutput;
@@ -144,12 +149,18 @@ namespace ruya
 				float ys = 0.90f;
 				float zs = 0.15f;
 
-				for (Cube* cube : cubes)
-				{
-					float degrees = glm::degrees((float)glfwGetTime());
-					//cube->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
-					//ico.set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
-				}
+				float degrees = glm::degrees((float)glfwGetTime());
+				//for (Cube* cube : cubes)
+				//	cube->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
+				
+				newCubeptr->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
+				newIco->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
+				mat4 rot(1.0); 
+				rot = glm::rotate(rot, glm::radians(zs * degrees), vec3(1.0f, 0.0f, 0.0f));
+				rot = glm::rotate(rot, glm::radians(xs * degrees), vec3(0.0f, 1.0f, 0.0f));
+				rot = glm::rotate(rot, glm::radians(ys * degrees), vec3(0.0f, 0.0f, 1.0f));
+				vec4 pos = rot * vec4(5, 0, 0, 1);
+				light->model().set_position(vec3(pos.x, pos.y, pos.z) / pos.w);
 
 				// RENDER!!!
 				renderer.render_scene(scene);

@@ -62,13 +62,17 @@ namespace ruya
 		std::pair<mat4, mat4> model_matrix_and_inverse(); // first model, second inverse model
 		vec3 color() const { return mColor; }
 		vec3 position() const { return mPosition; }
+		vec3 scale() const { return mScale; }
 
 		// MANIPULATORS
 		inline void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }
 		inline void set_texture(const shared_ptr<Texture>& texture) { mTexture = texture; }
 		void set_position(const glm::vec3& position) { mPosition = position; }
+		void set_position(float x, float y, float z) { mPosition.x = x; mPosition.y = y; mPosition.z = z; }
 		void set_scale(const glm::vec3& scale) { mScale = scale; }
+		void set_scale(float scale) { mScale.x = scale, mScale.y = scale, mScale.z = scale; }
 		void set_color(const glm::vec3& color) { mColor = color; }
+		void set_color(float r, float g, float b) { mColor.r = r; mColor.g = g; mColor.b = b; }
 		void set_rotation(const glm::vec3& rotation) { mRotation = rotation; } // resets rotation to given amount per axis
 		
 		void rotate(float x, float y, float z);

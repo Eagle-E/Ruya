@@ -68,12 +68,13 @@ std::pair<mat4, mat4> ruya::Object::model_matrix_and_inverse()
         model_invModel.second = glm::inverse(model_invModel.first);
     else
     {
-        model_invModel.second =  mat4(glm::transpose(glm::mat3(model_invModel.first)));
-        model_invModel.second[3][0] = -mPosition[0];
-        model_invModel.second[3][1] = -mPosition[1];
-        model_invModel.second[3][2] = -mPosition[2];
-        model_invModel.second[3][3] = 1.0f;
-        
+        //model_invModel.second =  mat4(glm::transpose(glm::mat3(model_invModel.first)));
+        //model_invModel.second[3][0] = -mPosition[0];
+        //model_invModel.second[3][1] = -mPosition[1];
+        //model_invModel.second[3][2] = -mPosition[2];
+        //model_invModel.second[3][3] = 1.0f;
+        model_invModel.second = glm::inverse(model_invModel.first);
+        //TODO: optimize calculation of the inverse 
     }
 
     return model_invModel;

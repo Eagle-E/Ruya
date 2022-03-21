@@ -155,5 +155,6 @@ std::shared_ptr<Mesh> ruya::Cube::init_mesh()
 	};
 
 
+
 	return mesh;
 }

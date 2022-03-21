@@ -81,8 +81,12 @@ void ruya::Renderer::render_object(Object& obj, const mat4& viewProjectTransform
 	// pass uniform data
 	activeShader->setVec3("objColor", obj.color());
 	activeShader->setVec3("lightColor", light.color());
-	vec4 lightPosInObjSpace = Model_ModelInv.second * vec4(light.position(), 1.0f);
-	activeShader->setVec3("LightPosInObjSpace", vec3(lightPosInObjSpace) / lightPosInObjSpace.w);
+
+	mat4 inverseModelMat = glm::inverse(obj.model_matrix());
+	vec4 lightPosInObjSpace = inverseModelMat * vec4(light.position(), 1.0f);
+	vec4 cameraPosInObjSpace = inverseModelMat * vec4(mCamera->position(), 1.0f);
+	activeShader->setVec3("lightPosInObjSpace", vec3(lightPosInObjSpace) / lightPosInObjSpace.w);
+	activeShader->setVec3("cameraPosInObjSpace", vec3(cameraPosInObjSpace) / cameraPosInObjSpace.w);
 
 	// calc model-view-projection matrix
 	mat4 MVP = viewProjectTransform * Model_ModelInv.first;

@@ -214,12 +214,13 @@ std::shared_ptr<Mesh> ruya::Icosahedron::init_mesh()
 		{
 			insert_face_unique(mesh->faces, uvec3(i, pair.x, pair.y));
 		}
-
 	}
 
-	// init mesh, sum face normals then normalize
+	// init vertex normals: for all vertices get sum of all surface normals 
+	// it is part of then divide it by 5 (each vertex is part of 5 triangles 
+	// in an icosahedron)
 	mesh->normals.clear();
-	mesh->normals.resize(mesh->vertices.size());
+	mesh->normals.resize(mesh->vertices.size(), vec3(0));
 
 	for (const uvec3& face : mesh->faces)
 	{
@@ -227,9 +228,14 @@ std::shared_ptr<Mesh> ruya::Icosahedron::init_mesh()
 		vec3 v1 = mesh->vertices[face[1]];
 		vec3 v2 = mesh->vertices[face[2]];
 		vec3 normal = glm::normalize(v0 + v1 + v2);
-		mesh->normals[face[0]] = normal;
-		mesh->normals[face[1]] = normal;
-		mesh->normals[face[2]] = normal;
+		mesh->normals[face[0]] += normal;
+		mesh->normals[face[1]] += normal;
+		mesh->normals[face[2]] += normal;
+	}
+
+	for (int i = 0; i < mesh->normals.size(); i++)
+	{
+		mesh->normals[i] /= 5;
 	}
 
 	return mesh;

@@ -2,7 +2,7 @@
 
 uniform vec3 objColor;
 uniform vec3 lightColor;
-uniform vec3 LightPosInObjSpace;
+uniform vec3 lightPosInObjSpace;
 in vec3 fragPositionInObjSpace;
 in vec3 surfaceNormalInLocalSpace;
 
@@ -16,7 +16,7 @@ void main()
 
     // diffuse color
     vec3 norm = normalize(surfaceNormalInLocalSpace);
-    vec3 lightDir = normalize(LightPosInObjSpace - fragPositionInObjSpace);
+    vec3 lightDir = normalize(lightPosInObjSpace - fragPositionInObjSpace);
     float diff = max(dot(lightDir, norm), 0.0);
     vec3 diffuse = diff * lightColor;
 

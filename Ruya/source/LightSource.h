@@ -23,6 +23,7 @@ namespace ruya
 
 		// SETTERS
 		void set_color(const vec3& color) { mColor = color; }
+		void set_position(const vec3& position) { mModel.set_position(position); }
 
 	private:
 		vec3 mColor;

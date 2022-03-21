@@ -60,9 +60,12 @@ long int ruya::Mesh::size_texture_coords() const
 }
 
 /*
-* Will calculate the surface normals for each face stored in "faces".
+* Will calculate the surface normals for each face stored in "faces" and store the results in "normals"
+*   - each vertex in the "vertices" array will have an equivalent surface
+*     normal at the same index in the "normals" array
+*   - this will only work for objects that have vertex duplicates for each triangle
 * @pre vertices and faces need to have been initialized before calling this
-* @post this function will update the contents of the "normals" array with the surface normal vectors
+* @post this function will update the contents of the "normals" array with the surface normals
 */
 void ruya::Mesh::update_surface_normals()
 {
@@ -78,6 +81,36 @@ void ruya::Mesh::update_surface_normals()
         normals[face[0]] = normal;
         normals[face[1]] = normal;
         normals[face[2]] = normal;
-        //normals.push_back(normal);
+    }
+}
+
+/*
+* Will calculate the vertex normals for each vertex in "vertices".
+* @pre vertices and faces need to have been initialized before calling this
+* @post this function will update the contents of the "normals" array with the vertex normals
+*/
+void ruya::Mesh::update_vertex_normals()
+{
+    normals.clear();
+    normals.resize(vertices.size(), vec3(0));
+    vector<unsigned int> counts(vertices.size(), 0);
+
+    for (uvec3& face : faces)
+    {
+        vec3 v1 = vertices[face[0]];
+        vec3 v2 = vertices[face[1]];
+        vec3 v3 = vertices[face[2]];
+        vec3 normal = glm::normalize(glm::cross(v2 - v1, v3 - v1));
+        normals[face[0]] += normal; 
+        normals[face[1]] += normal; 
+        normals[face[2]] += normal; 
+        counts[face[0]]++;
+        counts[face[1]]++;
+        counts[face[2]]++;
+    }
+
+    for (int i = 0; i < normals.size(); i++)
+    {
+        normals[i] /= counts[i];
     }
 }

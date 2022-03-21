@@ -24,7 +24,10 @@ namespace ruya
 		long int size_faces() const;
 		long int size_normals() const;
 		long int size_texture_coords() const;
+
+		// TODO: remove two functions below? Make creator of mesh responsible for initializing?
 		void update_surface_normals();
+		void update_vertex_normals();
 	};
 }
 
