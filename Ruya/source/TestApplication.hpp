@@ -85,26 +85,31 @@ namespace ruya
 			textures.push_back(std::make_shared<Texture>("resources/Metal032_1K-PNG/Metal032_1K_Color.png"));
 			textures.push_back(std::make_shared<Texture>("resources/Fabric004_1K-PNG/Fabric004_1K_Color.png"));
 
-			vector<Cube*> cubes;
+			vector<Object*> objects;
 			int radius = 2; // radius of grid, so grid will have 2r+1 cols and rows
-			float d = 1.75f;
+			float d = 10.0f;
 			for (float i = -radius; i <= radius; i++)
 			{
 				for (float j = -radius; j <= radius; j++)
 				{
-					/*
-					Cube* newCubeptr = new Cube();
-					Cube& newCube = *newCubeptr;
-					newCube.set_position(vec3(d * i, d * j, -5.0f));
-					float g = (i + radius) / (2 * radius) * 0.8 + 0.1; // map i and j from [-r, r] to [0.1, 0.8]
-					float b = (j + radius) / (2 * radius) * 0.8 + 0.1;
-					//float r = (b + g) / 2.0f;
-					float r = 0.0f;
-					newCube.set_color(vec3(r, g, b));
-					//newCube.set_texture(textures[i % textures.size()]);
-					cubes.push_back(newCubeptr);
-					scene.add_object(newCubeptr);
-					*/
+					for (float k = -radius; k <= radius; k++)
+					{
+						Object* newObjptr = nullptr;
+						if ( (int)(i+j+k) % 2 == 0)
+							newObjptr = new Cube();
+						else 
+							newObjptr = new Icosahedron();
+						float g = (i + radius) / (2 * radius) * 0.8 + 0.1; // map i and j from [-r, r] to [0.1, 0.8]
+						float b = (j + radius) / (2 * radius) * 0.8 + 0.1;
+						float r = (k + radius) / (2 * radius) * 0.8 + 0.1;
+						//float r = (b + g) / 2.0f;
+						newObjptr->set_color(vec3(r, g, b));
+						newObjptr->set_position(vec3(d * i, d * j, d * k));
+						newObjptr->set_scale(3.0f);
+						//newCube.set_texture(textures[i % textures.size()]);
+						objects.push_back(newObjptr);
+						scene.add_object(newObjptr);
+					}
 				}
 			}
 
@@ -133,7 +138,7 @@ namespace ruya
 			scene.add_object(newCubeptr);
 			scene.add_object(newIco);
 			scene.add_light(light);
-			scene.add_object(floor);
+			//scene.add_object(floor);
 
 
 			glm::vec4 bgColor(0.9f, 0.9f, 0.9f, 1.0f); // background color
@@ -153,8 +158,8 @@ namespace ruya
 				float zs = 0.15f;
 
 				float degrees = glm::degrees((float)glfwGetTime());
-				//for (Cube* cube : cubes)
-				//	cube->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
+				for (Object* obj : objects)
+					obj->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
 				
 				newCubeptr->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
 				newIco->set_rotation(vec3(xs * degrees, ys * degrees, zs * degrees));
@@ -162,7 +167,7 @@ namespace ruya
 				rot = glm::rotate(rot, glm::radians(zs * degrees), vec3(1.0f, 0.0f, 0.0f));
 				rot = glm::rotate(rot, glm::radians(xs * degrees), vec3(0.0f, 1.0f, 0.0f));
 				rot = glm::rotate(rot, glm::radians(ys * degrees), vec3(0.0f, 0.0f, 1.0f));
-				vec4 pos = rot * vec4(5, 0, 0, 1);
+				vec4 pos = rot * vec4(50, 0, 0, 1);
 				light->model().set_position(vec3(pos.x, pos.y, pos.z) / pos.w);
 
 				// RENDER!!!
