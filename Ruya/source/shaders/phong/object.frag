@@ -30,7 +30,6 @@ out vec4 FragColor;
 void main()
 {
     // ambient color
-    float ambientStrength = 0.15;
     vec3 ambientComponent = light.ambient * material.ambient;
 
     // diffuse color

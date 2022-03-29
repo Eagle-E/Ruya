@@ -1,5 +1,23 @@
 #version 460 core
 
+struct Material 
+{
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+}; 
+uniform Material material;
+
+struct Light 
+{
+    vec3 position;  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+uniform Light light;
+
 uniform vec3 objColor;
 uniform vec3 lightColor;
 uniform vec3 lightPosInObjSpace;

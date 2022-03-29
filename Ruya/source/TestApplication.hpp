@@ -26,6 +26,8 @@
 #include "Icosahedron.h"
 #include "Scene.h"
 #include "LightSource.h"
+#include "Icosphere.hpp"
+
 
 using std::vector;
 using glm::vec3;		using glm::vec2;		using glm::dvec2;
@@ -34,7 +36,8 @@ using ruya::Mesh;		using ruya::Renderer;
 using ruya::Texture;	using ruya::Camera;
 using ruya::Cube;		using ruya::Timer;
 using ruya::Icosahedron; using ruya::Scene;
-using ruya::LightSource;
+using ruya::LightSource; using ruya::Icosphere;
+
 
 namespace ruya
 {
@@ -108,7 +111,7 @@ namespace ruya
 						newObjptr->set_scale(3.0f);
 						//newCube.set_texture(textures[i % textures.size()]);
 						objects.push_back(newObjptr);
-						scene.add_object(newObjptr);
+						//scene.add_object(newObjptr);
 					}
 				}
 			}
@@ -117,8 +120,13 @@ namespace ruya
 			Cube* newCubeptr = new Cube();
 			Cube* floor = new Cube();
 			Icosahedron* newIco= new Icosahedron();
-			newCubeptr->set_position(vec3(3.0f, -1.0f, -2.0f));
-			newIco->set_position(vec3(-3.0f, -1.0f, -2.0f));
+			Icosphere* newIcoSphere = new Icosphere();
+
+			newCubeptr->set_position(3.0f, -1.0f, -2.0f);
+			newIco->set_position(-3.0f, -1.0f, -2.0f);
+			newIcoSphere->set_position(0.0f, -1.0f, 0.0f);
+			newIcoSphere->set_rotation(vec3(0, 70.0f, 0));
+
 			floor->set_scale(100.0f);
 			floor->set_position(0, -floor->scale().y/2 - 10.0f, 0);
 			floor->set_color(0.65f, 0.85f, 0.95f);
@@ -128,15 +136,16 @@ namespace ruya
 			//ico.set_color(vec3(1.0f, 0.5f, 0.31f));
 			LightSource * light = new LightSource(vec3(1.0f, 1.0f, 1.0f));
 			light->model().set_mesh(ico.mesh()); // the icosahedron obj and the lightsource will share the same mesh
-			light->model().set_position(vec3(0.0f));
+			light->model().set_position(0.0f, 5.0f, 3.0f);
 			light->model().set_color(vec3(1.0f, 0.5f, 0.31f));
 			//light->model().set_color(vec3(1.0f, 1.0f, 1.0f));
 			light->set_ambient(vec3(0.2f, 0.2f, 0.2f));
-			light->set_diffuse(vec3(0.8f, 0.8f, 0.8f));
+			light->set_diffuse(vec3(0.7f, 0.7f, 0.7f));
 			light->set_specular(vec3( 1.0f, 1.0f, 1.0f));
 			
 			scene.add_object(newCubeptr);
 			scene.add_object(newIco);
+			scene.add_object(newIcoSphere);
 			scene.add_light(light);
 			//scene.add_object(floor);
 
@@ -168,7 +177,7 @@ namespace ruya
 				rot = glm::rotate(rot, glm::radians(xs * degrees), vec3(0.0f, 1.0f, 0.0f));
 				rot = glm::rotate(rot, glm::radians(ys * degrees), vec3(0.0f, 0.0f, 1.0f));
 				vec4 pos = rot * vec4(50, 0, 0, 1);
-				light->model().set_position(vec3(pos.x, pos.y, pos.z) / pos.w);
+				//light->model().set_position(vec3(pos.x, pos.y, pos.z) / pos.w);
 
 				// RENDER!!!
 				renderer.render_scene(scene);
@@ -201,7 +210,7 @@ namespace ruya
 			
 			// move camera forward/backward/left/right perpendicular with the xz plane
 			// move camera up/down along y-axis
-			float moveSpeed = 8.0f; // units per second
+			float moveSpeed = 2.0f; // units per second
 			float dt = mFrameTimer.elapsed_time_s();
 
 			if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)

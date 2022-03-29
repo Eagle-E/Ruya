@@ -175,6 +175,7 @@
     <ClCompile Include="source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Icosphere.hpp" />
     <ClInclude Include="source\Material.h" />
     <ClInclude Include="source\LightSource.h" />
     <ClInclude Include="source\Icosahedron.h" />

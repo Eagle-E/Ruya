@@ -89,7 +89,7 @@ namespace ruya
 		// OPERATORS
 		bool operator==(const Object& other);
 
-	private:
+	protected:
 		vec3 mPosition; // position relative to parent or world coordinates.
 		vec3 mRotation;
 		vec3 mScale;
@@ -98,6 +98,7 @@ namespace ruya
 		shared_ptr<Texture> mTexture; // vertices, faces, texture coords
 		Material mMaterial;
 
+	private:
 		Object* mParent;
 		list<Object*> mChildren;
 		UUID mUUID;

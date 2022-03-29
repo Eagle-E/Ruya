@@ -13,8 +13,8 @@ namespace ruya
 	public: 
 		Icosahedron();
 		void print_model_data() const;
+		static std::shared_ptr<Mesh> create_icosahedron_mesh();
 	private:
-		static std::shared_ptr<Mesh> init_mesh();
 		static std::shared_ptr<Mesh> mMesh;
 	};
 

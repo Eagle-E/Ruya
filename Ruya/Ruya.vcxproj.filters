@@ -151,6 +151,9 @@
     <ClInclude Include="source\Material.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="source\Icosphere.hpp">
+      <Filter>Model\Shapes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="shader_file_extensions.txt">

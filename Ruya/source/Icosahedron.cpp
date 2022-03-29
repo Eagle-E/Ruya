@@ -112,7 +112,7 @@ namespace
 }
 
 
-std::shared_ptr<Mesh> ruya::Icosahedron::mMesh = init_mesh();
+std::shared_ptr<Mesh> ruya::Icosahedron::mMesh = create_icosahedron_mesh();
 
 ruya::Icosahedron::Icosahedron()
 {
@@ -153,7 +153,7 @@ void ruya::Icosahedron::print_model_data() const
 	}
 }
 
-std::shared_ptr<Mesh> ruya::Icosahedron::init_mesh()
+std::shared_ptr<Mesh> ruya::Icosahedron::create_icosahedron_mesh()
 {
 
 	/*
