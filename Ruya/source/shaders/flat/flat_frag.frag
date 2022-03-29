@@ -21,6 +21,7 @@ uniform Light light;
 uniform vec3 objColor;
 uniform vec3 lightColor;
 uniform vec3 lightPosInObjSpace;
+uniform vec3 cameraPosInObjSpace;
 in vec3 fragPositionInObjSpace;
 in vec3 surfaceNormalInLocalSpace;
 
@@ -29,17 +30,16 @@ out vec4 FragColor;
 void main()
 {
     // ambient color
-    float ambientStrength = 0.15;
-    vec3 ambient = ambientStrength * lightColor;
+    vec3 ambientComponent = light.ambient * material.ambient;
 
     // diffuse color
     vec3 norm = normalize(surfaceNormalInLocalSpace);
     vec3 lightDir = normalize(lightPosInObjSpace - fragPositionInObjSpace);
     float diff = max(dot(lightDir, norm), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 diffuseComponent = light.diffuse * (diff * material.diffuse);
 
     // resulting fragment color
-    vec3 result = (ambient + diffuse) * objColor;
+    vec3 result = (ambientComponent + diffuseComponent) * objColor;
     FragColor = vec4(result, 1.0);
     //FragColor = vec4(fragPositionInObjSpace, 1.0);
 } 

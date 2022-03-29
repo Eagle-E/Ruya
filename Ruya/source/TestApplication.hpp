@@ -116,16 +116,51 @@ namespace ruya
 				}
 			}
 
+			// add spheres in a line
+			Timer timer;
+			printf("Old algo:\n");
+			for (int i = 0; i <= 5; i++)
+			{
+				timer.start();
+				Icosphere* sphere = new Icosphere(i, true);
+				timer.stop();
+				sphere->set_position((i-3.0f) * 2.5f, 2.5f, -1.0f);
+				scene.add_object(sphere);
+
+				printf("sphere level %d = %d vertices, %d faces (%f s)\n", i, sphere->mesh()->vertices.size(), sphere->mesh()->faces.size(), timer.elapsed_time_s());
+			}
+			printf("\nNew algo:\n");
+
+			for (int i = 0; i <= 10; i++)
+			{
+				timer.start();
+				Icosphere* sphere = new Icosphere(i, false);
+				timer.stop();
+				sphere->set_position((i - 3.0f) * 2.5f, -2.5f, -1.0f);
+				scene.add_object(sphere);
+
+				printf("sphere level %d = %d vertices, %d faces (%f s)\n", i, sphere->mesh()->vertices.size(), sphere->mesh()->faces.size(), timer.elapsed_time_s());
+			}
+
+			/*
+			for (int i = 0; i <= 5; i++)
+			{
+				for (int j = 0; j < 5; j++)
+				{
+					Icosphere* sphere = new Icosphere(i);
+					sphere->set_position((i - 3.0f) * 2.5f, 2.5f + j * 2.5f, -1.0f);
+					scene.add_object(sphere);
+				}
+			}
+			*/
+
 			Cube ico;
 			Cube* newCubeptr = new Cube();
 			Cube* floor = new Cube();
 			Icosahedron* newIco= new Icosahedron();
-			Icosphere* newIcoSphere = new Icosphere();
 
 			newCubeptr->set_position(3.0f, -1.0f, -2.0f);
 			newIco->set_position(-3.0f, -1.0f, -2.0f);
-			newIcoSphere->set_position(0.0f, -1.0f, 0.0f);
-			newIcoSphere->set_rotation(vec3(0, 70.0f, 0));
 
 			floor->set_scale(100.0f);
 			floor->set_position(0, -floor->scale().y/2 - 10.0f, 0);
@@ -145,7 +180,6 @@ namespace ruya
 			
 			scene.add_object(newCubeptr);
 			scene.add_object(newIco);
-			scene.add_object(newIcoSphere);
 			scene.add_light(light);
 			//scene.add_object(floor);
 
@@ -178,6 +212,8 @@ namespace ruya
 				rot = glm::rotate(rot, glm::radians(ys * degrees), vec3(0.0f, 0.0f, 1.0f));
 				vec4 pos = rot * vec4(50, 0, 0, 1);
 				//light->model().set_position(vec3(pos.x, pos.y, pos.z) / pos.w);
+				light->model().set_position(cos(glfwGetTime()) * 5.0f, 5.0f, 3.0f);
+
 
 				// RENDER!!!
 				renderer.render_scene(scene);
