@@ -90,28 +90,50 @@ namespace ruya
 
 			vector<Object*> objects;
 			int radius = 2; // radius of grid, so grid will have 2r+1 cols and rows
-			float d = 10.0f;
+			float d = 7.5f;
 			for (float i = -radius; i <= radius; i++)
 			{
 				for (float j = -radius; j <= radius; j++)
 				{
-					for (float k = -radius; k <= radius; k++)
+					if (false)
 					{
-						Object* newObjptr = nullptr;
-						if ( (int)(i+j+k) % 2 == 0)
-							newObjptr = new Cube();
-						else 
-							newObjptr = new Icosahedron();
+						for (float k = -radius; k <= radius; k++)
+						{
+							//Object* newObjptr = nullptr;
+							//if ( (int)(i+j+k) % 2 == 0)
+							//	newObjptr = new Cube();
+							//else 
+							//	newObjptr = new Icosahedron();
+
+							Object* newObjptr = new Icosphere(i + radius);
+							float g = (i + radius) / (2 * radius) * 0.8 + 0.1; // map i and j from [-r, r] to [0.1, 0.8]
+							float b = (j + radius) / (2 * radius) * 0.8 + 0.1;
+							float r = (k + radius) / (2 * radius) * 0.8 + 0.1;
+							//float r = (b + g) / 2.0f;
+							newObjptr->set_color(vec3(r, g, b));
+							newObjptr->set_position(vec3(d * i, d * j, d * k));
+							newObjptr->set_scale(3.0f);
+							newObjptr->material().ambient = vec3(1.0f);
+							newObjptr->material().diffuse = vec3(1.0f);
+							newObjptr->material().specular = vec3(1.0f);
+							newObjptr->material().shininess = 1.0f;
+							//newCube.set_texture(textures[i % textures.size()]);
+							objects.push_back(newObjptr);
+							scene.add_object(newObjptr);
+						}
+					}
+					else
+					{
+						Object* newObjptr = new Icosphere(i + radius);
 						float g = (i + radius) / (2 * radius) * 0.8 + 0.1; // map i and j from [-r, r] to [0.1, 0.8]
 						float b = (j + radius) / (2 * radius) * 0.8 + 0.1;
-						float r = (k + radius) / (2 * radius) * 0.8 + 0.1;
-						//float r = (b + g) / 2.0f;
+						//float r = (k + radius) / (2 * radius) * 0.8 + 0.1;
+						float r = (b + g) / 2.0f;
 						newObjptr->set_color(vec3(r, g, b));
-						newObjptr->set_position(vec3(d * i, d * j, d * k));
+						newObjptr->set_position(vec3(d * i, d * j, -5.0f));
 						newObjptr->set_scale(3.0f);
-						//newCube.set_texture(textures[i % textures.size()]);
 						objects.push_back(newObjptr);
-						//scene.add_object(newObjptr);
+						scene.add_object(newObjptr);
 					}
 				}
 			}
@@ -122,26 +144,14 @@ namespace ruya
 			for (int i = 0; i <= 5; i++)
 			{
 				timer.start();
-				Icosphere* sphere = new Icosphere(i, true);
+				Icosphere* sphere = new Icosphere(i);
 				timer.stop();
 				sphere->set_position((i-3.0f) * 2.5f, 2.5f, -1.0f);
 				scene.add_object(sphere);
 
 				printf("sphere level %d = %d vertices, %d faces (%f s)\n", i, sphere->mesh()->vertices.size(), sphere->mesh()->faces.size(), timer.elapsed_time_s());
 			}
-			printf("\nNew algo:\n");
-
-			for (int i = 0; i <= 10; i++)
-			{
-				timer.start();
-				Icosphere* sphere = new Icosphere(i, false);
-				timer.stop();
-				sphere->set_position((i - 3.0f) * 2.5f, -2.5f, -1.0f);
-				scene.add_object(sphere);
-
-				printf("sphere level %d = %d vertices, %d faces (%f s)\n", i, sphere->mesh()->vertices.size(), sphere->mesh()->faces.size(), timer.elapsed_time_s());
-			}
-
+	
 			/*
 			for (int i = 0; i <= 5; i++)
 			{
@@ -153,6 +163,7 @@ namespace ruya
 				}
 			}
 			*/
+			
 
 			Cube ico;
 			Cube* newCubeptr = new Cube();
@@ -172,7 +183,7 @@ namespace ruya
 			LightSource * light = new LightSource(vec3(1.0f, 1.0f, 1.0f));
 			light->model().set_mesh(ico.mesh()); // the icosahedron obj and the lightsource will share the same mesh
 			light->model().set_position(0.0f, 5.0f, 3.0f);
-			light->model().set_color(vec3(1.0f, 0.5f, 0.31f));
+			light->model().set_color(vec3(1.0f, 1.0f, 1.0f));
 			//light->model().set_color(vec3(1.0f, 1.0f, 1.0f));
 			light->set_ambient(vec3(0.2f, 0.2f, 0.2f));
 			light->set_diffuse(vec3(0.7f, 0.7f, 0.7f));
@@ -212,7 +223,7 @@ namespace ruya
 				rot = glm::rotate(rot, glm::radians(ys * degrees), vec3(0.0f, 0.0f, 1.0f));
 				vec4 pos = rot * vec4(50, 0, 0, 1);
 				//light->model().set_position(vec3(pos.x, pos.y, pos.z) / pos.w);
-				light->model().set_position(cos(glfwGetTime()) * 5.0f, 5.0f, 3.0f);
+				light->model().set_position(cos(glfwGetTime()) * 7.5f, 5.0f, 3.0f);
 
 
 				// RENDER!!!
@@ -246,7 +257,7 @@ namespace ruya
 			
 			// move camera forward/backward/left/right perpendicular with the xz plane
 			// move camera up/down along y-axis
-			float moveSpeed = 2.0f; // units per second
+			float moveSpeed = 6.0f; // units per second
 			float dt = mFrameTimer.elapsed_time_s();
 
 			if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)
