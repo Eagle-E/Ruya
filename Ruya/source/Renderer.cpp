@@ -163,35 +163,35 @@ void GLAPIENTRY ruya::Renderer::debug_mesage_callback(GLenum source, GLenum type
 	const char* strSeverity = "Unknown";
 	switch (severity)
 	{
-		case GL_DEBUG_SEVERITY_HIGH: strSeverity = "High"; break;
-		case GL_DEBUG_SEVERITY_MEDIUM: strSeverity = "Medium"; break;
-		case GL_DEBUG_SEVERITY_LOW: strSeverity = "Low"; break;
+		case GL_DEBUG_SEVERITY_HIGH:		 strSeverity = "High"; break;
+		case GL_DEBUG_SEVERITY_MEDIUM:		 strSeverity = "Medium"; break;
+		case GL_DEBUG_SEVERITY_LOW:			 strSeverity = "Low"; break;
 		case GL_DEBUG_SEVERITY_NOTIFICATION: strSeverity = "Notification"; break;
 	}
 
 	const char* strType = "Unknown";
 	switch (type)
 	{
-		case GL_DEBUG_TYPE_ERROR: strType = "** ERROR **";
+		case GL_DEBUG_TYPE_ERROR:				strType = "** ERROR **";
 		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: strType = "Depracated Behavior";
-		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: strType = "Undefined Behavior";
-		case GL_DEBUG_TYPE_PORTABILITY: strType = "Portability";
-		case GL_DEBUG_TYPE_PERFORMANCE: strType = "Performance";
-		case GL_DEBUG_TYPE_OTHER: strType = "Other";
-		case GL_DEBUG_TYPE_MARKER: strType = "Marker";
-		case GL_DEBUG_TYPE_PUSH_GROUP: strType = "Push Group";
-		case GL_DEBUG_TYPE_POP_GROUP: strType = "Pop Group";
+		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  strType = "Undefined Behavior";
+		case GL_DEBUG_TYPE_PORTABILITY:			strType = "Portability";
+		case GL_DEBUG_TYPE_PERFORMANCE:			strType = "Performance";
+		case GL_DEBUG_TYPE_OTHER:				strType = "Other";
+		case GL_DEBUG_TYPE_MARKER:				strType = "Marker";
+		case GL_DEBUG_TYPE_PUSH_GROUP:			strType = "Push Group";
+		case GL_DEBUG_TYPE_POP_GROUP:			strType = "Pop Group";
 	}
 
 	const char* strSource = "Unknown";
 	switch (source)
 	{
-		case GL_DEBUG_SOURCE_API: strSource = "API";
-		case GL_DEBUG_SOURCE_WINDOW_SYSTEM: strSource = "Window System";
+		case GL_DEBUG_SOURCE_API:			  strSource = "API";
+		case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   strSource = "Window System";
 		case GL_DEBUG_SOURCE_SHADER_COMPILER: strSource = "Shader Compiler";
-		case GL_DEBUG_SOURCE_THIRD_PARTY: strSource = "Third Party";
-		case GL_DEBUG_SOURCE_APPLICATION: strSource = "Application";
-		case GL_DEBUG_SOURCE_OTHER: strSource = "Other";
+		case GL_DEBUG_SOURCE_THIRD_PARTY:	  strSource = "Third Party";
+		case GL_DEBUG_SOURCE_APPLICATION:	  strSource = "Application";
+		case GL_DEBUG_SOURCE_OTHER:			  strSource = "Other";
 	}
 
 	
@@ -221,14 +221,10 @@ void ruya::Renderer::draw_mesh(const shared_ptr<Mesh>& mesh)
 		GLuint meshVaoID = buffer_mesh(*mesh);
 		mMeshVaoMap[mesh] = meshVaoID;
 	}
-	int error = glGetError();
-
 
 	size_t numIndexes = mesh->faces.size() * 3;
 	glBindVertexArray(mMeshVaoMap[mesh]);
 	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
-	error = glGetError();
-	int a = 0;
 }
 
 /*

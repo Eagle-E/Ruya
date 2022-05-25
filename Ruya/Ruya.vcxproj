@@ -155,6 +155,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="includes\imgui\imgui.cpp" />
+    <ClCompile Include="includes\imgui\imgui_demo.cpp" />
+    <ClCompile Include="includes\imgui\imgui_draw.cpp" />
+    <ClCompile Include="includes\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="includes\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="includes\imgui\imgui_tables.cpp" />
+    <ClCompile Include="includes\imgui\imgui_widgets.cpp" />
     <ClCompile Include="source\LightSource.cpp" />
     <ClCompile Include="source\Cube.cpp" />
     <ClCompile Include="source\Camera.cpp" />
@@ -175,6 +182,16 @@
     <ClCompile Include="source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\imgui\imconfig.h" />
+    <ClInclude Include="includes\imgui\imgui.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="includes\imgui\imgui_internal.h" />
+    <ClInclude Include="includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="includes\imgui\imstb_textedit.h" />
+    <ClInclude Include="includes\imgui\imstb_truetype.h" />
+    <ClInclude Include="source\KeyframeEditor.hpp" />
     <ClInclude Include="source\Icosphere.hpp" />
     <ClInclude Include="source\Material.h" />
     <ClInclude Include="source\LightSource.h" />

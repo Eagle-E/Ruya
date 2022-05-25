@@ -168,7 +168,6 @@ namespace ruya
 	//std::shared_ptr<Mesh> ruya::Icosphere::mMesh = init_mesh();
 	std::shared_ptr<Mesh> ruya::Icosphere::mMesh;
 	vector<std::shared_ptr<Mesh>> ruya::Icosphere::mMeshes(10);
-
 }
 
 

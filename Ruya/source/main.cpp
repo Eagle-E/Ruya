@@ -1,4 +1,5 @@
-#include "TestApplication.hpp"
+//#include "TestApplication.hpp"
+#include "KeyframeEditor.hpp"
 #include "Window.h"
 
 int main()
@@ -6,7 +7,8 @@ int main()
 	ruya::Window window(1450, 875);
 	window.make_context_current();
 	
-	ruya::TestApplication app(window);
+	//ruya::TestApplication app(window);
+	ruya::KeyframeEditor app(window);
 
 	try
 	{

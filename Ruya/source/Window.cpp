@@ -92,8 +92,8 @@ void ruya::Window::resize_callback(GLFWwindow* window, int width, int height)
 void ruya::Window::process_inputs()
 {		
 	// Close window if ESC key is pressed
-	if (glfwGetKey(mGLFWwindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(mGLFWwindow, true);
+	//if (glfwGetKey(mGLFWwindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	//	glfwSetWindowShouldClose(mGLFWwindow, true);
 
 	if (glfwGetKey(mGLFWwindow, GLFW_KEY_1) == GLFW_PRESS && allowRenderModeChange)
 	{

@@ -39,6 +39,9 @@
     <Filter Include="Shaders\phong">
       <UniqueIdentifier>{39f6326d-72c6-40df-9983-338baeec9f14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\imgui">
+      <UniqueIdentifier>{fa6f1d6a-a491-428f-be7b-8de6eb827da6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\glad.c">
@@ -94,6 +97,27 @@
     </ClCompile>
     <ClCompile Include="source\Material.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\imgui\imgui.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\imgui\imgui_demo.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\imgui\imgui_draw.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\imgui\imgui_impl_glfw.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\imgui\imgui_impl_opengl3.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\imgui\imgui_tables.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\imgui\imgui_widgets.cpp">
+      <Filter>UI\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +177,36 @@
     </ClInclude>
     <ClInclude Include="source\Icosphere.hpp">
       <Filter>Model\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="source\KeyframeEditor.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imconfig.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imgui.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imgui_impl_glfw.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imgui_impl_opengl3.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imgui_internal.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imstb_rectpack.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imstb_textedit.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imgui\imstb_truetype.h">
+      <Filter>UI\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
