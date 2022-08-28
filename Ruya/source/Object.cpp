@@ -3,7 +3,8 @@
 
 
 ruya::Object::Object()
-    : mPosition(0.0f), mRotation(0.0f), mScale(1.0f), mColor(0.99f), mMesh(nullptr), mTexture(nullptr), mParent(nullptr), mMaterial(Materials::silver)
+    :   mPosition(0.0f), mRotation(0.0f), mScale(1.0f), mColor(0.99f),
+        mMesh(nullptr), mTexture(nullptr), mParent(nullptr), mMaterial(Materials::silver)
 {
 }
 

@@ -3,6 +3,7 @@
 
 #define _USE_MATH_DEFINES
 #include <glm/glm.hpp>
+#include <Object.h>
 
 #define M_PI       3.14159265358979323846   // pi
 
@@ -17,6 +18,7 @@ namespace ruya
 
         // GETTERS
         glm::vec3 position() const;
+        Object& model() { return mModel; }
         float fov() const { return mFov; }
         float horizontal_angle() const;
         float vertical_angle() const;
@@ -41,8 +43,9 @@ namespace ruya
         glm::vec3 mCamFront; // vector pointing the direction the cam is faced
         float mHorizontalAngle, mVerticalAngle;
         float mFov;
-        
-        float mCamSpeed = 0.01f;
+        Object mModel;
+
+        //float mCamSpeed = 0.01f;
 
 
         // camera constants

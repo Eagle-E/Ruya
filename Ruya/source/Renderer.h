@@ -67,7 +67,7 @@ namespace ruya
 
 		Renderer(Shader* shaderObjects, Shader* shaderLights, Window* window, Camera* camera);
 		void render_scene(Scene& scene);
-		void render_object(Object& obj);
+		void render_object(Object& obj, LightSource& light);
 		void set_flat_shader(Shader* flatShader) { mFlatShaderObjects = flatShader; }
 		void set_shading_mode(ShadingMode mode) { mShadingMode = mode; }
 		ShadingMode shading_mode() const { return mShadingMode; }
@@ -79,6 +79,7 @@ namespace ruya
 		void render_object(Object& obj, const mat4& viewProjectTransform, const LightSource& light, Shader * activeShader);
 		void render_light_source(LightSource& light, const mat4& viewProjectTransform);
 		void draw_mesh(const shared_ptr<Mesh>& mesh);
+		Shader* get_active_shader_objects();
 
 		GLuint buffer_mesh(const Mesh& mesh);
 		Shader* mSmoothShaderObjects;
@@ -92,6 +93,7 @@ namespace ruya
 		const GLuint INDEX_VERTEX_ATTRIB; // indexes of the attributes used in the vertex shader
 		const GLuint INDEX_NORMAL_ATTRIB;
 		const GLuint INDEX_TEXTURE_ATTRIB;
+		const mat4 PROJECTION;
 		TextureSlotManager mSlotManager;
 
 		bool test = true;

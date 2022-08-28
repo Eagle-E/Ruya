@@ -15,8 +15,10 @@ namespace ruya
 
         Material(vec3 ambient, vec3 diffuse, vec3 specular, float shininess) 
             : ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess) {}
+        
         Material(float ar, float ag, float ab, float dr, float dg, float db, float sr, float sg, float sb, float shininess)
             : ambient(ar, ag, ab), diffuse(dr, dg, db), specular(sr, sg, sb), shininess(shininess) {}
+        
         Material() : ambient(0), diffuse(0), specular(0), shininess(0) {}
     };
 

@@ -69,14 +69,14 @@ namespace ruya
 		// MANIPULATORS
 		inline void set_mesh(const shared_ptr<Mesh>& mesh) { mMesh = mesh; }
 		inline void set_texture(const shared_ptr<Texture>& texture) { mTexture = texture; }
-		void set_position(const glm::vec3& position) { mPosition = position; }
+		void set_position(const vec3& position)		 { mPosition = position; }
 		void set_position(float x, float y, float z) { mPosition.x = x; mPosition.y = y; mPosition.z = z; }
-		void set_scale(const glm::vec3& scale) { mScale = scale; }
-		void set_scale(float scale) { mScale.x = scale, mScale.y = scale, mScale.z = scale; }
-		void set_color(const glm::vec3& color) { mColor = color; }
-		void set_color(float r, float g, float b) { mColor.r = r; mColor.g = g; mColor.b = b; }
-		void set_rotation(const glm::vec3& rotation) { mRotation = rotation; } // resets rotation to given amount per axis
-		void set_material(const Material& material) { mMaterial = material; }
+		void set_scale(const vec3& scale)			 { mScale = scale; }
+		void set_scale(float scale)					 { mScale.x = scale, mScale.y = scale, mScale.z = scale; }
+		void set_color(const vec3& color)			 { mColor = color; }
+		void set_color(float r, float g, float b)	 { mColor.r = r; mColor.g = g; mColor.b = b; }
+		void set_rotation(const vec3& rotation)		 { mRotation = rotation; } // resets rotation to given amount per axis
+		void set_material(const Material& material)  { mMaterial = material; }
 
 		void rotate(float x, float y, float z);
 		void rotate_x(float degrees) { mRotation.x = fmod(mRotation.x + degrees, 360); } // idem rotate() but on 1 axis

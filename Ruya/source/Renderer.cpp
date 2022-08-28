@@ -17,7 +17,8 @@ ruya::Renderer::Renderer(Shader* shaderObjects, Shader* shaderLights, Window* wi
 	  mFlatShaderObjects(nullptr), mShadingMode(ShadingMode::SMOOTH),
 	INDEX_VERTEX_ATTRIB(0),
 	INDEX_NORMAL_ATTRIB(1),
-	INDEX_TEXTURE_ATTRIB(2)
+	INDEX_TEXTURE_ATTRIB(2),
+	PROJECTION(glm::perspective(glm::radians(mCamera->fov()), mWindow->aspect_ratio(), 0.1f, 300.0f))
 {
 	// enable depth test
 	glEnable(GL_DEPTH_TEST);
@@ -32,17 +33,11 @@ void ruya::Renderer::render_scene(Scene& scene)
 {
 	// OBJECTS
 	// activate object shader to render objects
-	Shader* activeObjectShader = nullptr;
-	switch (mShadingMode)
-	{
-		case ShadingMode::SMOOTH:	activeObjectShader = mSmoothShaderObjects;	break;
-		case ShadingMode::FLAT:		activeObjectShader = mFlatShaderObjects;	break;
-	}
+	Shader* activeObjectShader = get_active_shader_objects();
 	activeObjectShader->use();
 
 	// get view-projection matrix
-	mat4 projection = glm::perspective(glm::radians(mCamera->fov()), mWindow->aspect_ratio(), 0.1f, 300.0f);
-	mat4 VP = projection * mCamera->view_matrix();
+	mat4 VP = PROJECTION * mCamera->view_matrix();
 
 	// render scene objects
 	list<Object*>& objects = scene.get_scene_objects();
@@ -123,12 +118,57 @@ void ruya::Renderer::render_light_source(LightSource& light, const mat4& viewPro
 
 
 
-void ruya::Renderer::render_object(Object& obj)
+void ruya::Renderer::render_object(Object& obj, LightSource& light)
 {
 	// TODO:	when a mesh gets deleted that is in the unordered_map, it needs to be removed.
 	//			Consider attaching a custom destroctor on the shared_ptr that is being used as
 	//			key, that will remove the 'null' shared_ptr.
 
+	// activate object shader to render objects
+	Shader* activeShader = get_active_shader_objects();
+	activeShader->use();
+
+	// Bind the textures and set their uniform location
+	if (obj.texture())
+	{
+		GLuint textureSlot = mSlotManager.bind_texture(*obj.texture());
+		activeShader->setInt("ourTexture", textureSlot - GL_TEXTURE0); // TODO: save texture uniform name in Shader class instead of hardcoding
+	}
+
+	std::pair<mat4, mat4> Model_ModelInv = obj.model_matrix_and_inverse();
+
+	// pass uniform data
+	activeShader->setVec3("objColor", obj.color());
+	activeShader->setVec3("lightColor", light.color());
+
+	mat4 inverseModelMat = glm::inverse(Model_ModelInv.first);
+	vec4 lightPosInObjSpace = inverseModelMat * vec4(light.position(), 1.0f);
+	vec4 cameraPosInObjSpace = inverseModelMat * vec4(mCamera->position(), 1.0f);
+	activeShader->setVec3("lightPosInObjSpace", vec3(lightPosInObjSpace) / lightPosInObjSpace.w);
+	activeShader->setVec3("cameraPosInObjSpace", vec3(cameraPosInObjSpace) / cameraPosInObjSpace.w);
+
+	// material uniform
+	Material& material = obj.material();
+	activeShader->setVec3("material.ambient", material.ambient);
+	activeShader->setVec3("material.diffuse", material.diffuse);
+	activeShader->setVec3("material.specular", material.specular);
+	activeShader->setFloat("material.shininess", material.shininess);
+
+	// light uniform
+	activeShader->setVec3("light.ambient", light.ambient());
+	activeShader->setVec3("light.diffuse", light.diffuse());
+	activeShader->setVec3("light.specular", light.specular());
+
+	// calc model-view-projection matrix
+	mat4 VP = PROJECTION * mCamera->view_matrix();
+	mat4 MVP = VP * Model_ModelInv.first;
+	activeShader->setMatrix4D("MVP", MVP);
+
+	// render mesh
+	draw_mesh(obj.mesh());
+
+	/*
+	// OOOOOOLLLLLLLLLLLDDDDDDDDDDD
 	// Check if the Mesh of the object already had been buffered, if not create the buffers
 	if (mMeshVaoMap.find(obj.mesh()) == mMeshVaoMap.end())
 	{
@@ -147,12 +187,13 @@ void ruya::Renderer::render_object(Object& obj)
 	mSmoothShaderObjects->setVec3("objColor", obj.color());
 
 	// calc model-view-projection matrix
-	mat4 projection = glm::perspective(glm::radians(mCamera->fov()), mWindow->aspect_ratio(), 0.1f, 300.0f);
-	mat4 MVP = projection * mCamera->view_matrix() * obj.model_matrix();
+	mat4 MVP = PROJECTION * mCamera->view_matrix() * obj.model_matrix();
 	mSmoothShaderObjects->setMatrix4D("MVP", MVP);
+
 
 	// Bind the vao and render
 	draw_mesh(obj.mesh());
+	*/
 }
 
 void GLAPIENTRY ruya::Renderer::debug_mesage_callback(GLenum source, GLenum type, GLuint id, GLenum severity, 
@@ -225,6 +266,17 @@ void ruya::Renderer::draw_mesh(const shared_ptr<Mesh>& mesh)
 	size_t numIndexes = mesh->faces.size() * 3;
 	glBindVertexArray(mMeshVaoMap[mesh]);
 	glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, 0);
+}
+
+Shader* ruya::Renderer::get_active_shader_objects()
+{
+	Shader* activeObjectShader = nullptr;
+	switch (mShadingMode)
+	{
+		case ShadingMode::SMOOTH:	activeObjectShader = mSmoothShaderObjects;	break;
+		case ShadingMode::FLAT:		activeObjectShader = mFlatShaderObjects;	break;
+	}
+	return activeObjectShader;
 }
 
 /*
