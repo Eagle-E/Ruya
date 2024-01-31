@@ -82,8 +82,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\guney\Desktop\learningOpenGL\Ruya_framework\Ruya\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\guney\Desktop\learningOpenGL\Ruya_framework\Ruya\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\libs;$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>code_analysis_ruleset.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
