@@ -350,6 +350,7 @@ MigrationBackup/
 .ionide/
 
 
-# Test folder
+# Custom folders
+build/
 Test/
 Ruya/Tools/
