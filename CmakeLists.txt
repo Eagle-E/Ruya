@@ -1,7 +1,76 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(Ruya)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(main src/main.cpp)
+project(
+    Ruya
+    VERSION 0.0.0
+)
 
+
+
+set(HEADERS
+
+)
+
+set(SOURCES
+    "main.cpp"
+)
+
+# Compiler definitions
+set(DEFINES
+
+)
+
+# Compiler options
+set(OPTIONS
+
+)
+
+# targets to be used throughout our build process
+set(MAIN_TARGET "main")
+
+# The source and header files defined here are assumed to be within the src/ folder
+list(TRANSFORM HEADERS PREPEND "src/")
+list(TRANSFORM SOURCES PREPEND "src/")
+
+# create main target and add its sources
+add_executable(${MAIN_TARGET})
+target_sources(${MAIN_TARGET} PRIVATE ${SOURCES} ${HEADERS})
+
+
+
+# dependencies
+set(EXTERNAL_DIR "${CMAKE_SOURCE_DIR}/external")
+
+# include the "external" dir
+target_include_directories(${MAIN_TARGET} PRIVATE "${EXTERNAL_DIR}")
  
+
+##### GLFW3
+set(GLFW_DIR "${EXTERNAL_DIR}/glfw")
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+target_include_directories(${MAIN_TARGET} PRIVATE "${GLFW_DIR}")
+target_link_libraries(${MAIN_TARGET} PRIVATE "${GLFW_DIR}/lib/glfw3.lib")
+
+
+##### GLAD
+set(GLAD_DIR "${EXTERNAL_DIR}/glad")
+add_subdirectory("${GLAD_DIR}")
+target_include_directories(${MAIN_TARGET} PRIVATE "${GLAD_DIR}")
+target_link_libraries(${MAIN_TARGET} PRIVATE LibGlad)
+
+
+##### IMGUI
+#set(IMGUI_DIR "${EXTERNAL_DIR}/imgui")
+#add_subdirectory("${IMGUI_DIR}")
+#target_include_directories(${MAIN_TARGET} PRIVATE 
+#    "${IMGUI_DIR}" 
+#    "${IMGUI_DIR}/backends"
+#    "${IMGUI_DIR}/misc/cpp"
+#)
+#target_link_libraries(${MAIN_TARGET} PRIVATE LibImGui)
