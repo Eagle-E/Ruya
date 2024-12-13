@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Custom folders
+build/
+**/build/
+Test/
+Ruya/Tools/
+
+
 # User-specific files
 *.rsuser
 *.suo
@@ -350,7 +357,3 @@ MigrationBackup/
 .ionide/
 
 
-# Custom folders
-build/
-Test/
-Ruya/Tools/
