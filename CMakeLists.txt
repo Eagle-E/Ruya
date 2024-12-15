@@ -79,8 +79,14 @@ target_include_directories(${MAIN_TARGET} PRIVATE "${EXTERNAL_DIR}")
 
 
 ##### GLM
+set(LINK_GLM_STATIC 0) # set to 1 if you want to link glm statically
 set(GLM_DIR "${EXTERNAL_DIR}/glm")
-target_include_directories(${MAIN_TARGET} PRIVATE "${GLM_DIR}")
+if (LINK_GLM_STATIC)
+    message(LINK_GLM_STATIC=${LINK_GLM_STATIC})
+    set(BUILD_STATIC_LIBS 1)
+    add_subdirectory(${GLM_DIR})
+    target_link_libraries(${MAIN_TARGET} glm_static)
+endif (LINK_GLM_STATIC)
 
 ##### GLFW3
 set(GLFW_DIR "${EXTERNAL_DIR}/glfw")
@@ -91,11 +97,15 @@ target_link_libraries(${MAIN_TARGET} glfw)
 # set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 
+
 ##### GLAD
 set(GLAD_DIR "${EXTERNAL_DIR}/glad")
-add_subdirectory("${GLAD_DIR}")
-target_include_directories(${MAIN_TARGET} PRIVATE "${GLAD_DIR}")
+
+add_library(LibGlad "${GLAD_DIR}/src/glad.c")
+target_include_directories(LibGlad PRIVATE "${GLAD_DIR}/include")
+
 target_link_libraries(${MAIN_TARGET} LibGlad)
+target_include_directories(${MAIN_TARGET} PRIVATE "${GLAD_DIR}/include")
 
 
 ##### IMGUI
