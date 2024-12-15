@@ -48,25 +48,24 @@ set(EXTERNAL_DIR "${CMAKE_SOURCE_DIR}/external")
 target_include_directories(${MAIN_TARGET} PRIVATE "${EXTERNAL_DIR}")
  
 
-if (WIN32)
-    # do something
-    ##### GLFW3
-    set(GLFW_DIR "${EXTERNAL_DIR}/glfw_win")
-    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    
-    target_include_directories(${MAIN_TARGET} PRIVATE "${GLFW_DIR}")
-    target_link_libraries(${MAIN_TARGET} PRIVATE "${GLFW_DIR}/lib/glfw3.lib")
-    
 
-    ##### GLAD
-    set(GLAD_DIR "${EXTERNAL_DIR}/glad")
-    add_subdirectory("${GLAD_DIR}")
-    target_include_directories(${MAIN_TARGET} PRIVATE "${GLAD_DIR}")
-    target_link_libraries(${MAIN_TARGET} PRIVATE LibGlad)
-    
-    
+##### GLFW3
+set(GLFW_DIR "${EXTERNAL_DIR}/glfw")
+add_subdirectory(${GLFW_DIR})
+target_link_libraries(${MAIN_TARGET} glfw)
+# set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+# set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+# set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+
+##### GLAD
+set(GLAD_DIR "${EXTERNAL_DIR}/glad")
+add_subdirectory("${GLAD_DIR}")
+target_include_directories(${MAIN_TARGET} PRIVATE "${GLAD_DIR}")
+target_link_libraries(${MAIN_TARGET} LibGlad)
+
+
+if (WIN32)
     ##### IMGUI
     #set(IMGUI_DIR "${EXTERNAL_DIR}/imgui")
     #add_subdirectory("${IMGUI_DIR}")
@@ -80,17 +79,5 @@ endif (WIN32)
 
 
 if (UNIX)
-    ##### GLFW3
-    set(GLFW_DIR "${EXTERNAL_DIR}/glfw")
-    add_subdirectory(${GLFW_DIR})
-    target_link_libraries(${MAIN_TARGET} glfw)
-    # set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-    # set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-    # set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    
-    ##### GLAD
-    set(GLAD_DIR "${EXTERNAL_DIR}/glad")
-    add_subdirectory("${GLAD_DIR}")
-    target_include_directories(${MAIN_TARGET} PRIVATE "${GLAD_DIR}")
-    target_link_libraries(${MAIN_TARGET} LibGlad)
+
 endif (UNIX)
