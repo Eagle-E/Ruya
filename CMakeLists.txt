@@ -11,8 +11,10 @@ project(
 
 
 set(HEADERS
+    engine/material.h
     engine/mesh.h
     engine/texture.h
+    engine/window.h
     utils/uuid.h
     utils/timer.h
     io/stb_image.h
@@ -20,8 +22,10 @@ set(HEADERS
     
     set(SOURCES
     main.cpp
+    engine/material.cpp
     engine/mesh.cpp
     engine/texture.cpp
+    engine/window.cpp
     utils/uuid.cpp
     utils/timer.cpp
     io/stb_image.cpp
