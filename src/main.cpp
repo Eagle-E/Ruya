@@ -2,11 +2,7 @@
 #include <glad.h> 
 #include <GLFW/glfw3.h>
 
-<<<<<<< HEAD
 #include "engine/mesh.h"
-=======
-#include "mesh.h"
->>>>>>> 614f16d5ef3819f25c8429b9427a5371708fea9c
 #include "utils/uuid.h"
 
 using namespace std;
@@ -22,10 +18,6 @@ int main()
 {
     ruya::Mesh mesh1{};
     ruya::UUID id1{};
-<<<<<<< HEAD
-=======
-    cout << ">>>>>>>>>>>>>> " << id1.value() << endl;
->>>>>>> 614f16d5ef3819f25c8429b9427a5371708fea9c
 
 
 
