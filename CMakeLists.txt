@@ -11,12 +11,16 @@ project(
 
 
 set(HEADERS
-    mesh.h
-)
-
-set(SOURCES
+    engine/mesh.h
+    utils/uuid.h
+    io/stb_image.h
+    )
+    
+    set(SOURCES
     main.cpp
-    mesh.cpp
+    engine/mesh.cpp
+    utils/uuid.cpp
+    io/stb_image.cpp
 )
 
 # Compiler definitions

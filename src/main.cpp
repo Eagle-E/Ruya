@@ -2,7 +2,8 @@
 #include <glad.h> 
 #include <GLFW/glfw3.h>
 
-#include "mesh.h"
+#include "engine/mesh.h"
+#include "utils/uuid.h"
 
 using namespace std;
 
@@ -16,6 +17,9 @@ static void glfw_error_callback(int error, const char* description)
 int main()
 {
     ruya::Mesh mesh1{};
+    ruya::UUID id1{};
+
+
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
