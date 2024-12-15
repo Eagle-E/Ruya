@@ -12,11 +12,13 @@ project(
 
 set(HEADERS
     mesh.h
+    utils/uuid.h
 )
 
 set(SOURCES
     main.cpp
     mesh.cpp
+    utils/uuid.cpp
 )
 
 # Compiler definitions
