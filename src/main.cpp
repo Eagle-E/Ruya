@@ -8,6 +8,11 @@
 #include "utils/uuid.h"
 #include "utils/timer.h"
 
+#include "engine/object.h"
+#include "engine/models/cube.h"
+#include "engine/models/icosahedron.h"
+#include "engine/models/icosphere.hpp"
+
 using namespace std;
 
 
@@ -25,6 +30,11 @@ int main()
     ruya::Timer timer{};
 
     ruya::Window window{1000, 1000};
+
+    ruya::Object obj{};
+    ruya::Cube cube{};
+    ruya::Icosahedron icosahedron{};
+    ruya::Icosphere icosphere{};
 
     timer.start();
     timer.stop();

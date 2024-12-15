@@ -23,7 +23,7 @@ set(HEADERS
     io/stb_image.h
     )
     
-    set(SOURCES
+set(SOURCES
     main.cpp
     engine/material.cpp
     engine/mesh.cpp
