@@ -9,6 +9,8 @@ build/
 Test/
 Ruya/Tools/
 
+# temp
+**/*Copy/
 
 # User-specific files
 *.rsuser
@@ -355,5 +357,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
 
 

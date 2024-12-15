@@ -14,6 +14,7 @@ set(HEADERS
     engine/mesh.h
     engine/texture.h
     utils/uuid.h
+    utils/timer.h
     io/stb_image.h
     )
     
@@ -22,6 +23,7 @@ set(HEADERS
     engine/mesh.cpp
     engine/texture.cpp
     utils/uuid.cpp
+    utils/timer.cpp
     io/stb_image.cpp
 )
 

@@ -5,6 +5,7 @@
 #include "engine/mesh.h"
 #include "engine/texture.h"
 #include "utils/uuid.h"
+#include "utils/timer.h"
 
 using namespace std;
 
@@ -20,7 +21,12 @@ int main()
     ruya::Mesh mesh1{};
     ruya::UUID id1{};
     ruya::Texture tex1{};
+    ruya::Timer timer{};
 
+    timer.start();
+    timer.stop();
+    cout << ">>>>>>>>>>>> " << timer.elapsed_time_ns() << endl;
+    
 
 
     glfwSetErrorCallback(glfw_error_callback);
