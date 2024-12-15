@@ -12,13 +12,15 @@ project(
 
 set(HEADERS
     engine/mesh.h
+    engine/texture.h
     utils/uuid.h
     io/stb_image.h
     )
     
-set(SOURCES
+    set(SOURCES
     main.cpp
     engine/mesh.cpp
+    engine/texture.cpp
     utils/uuid.cpp
     io/stb_image.cpp
 )
@@ -35,6 +37,7 @@ set(OPTIONS
 
 # targets to be used throughout our build process
 set(MAIN_TARGET "main")
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 
 # The source and header files defined here are assumed to be within the src/ folder
 list(TRANSFORM HEADERS PREPEND "src/")
@@ -43,6 +46,12 @@ list(TRANSFORM SOURCES PREPEND "src/")
 # create main target and add its sources
 add_executable(${MAIN_TARGET})
 target_sources(${MAIN_TARGET} PRIVATE ${SOURCES} ${HEADERS})
+
+# add the src dir as include so that it can serve as the root for all our includes
+#   =>  no matter where a source file is located within src/, it can include any other 
+#       src file by providing the path starting from src/ as root, 
+#           i.e. `#include "mydir/myfile.h"` includes the file located at src/mydir/myfile.h
+target_include_directories(${MAIN_TARGET} PRIVATE ${SRC_DIR})
 
 
 

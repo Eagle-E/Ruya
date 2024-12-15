@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "engine/mesh.h"
+#include "engine/texture.h"
 #include "utils/uuid.h"
 
 using namespace std;
@@ -18,6 +19,7 @@ int main()
 {
     ruya::Mesh mesh1{};
     ruya::UUID id1{};
+    ruya::Texture tex1{};
 
 
 
