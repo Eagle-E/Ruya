@@ -11,11 +11,12 @@ project(
 
 
 set(HEADERS
-
+    mesh.h
 )
 
 set(SOURCES
-    "main.cpp"
+    main.cpp
+    mesh.cpp
 )
 
 # Compiler definitions
@@ -49,6 +50,10 @@ target_include_directories(${MAIN_TARGET} PRIVATE "${EXTERNAL_DIR}")
  
 
 
+##### GLM
+set(GLM_DIR "${EXTERNAL_DIR}/glm")
+target_include_directories(${MAIN_TARGET} PRIVATE "${GLM_DIR}")
+
 ##### GLFW3
 set(GLFW_DIR "${EXTERNAL_DIR}/glfw")
 add_subdirectory(${GLFW_DIR})
@@ -65,16 +70,17 @@ target_include_directories(${MAIN_TARGET} PRIVATE "${GLAD_DIR}")
 target_link_libraries(${MAIN_TARGET} LibGlad)
 
 
+##### IMGUI
+#set(IMGUI_DIR "${EXTERNAL_DIR}/imgui")
+#add_subdirectory("${IMGUI_DIR}")
+#target_include_directories(${MAIN_TARGET} PRIVATE 
+#    "${IMGUI_DIR}" 
+#    "${IMGUI_DIR}/backends"
+#    "${IMGUI_DIR}/misc/cpp"
+#)
+#target_link_libraries(${MAIN_TARGET} PRIVATE LibImGui)
+
 if (WIN32)
-    ##### IMGUI
-    #set(IMGUI_DIR "${EXTERNAL_DIR}/imgui")
-    #add_subdirectory("${IMGUI_DIR}")
-    #target_include_directories(${MAIN_TARGET} PRIVATE 
-    #    "${IMGUI_DIR}" 
-    #    "${IMGUI_DIR}/backends"
-    #    "${IMGUI_DIR}/misc/cpp"
-    #)
-    #target_link_libraries(${MAIN_TARGET} PRIVATE LibImGui)
 endif (WIN32)
 
 

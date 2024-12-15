@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "C:/Users/userz/home/cs/proj/Ruya/main"
+    "cmake.sourceDirectory": "C:/Users/userz/home/cs/proj/Ruya/main",
+    "files.associations": {
+        "vector": "cpp"
+    }
 }
