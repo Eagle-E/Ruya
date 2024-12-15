@@ -3,6 +3,7 @@
     "files.associations": {
         "vector": "cpp",
         "random": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "memory": "cpp"
     }
 }

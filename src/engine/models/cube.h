@@ -3,7 +3,7 @@
 
 #include "engine/object.h"
 
-namespace ruya
+namespace ruya::models
 {
 
 	class Cube : public ruya::Object

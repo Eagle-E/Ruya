@@ -12,6 +12,7 @@
 #include "engine/models/cube.h"
 #include "engine/models/icosahedron.h"
 #include "engine/models/icosphere.hpp"
+#include "engine/models/square.h"
 
 using namespace std;
 
@@ -32,9 +33,10 @@ int main()
     ruya::Window window{1000, 1000};
 
     ruya::Object obj{};
-    ruya::Cube cube{};
-    ruya::Icosahedron icosahedron{};
-    ruya::Icosphere icosphere{};
+    ruya::models::Cube cube{};
+    ruya::models::Icosahedron icosahedron{};
+    ruya::models::Icosphere icosphere{};
+    ruya::models::Square square{};
 
     timer.start();
     timer.stop();

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 project(
@@ -18,10 +18,11 @@ set(HEADERS
     engine/window.h
     engine/models/cube.h
     engine/models/icosahedron.h
+    engine/models/square.h
     utils/uuid.h
     utils/timer.h
     io/stb_image.h
-    )
+)
     
 set(SOURCES
     main.cpp
@@ -33,6 +34,7 @@ set(SOURCES
     engine/models/cube.cpp
     engine/models/icosahedron.cpp
     engine/models/icosphere.hpp
+    engine/models/square.cpp
     utils/uuid.cpp
     utils/timer.cpp
     io/stb_image.cpp

@@ -6,23 +6,23 @@
 using ruya::Mesh;
 using ruya::Texture;
 
+using ruya::models::Cube;
 
 
+std::shared_ptr<Mesh> Cube::mMesh = init_mesh();
 
-std::shared_ptr<Mesh> ruya::Cube::mMesh = init_mesh();
 
-
-ruya::Cube::Cube()
+Cube::Cube()
 {
 	set_mesh(mMesh);
 	//mMesh->update_surface_normals();
 }
 
-ruya::Cube::~Cube()
+Cube::~Cube()
 {
 }
 
-std::shared_ptr<Mesh> ruya::Cube::init_mesh()
+std::shared_ptr<Mesh> Cube::init_mesh()
 {
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 	

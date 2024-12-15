@@ -4,7 +4,7 @@
 #include "engine/object.h"
 
 
-namespace ruya
+namespace ruya::models
 {
 
 

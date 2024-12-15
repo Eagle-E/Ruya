@@ -24,7 +24,7 @@ namespace
 	};
 }
 
-namespace ruya
+namespace ruya::models
 {
 	class Icosphere : public Object
 	{
@@ -166,8 +166,8 @@ namespace ruya
 
 	// init static vars
 	//std::shared_ptr<Mesh> ruya::Icosphere::mMesh = init_mesh();
-	std::shared_ptr<Mesh> ruya::Icosphere::mMesh;
-	vector<std::shared_ptr<Mesh>> ruya::Icosphere::mMeshes(10);
+	std::shared_ptr<Mesh> Icosphere::mMesh;
+	vector<std::shared_ptr<Mesh>> Icosphere::mMeshes(10);
 
 }
 

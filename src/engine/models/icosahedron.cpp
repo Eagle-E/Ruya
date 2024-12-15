@@ -8,6 +8,7 @@
 using ruya::Mesh;
 using std::vector;
 using glm::ivec2;
+using ruya::models::Icosahedron;
 
 namespace
 {
@@ -112,9 +113,9 @@ namespace
 }
 
 
-std::shared_ptr<Mesh> ruya::Icosahedron::mMesh = create_icosahedron_mesh();
+std::shared_ptr<Mesh> Icosahedron::mMesh = create_icosahedron_mesh();
 
-ruya::Icosahedron::Icosahedron()
+Icosahedron::Icosahedron()
 {
 	set_mesh(mMesh);
 	
@@ -124,7 +125,7 @@ ruya::Icosahedron::Icosahedron()
 
 }
 
-void ruya::Icosahedron::print_model_data() const
+void Icosahedron::print_model_data() const
 {
 	auto printvec = [](vec3 v)
 	{
@@ -153,7 +154,7 @@ void ruya::Icosahedron::print_model_data() const
 	}
 }
 
-std::shared_ptr<Mesh> ruya::Icosahedron::create_icosahedron_mesh()
+std::shared_ptr<Mesh> Icosahedron::create_icosahedron_mesh()
 {
 
 	/*
