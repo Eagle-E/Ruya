@@ -2,9 +2,10 @@
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 
+#include "core/window.h"
+#include "core/camera.h"
 #include "engine/mesh.h"
 #include "engine/texture.h"
-#include "engine/window.h"
 #include "utils/uuid.h"
 #include "utils/timer.h"
 
@@ -31,6 +32,7 @@ int main()
     ruya::Timer timer{};
 
     ruya::Window window{1000, 1000};
+    ruya::Camera cam{};
 
     ruya::Object obj{};
     ruya::models::Cube cube{};

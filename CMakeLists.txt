@@ -11,11 +11,12 @@ project(
 
 
 set(HEADERS
+    core/window.h
+    core/camera.h
     engine/material.h
     engine/mesh.h
     engine/object.h
     engine/texture.h
-    engine/window.h
     engine/models/cube.h
     engine/models/icosahedron.h
     engine/models/square.h
@@ -26,11 +27,12 @@ set(HEADERS
     
 set(SOURCES
     main.cpp
+    core/window.cpp
+    core/camera.cpp
     engine/material.cpp
     engine/mesh.cpp
     engine/object.cpp
     engine/texture.cpp
-    engine/window.cpp
     engine/models/cube.cpp
     engine/models/icosahedron.cpp
     engine/models/icosphere.hpp
