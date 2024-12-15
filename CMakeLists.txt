@@ -16,7 +16,7 @@ set(HEADERS
     io/stb_image.h
     )
     
-    set(SOURCES
+set(SOURCES
     main.cpp
     engine/mesh.cpp
     utils/uuid.cpp
