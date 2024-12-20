@@ -1,7 +1,7 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 
-#include "engine/object.h"
+#include "engine/scene/object.h"
 #include <glm/glm.hpp>
 #include <vector>
 

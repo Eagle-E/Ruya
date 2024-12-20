@@ -11,15 +11,16 @@ project(
 
 
 set(HEADERS
-    core/window.h
-    core/camera.h
+    engine/core/window.h
     engine/material.h
     engine/mesh.h
-    engine/object.h
     engine/texture.h
-    engine/models/cube.h
-    engine/models/icosahedron.h
-    engine/models/square.h
+    engine/scene/camera.h
+    engine/scene/object.h
+    engine/scene/light_source.h
+    engine/scene/models/cube.h
+    engine/scene/models/icosahedron.h
+    engine/scene/models/square.h
     utils/uuid.h
     utils/timer.h
     io/stb_image.h
@@ -27,16 +28,17 @@ set(HEADERS
     
 set(SOURCES
     main.cpp
-    core/window.cpp
-    core/camera.cpp
+    engine/core/window.cpp
     engine/material.cpp
     engine/mesh.cpp
-    engine/object.cpp
     engine/texture.cpp
-    engine/models/cube.cpp
-    engine/models/icosahedron.cpp
-    engine/models/icosphere.hpp
-    engine/models/square.cpp
+    engine/scene/camera.cpp
+    engine/scene/object.cpp
+    engine/scene/light_source.cpp
+    engine/scene/models/cube.cpp
+    engine/scene/models/icosahedron.cpp
+    engine/scene/models/icosphere.hpp
+    engine/scene/models/square.cpp
     utils/uuid.cpp
     utils/timer.cpp
     io/stb_image.cpp

@@ -1,8 +1,8 @@
 #ifndef ICOSPHERE_H
 #define ICOSPHERE_H
 
-#include "engine/object.h"
-#include "engine/models/icosahedron.h"
+#include "engine/scene/object.h"
+#include "engine/scene/models/icosahedron.h"
 #include <unordered_map>
 
 

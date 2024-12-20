@@ -1,7 +1,7 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#include "engine/object.h"
+#include "engine/scene/object.h"
 
 namespace ruya::models
 {

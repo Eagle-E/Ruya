@@ -2,18 +2,19 @@
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 
-#include "core/window.h"
-#include "core/camera.h"
+#include "engine/core/window.h"
 #include "engine/mesh.h"
 #include "engine/texture.h"
 #include "utils/uuid.h"
 #include "utils/timer.h"
 
-#include "engine/object.h"
-#include "engine/models/cube.h"
-#include "engine/models/icosahedron.h"
-#include "engine/models/icosphere.hpp"
-#include "engine/models/square.h"
+#include "engine/scene/object.h"
+#include "engine/scene/camera.h"
+#include "engine/scene/light_source.h"
+#include "engine/scene/models/cube.h"
+#include "engine/scene/models/icosahedron.h"
+#include "engine/scene/models/icosphere.hpp"
+#include "engine/scene/models/square.h"
 
 using namespace std;
 
@@ -35,6 +36,8 @@ int main()
     ruya::Camera cam{};
 
     ruya::Object obj{};
+    ruya::LightSource light{};
+
     ruya::models::Cube cube{};
     ruya::models::Icosahedron icosahedron{};
     ruya::models::Icosphere icosphere{};

@@ -1,7 +1,7 @@
 #ifndef ICOSAHEDRON_H
 #define ICOSAHEDRON_H
 
-#include "engine/object.h"
+#include "engine/scene/object.h"
 
 
 namespace ruya::models

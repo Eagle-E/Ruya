@@ -4,6 +4,7 @@
         "vector": "cpp",
         "random": "cpp",
         "ostream": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "unordered_map": "cpp"
     }
 }
