@@ -16,8 +16,9 @@ set(HEADERS
     engine/mesh.h
     engine/texture.h
     engine/scene/camera.h
-    engine/scene/object.h
     engine/scene/light_source.h
+    engine/scene/object.h
+    engine/scene/scene.h
     engine/scene/models/cube.h
     engine/scene/models/icosahedron.h
     engine/scene/models/square.h
@@ -33,8 +34,9 @@ set(SOURCES
     engine/mesh.cpp
     engine/texture.cpp
     engine/scene/camera.cpp
-    engine/scene/object.cpp
     engine/scene/light_source.cpp
+    engine/scene/object.cpp
+    engine/scene/scene.cpp
     engine/scene/models/cube.cpp
     engine/scene/models/icosahedron.cpp
     engine/scene/models/icosphere.hpp

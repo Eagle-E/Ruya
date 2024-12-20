@@ -8,9 +8,10 @@
 #include "utils/uuid.h"
 #include "utils/timer.h"
 
-#include "engine/scene/object.h"
 #include "engine/scene/camera.h"
 #include "engine/scene/light_source.h"
+#include "engine/scene/object.h"
+#include "engine/scene/scene.h"
 #include "engine/scene/models/cube.h"
 #include "engine/scene/models/icosahedron.h"
 #include "engine/scene/models/icosphere.hpp"
@@ -37,6 +38,7 @@ int main()
 
     ruya::Object obj{};
     ruya::LightSource light{};
+    ruya::Scene scene{};
 
     ruya::models::Cube cube{};
     ruya::models::Icosahedron icosahedron{};
