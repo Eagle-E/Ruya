@@ -6,9 +6,9 @@
 #include <memory>
 #include <vector>
 #include "utils/uuid.h"
-#include "engine/mesh.h"
-#include "engine/texture.h"
-#include "engine/material.h"
+#include "engine/scene/mesh.h"
+#include "engine/scene/texture.h"
+#include "engine/scene/material.h"
 
 using glm::vec4;
 using glm::vec3;

@@ -3,10 +3,13 @@
 #include <GLFW/glfw3.h>
 
 #include "engine/core/window.h"
-#include "engine/mesh.h"
-#include "engine/texture.h"
+#include "engine/scene/mesh.h"
+#include "engine/scene/texture.h"
 #include "utils/uuid.h"
 #include "utils/timer.h"
+
+#include "engine/render/renderer.h"
+#include "engine/render/shader.h"
 
 #include "engine/scene/camera.h"
 #include "engine/scene/light_source.h"
@@ -39,6 +42,9 @@ int main()
     ruya::Object obj{};
     ruya::LightSource light{};
     ruya::Scene scene{};
+
+    ruya::Renderer renderer{nullptr, nullptr, nullptr, nullptr};
+    ruya::Shader shader{};
 
     ruya::models::Cube cube{};
     ruya::models::Icosahedron icosahedron{};

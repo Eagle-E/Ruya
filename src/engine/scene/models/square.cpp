@@ -1,7 +1,7 @@
 #include "square.h"
 #include <memory>
-#include <engine/texture.h>
-#include "engine/mesh.h"
+#include <engine/scene/texture.h>
+#include "engine/scene/mesh.h"
 
 using ruya::Texture;
 using ruya::Mesh;

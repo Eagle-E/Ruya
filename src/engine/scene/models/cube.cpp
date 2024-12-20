@@ -1,6 +1,6 @@
 #include "cube.h"
-#include "engine/mesh.h"
-#include "engine/texture.h"
+#include "engine/scene/mesh.h"
+#include "engine/scene/texture.h"
 #include <memory>
 
 using ruya::Mesh;

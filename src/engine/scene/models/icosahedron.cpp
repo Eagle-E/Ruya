@@ -1,5 +1,5 @@
 #include "icosahedron.h"
-#include "engine/mesh.h"
+#include "engine/scene/mesh.h"
 #include <memory>
 #include <vector>
 #include <limits>
