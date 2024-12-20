@@ -11,6 +11,7 @@ project(
 
 
 set(HEADERS
+    app.h
     engine/core/window.h
     engine/render/renderer.h
     engine/render/shader.h
@@ -31,6 +32,7 @@ set(HEADERS
     
 set(SOURCES
     main.cpp
+    test_app.hpp
     engine/core/window.cpp
     engine/render/renderer.cpp
     engine/render/shader.cpp
@@ -135,3 +137,15 @@ endif (WIN32)
 if (UNIX)
 
 endif (UNIX)
+
+
+
+##### Resource files: copy resource files (images, txt, shaders) to the executable location 
+# Copy the src/engine/render/shaders folder to shaders/ relative to the destination folder
+# of the main target.
+add_custom_command(
+    TARGET ${MAIN_TARGET} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${SRC_DIR}/engine/render/shaders
+    $<TARGET_FILE_DIR:${MAIN_TARGET}>/shaders
+)

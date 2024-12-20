@@ -1,3 +1,32 @@
+#include "test_app.hpp"
+#include "engine/core/window.h"
+
+int main()
+{
+	ruya::Window window(1450, 875);
+	window.make_context_current();
+	
+	ruya::TestApp app(window);
+
+	try
+	{
+		app.run();
+	}
+	catch (std::exception e)
+	{
+		std::cerr << e.what() << std::endl;
+		return 1;
+	}
+	
+	return 0;
+}
+
+
+
+
+
+
+/*
 #include <iostream>
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
@@ -70,3 +99,4 @@ int main()
 
     return 0;
 }
+*/
